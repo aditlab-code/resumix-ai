@@ -2,14 +2,12 @@
 
 import React from 'react';
 import { ActiveViewType } from './header';
-import { LayoutDashboard, Briefcase, Users, Sliders, BookOpen, RotateCcw } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Users, Sliders, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui';
 
 interface SidebarProps {
   activeView: ActiveViewType;
   onViewChange: (view: ActiveViewType) => void;
-  onResetData?: () => void;
 }
 
 const NAV: { id: ActiveViewType; label: string; icon: typeof LayoutDashboard }[] = [
@@ -20,12 +18,12 @@ const NAV: { id: ActiveViewType; label: string; icon: typeof LayoutDashboard }[]
   { id: 'docs', label: 'Dokumentasi', icon: BookOpen },
 ];
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onResetData }) => (
+export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange }) => (
   <aside className="w-[264px] bg-ink-default border-r border-slate-800 h-screen sticky top-0 flex flex-col justify-between shrink-0 shadow-e2 text-white">
     <div>
       {/* Brand Header */}
       <div className="px-5 h-16 flex items-center gap-3 border-b border-slate-800 bg-ink-default/90">
-        <div className="w-8 h-8 rounded-md bg-brand-accent text-white flex items-center justify-center font-bold text-base shadow-e1">
+        <div className="w-8 h-8 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold text-base shadow-e1">
           R
         </div>
         <div className="flex flex-col">
@@ -46,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onRe
               className={cn(
                 'w-full px-3.5 py-2.5 rounded-md text-body font-semibold flex items-center gap-3 focus-ring',
                 isActive
-                  ? 'bg-brand-accent text-white shadow-e1 font-bold'
+                  ? 'bg-blue-600 text-white shadow-e1 font-bold'
                   : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
               )}
             >
@@ -57,18 +55,5 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onRe
         })}
       </nav>
     </div>
-
-    {/* Reset Data Footer */}
-    {onResetData && (
-      <div className="p-3 border-t border-slate-800 bg-ink-default/50">
-        <button
-          onClick={onResetData}
-          className="w-full px-3.5 py-2 rounded-md text-caption font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 flex items-center justify-start gap-2.5 focus-ring"
-        >
-          <RotateCcw className="w-4 h-4 text-slate-400" />
-          Reset Demo Data
-        </button>
-      </div>
-    )}
   </aside>
 );

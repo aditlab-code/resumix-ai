@@ -5,7 +5,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: parseInt(process.env.API_PORT || '3000', 10),
+  PORT: parseInt(process.env.API_PORT || process.env.PORT || '3001', 10),
   AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'http://localhost:8000',
   DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/cv_ats_db',
   REDIS_HOST: process.env.REDIS_HOST || 'localhost',

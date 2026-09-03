@@ -7,13 +7,13 @@ import { Stat } from '@/components/ui';
 interface StatsOverviewProps {
   jobs: JobPosting[];
   applications: CandidateApplication[];
-  onOpenAuditLogs: () => void;
+  onNavigateToCandidates: () => void;
 }
 
 export const StatsOverview: React.FC<StatsOverviewProps> = ({
   jobs,
   applications,
-  onOpenAuditLogs,
+  onNavigateToCandidates,
 }) => {
   const activeJobs = jobs.filter((j) => j.status === 'open').length;
   const processing = applications.filter(
@@ -25,20 +25,20 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-      <Stat label="Lowongan Aktif" value={activeJobs} hint="terbuka" />
-      <Stat label="Total Kandidat" value={applications.length} hint="aplikasi" />
+      <Stat label="Lowongan Aktif" value={activeJobs} hint="terbuka" variant="blue" />
+      <Stat label="Total Kandidat" value={applications.length} hint="aplikasi" variant="indigo" />
       <Stat
         label="Diproses AI"
         value={processing}
-        tone={processing > 0 ? 'accent' : 'ink'}
+        variant="amber"
         hint={processing > 0 ? 'berjalan' : 'selesai'}
       />
       <Stat
         label="Perlu Review"
         value={warnings}
-        tone="warn"
-        hint="audit log"
-        onClick={onOpenAuditLogs}
+        variant="red"
+        hint="lihat kandidat"
+        onClick={onNavigateToCandidates}
       />
     </div>
   );

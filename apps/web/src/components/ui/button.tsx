@@ -5,15 +5,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const button = cva(
-  'inline-flex items-center justify-center gap-1.5 rounded-md font-semibold whitespace-nowrap disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/30 focus-visible:ring-offset-1',
+  'inline-flex items-center justify-center gap-1.5 rounded-md whitespace-nowrap disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/30 focus-visible:ring-offset-1',
   {
     variants: {
       variant: {
-        primary: 'bg-brand-accent text-white font-bold hover:bg-brand-accent_hover shadow-e1',
-        secondary: 'bg-surface-sunken text-ink-default font-semibold border border-surface-border hover:bg-surface-border hover:text-ink-default shadow-2xs',
-        ghost: 'bg-transparent text-ink-subtle hover:bg-surface-sunken hover:text-ink-default',
-        danger: 'bg-semantic-danger text-white font-bold hover:bg-red-800 shadow-e1',
-        'danger-soft': 'bg-semantic-danger_soft text-semantic-danger font-semibold hover:bg-red-200',
+        primary: 'bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-e1',
+        secondary: 'bg-slate-100 text-slate-900 font-bold border border-slate-300 hover:bg-slate-200 shadow-2xs',
+        ghost: 'bg-transparent text-slate-700 font-semibold hover:bg-slate-100 hover:text-slate-900',
+        danger: 'bg-red-700 text-white font-bold hover:bg-red-800 shadow-e1',
+        'danger-soft': 'bg-red-50 text-red-700 font-bold border border-red-200 hover:bg-red-100',
       },
       size: {
         sm: 'h-8 px-3 text-caption',

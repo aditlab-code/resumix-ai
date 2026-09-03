@@ -109,7 +109,6 @@ export default function HRDashboardPage() {
   const [deletingApplication, setDeletingApplication] = useState<CandidateApplication | null>(null);
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null);
   const [deletingJob, setDeletingJob] = useState<JobPosting | null>(null);
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isCreateJobModalOpen, setIsCreateJobModalOpen] = useState(false);
@@ -142,18 +141,6 @@ export default function HRDashboardPage() {
     setAuditLogs([]);
     if (typeof window !== 'undefined') localStorage.setItem('cv_ats_audit_logs', '[]');
     addToast('info', 'Audit log dibersihkan', 'Seluruh catatan aktivitas dihapus.');
-  };
-
-  const confirmResetData = () => {
-    setJobs(INITIAL_JOBS.map((j) => ({ ...j, applications_count: 0 })));
-    setApplications([]);
-    setAuditLogs([]);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('cv_ats_jobs');
-      localStorage.removeItem('cv_ats_applications');
-      localStorage.removeItem('cv_ats_audit_logs');
-    }
-    addToast('info', 'Data pelamar dibersihkan', 'Sistem siap menerima unggahan berkas CV PDF asli.');
   };
 
   const handleSelectJob = (jobId: string) => setSelectedJobId(jobId);
@@ -383,7 +370,6 @@ export default function HRDashboardPage() {
       <Sidebar
         activeView={activeView}
         onViewChange={setActiveView}
-        onResetData={() => setIsResetConfirmOpen(true)}
       />
 
       <main className="flex-1 p-6 space-y-6 overflow-y-auto w-full min-w-0 max-w-[1440px] mx-auto">
@@ -392,7 +378,6 @@ export default function HRDashboardPage() {
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
           onOpenCreateJobModal={() => setIsCreateJobModalOpen(true)}
           onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
-          onOpenSkillTaxonomyModal={() => setIsSkillTaxonomyModalOpen(true)}
         />
 
         {activeView === 'dashboard' && (
@@ -400,7 +385,7 @@ export default function HRDashboardPage() {
             <StatsOverview
               jobs={jobs}
               applications={applications}
-              onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
+              onNavigateToCandidates={() => setActiveView('candidates')}
             />
 
             {jobs.length === 0 ? (
@@ -547,6 +532,8 @@ export default function HRDashboardPage() {
         {activeView === 'settings' && (
           <PipelineSettingsView
             onSaveSettings={(msg) => addToast('success', 'Pengaturan disimpan', msg)}
+            onAddToast={addToast}
+            onAddAuditLog={addAuditLog}
           />
         )}
 
@@ -607,16 +594,6 @@ export default function HRDashboardPage() {
           onClose={() => setDeletingApplication(null)}
           application={deletingApplication}
           onConfirmDelete={handleConfirmDeleteCandidate}
-        />
-
-        <ConfirmDialog
-          isOpen={isResetConfirmOpen}
-          onClose={() => setIsResetConfirmOpen(false)}
-          onConfirm={confirmResetData}
-          title="Reset data demo"
-          message="Seluruh data dikembalikan ke sample awal. Data hasil hapus & tambah baru akan hilang."
-          confirmLabel="Reset"
-          tone="danger"
         />
 
         <ConfirmDialog
