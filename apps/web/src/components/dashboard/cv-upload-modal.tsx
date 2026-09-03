@@ -10,6 +10,8 @@ import {
   formatBytes,
   constructExecutiveSummary,
   parseAndNormalizePhoneNumber,
+  parseSinceYear,
+  reconstructPdfLines,
   extractMultipleEducations,
   extractMultipleWorkExperiences,
   extractProjectsAndAwards,
@@ -63,19 +65,21 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       const arrayBuffer = await uploadedFile.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
 
-      for (let i = 1; i <= Math.min(pdf.numPages, 5); i++) {
+      const pageTexts: string[] = [];
+      for (let i = 1; i <= Math.min(pdf.numPages, 6); i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
+        const viewport = page.getViewport({ scale: 1 });
 
-        const pageText = textContent.items.map((item: any) => item.str).join(' ');
-        fullText += ' ' + pageText;
-
-        textContent.items.forEach((item: any) => {
-          if (item.str && item.str.trim().length > 0) {
-            extractedTextLines.push(item.str.trim());
-          }
-        });
+        // Rebuild real lines from item geometry (pdf.js join(' ') loses line breaks).
+        const pageText = reconstructPdfLines(
+          textContent.items as any[],
+          viewport.width
+        );
+        pageTexts.push(pageText);
       }
+      fullText = pageTexts.join('\n');
+      extractedTextLines = fullText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
     } catch (e) {
       console.warn('PDFJS fallback:', e);
       try {
@@ -133,13 +137,10 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     }
 
     if (!email) {
-      const slug = candidateName.toLowerCase().replace(/[^a-z0-9]/g, '.');
-      email = `${slug}@example.com`;
+      const slug = candidateName.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
+      email = slug ? `${slug}@example.com` : '';
     }
-
-    if (!phoneNumber) {
-      phoneNumber = '+62 812-' + Math.floor(1000000 + Math.random() * 9000000);
-    }
+    // Phone: never fabricated. Empty means "not listed on the CV".
 
     const detectedSkills: { name: string; normalized_name: string; category: string }[] = [];
     const sections = extractCVSections(fullText);
@@ -184,15 +185,24 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const { projects, certifications } = extractProjectsAndAwards(fullText);
     const { portfolios, references } = extractPortfoliosAndReferences(fullText);
 
-    const totalExpMonths = workExperience.reduce((sum, item) => sum + (item.duration_months || 0), 0);
+    // Total experience: prefer explicit "since YYYY", else span of the earliest
+    // dated project/education entry to now, else sum of entry durations.
+    const thisYear = new Date().getFullYear();
+    const sinceYear = parseSinceYear(fullText);
+    const datedYears = [
+      ...workExperience.map((w) => parseInt((w.start_date || '').slice(0, 4), 10)),
+      ...education.map((e) => e.start_year || 0),
+    ].filter((y) => y >= 1990 && y <= thisYear);
+    const earliestYear = sinceYear || (datedYears.length ? Math.min(...datedYears) : 0);
 
-    let extractedSummary = '';
-    const summaryMatch = fullText.match(
-      /(summary|about me|profile|profil|ringkasan|objective)\s*[:\-\n]+\s*([^.\n]{20,250}\.[^.\n]{20,250}\.)/i
-    );
-    if (summaryMatch && summaryMatch[2]) {
-      extractedSummary = summaryMatch[2].trim();
-    } else {
+    let totalExpMonths = workExperience.reduce((sum, item) => sum + (item.duration_months || 0), 0);
+    if (earliestYear) {
+      totalExpMonths = Math.max(totalExpMonths, (thisYear - earliestYear) * 12);
+    }
+
+    const sections2 = extractCVSections(fullText);
+    let extractedSummary = (sections2.summary || '').replace(/\s*\n\s*/g, ' ').trim();
+    if (extractedSummary.length < 40) {
       const skillNames = detectedSkills.map((s) => s.normalized_name);
       const companies = workExperience.map((w) => w.company || '').filter((c) => c.length > 0);
       extractedSummary = constructExecutiveSummary(
@@ -207,13 +217,19 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const warnings: string[] = [];
     if (workExperience.length === 0) {
       warnings.push(
-        'Riwayat perusahaan/proyek belum terdeteksi otomatis dari PDF. Gunakan "Koreksi data" untuk melengkapi.'
+        'Riwayat pengalaman/proyek tidak terdeteksi otomatis. Gunakan "Edit data" untuk melengkapi.'
       );
     }
     if (education.length === 0) {
       warnings.push(
-        'Institusi pendidikan belum terdeteksi otomatis dari PDF. Gunakan "Koreksi data" untuk melengkapi.'
+        'Riwayat pendidikan tidak terdeteksi otomatis. Gunakan "Edit data" untuk melengkapi.'
       );
+    }
+    if (!phoneNumber) {
+      warnings.push('Nomor telepon tidak tercantum pada CV.');
+    }
+    if (!emailMatch) {
+      warnings.push('Alamat email tidak terdeteksi pada CV.');
     }
 
     const fullTextLength = fullText.trim().length;

@@ -16,47 +16,106 @@ export function formatBytes(bytes: number, decimals = 1) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
+/**
+ * Extract an Indonesian phone number. Returns '' when no plausible number exists
+ * (never fabricates). Guards against matching years, GPA, percentages, ID numbers.
+ */
 export function parseAndNormalizePhoneNumber(text: string): string {
   if (!text) return '';
 
-  // 1. Labeled phone number search (Phone: +62 812..., HP: 0812..., Telp: (021)...)
-  const labeledRegex = /(?:phone|telepon|telp|hp|mobile|wa|whatsapp|contact|kontak|no\.?\s*hp|no\.?\s*telp|nomor)[\s:]*([+()]?[\d\s\-./()]{9,20}\d)/i;
-  const labeledMatch = text.match(labeledRegex);
+  const normalize = (raw: string): string => {
+    let digits = raw.replace(/[^\d+]/g, '');
+    if (digits.startsWith('62')) digits = '+' + digits;
+    if (digits.startsWith('0')) digits = '+62' + digits.slice(1);
+    if (!digits.startsWith('+62')) return '';
 
-  let rawPhone = '';
-  if (labeledMatch && labeledMatch[1]) {
-    rawPhone = labeledMatch[1];
-  } else {
-    // 2. Generic pattern search (+62..., 08..., (021)...)
-    const genericRegex = /(?:\+?62|08|021|\(\+?62\))[\s\-./()]*\d[\d\s\-./()]{7,16}\d/;
-    const genericMatch = text.match(genericRegex);
-    if (genericMatch) {
-      rawPhone = genericMatch[0];
+    // Indonesian mobile numbers: +62 8xx xxxx xxxx (11-13 digits after +62 prefix removed)
+    const local = digits.slice(3);
+    if (!/^8\d{8,11}$/.test(local)) return '';
+
+    const provider = local.slice(0, 3);
+    const middle = local.slice(3, 7);
+    const rest = local.slice(7);
+    return rest ? `+62 ${provider}-${middle}-${rest}` : `+62 ${provider}-${middle}`;
+  };
+
+  // 1. Labeled: "Phone: +62 812...", "HP 0812...", "WhatsApp: 62812..."
+  const labeled = text.match(
+    /(?:phone|telepon|telp|tel|hp|handphone|mobile|cell|wa|whatsapp|kontak|no\.?\s*(?:hp|telp|telepon))\s*[:.\-]?\s*(\+?\(?(?:62|0)\)?[\d\s\-.()]{7,18}\d)/i
+  );
+  if (labeled && labeled[1]) {
+    const n = normalize(labeled[1]);
+    if (n) return n;
+  }
+
+  // 2. Unlabeled Indonesian mobile: +62 8.., 62 8.., 08.. (not preceded by a digit)
+  const generic = text.match(
+    /(?<![\d/.])(\+?62|0)8[\d\s\-.()]{7,14}\d(?![\d/])/
+  );
+  if (generic && generic[0]) {
+    const n = normalize(generic[0]);
+    if (n) return n;
+  }
+
+  return '';
+}
+
+/** Detect an explicit "since YYYY" / "sejak YYYY" career-start year in free text. */
+export function parseSinceYear(text: string): number | null {
+  const m = text.match(/\b(?:since|sejak|from|mulai)\s+((?:19|20)\d{2})\b/i);
+  if (m) return parseInt(m[1], 10);
+  return null;
+}
+
+/**
+ * Rebuild line-structured text from pdf.js text items using their x/y geometry.
+ * pdf.js otherwise yields items with no reliable line breaks; sections/education/
+ * experience parsers all depend on real lines. Splits multi-column rows on wide
+ * horizontal gaps. `items` are pdf.js TextItem-like objects with { str, transform }.
+ */
+export function reconstructPdfLines(
+  items: { str: string; transform: number[]; width?: number }[],
+  pageWidth = 600
+): string {
+  const glyphs = items
+    .filter((it) => it && typeof it.str === 'string' && it.str.trim().length > 0)
+    .map((it) => ({
+      str: it.str,
+      x: it.transform[4],
+      y: it.transform[5],
+      w: it.width || it.str.length * 5,
+    }));
+  if (glyphs.length === 0) return '';
+
+  // Bucket by y (top-to-bottom). PDF y grows upward.
+  glyphs.sort((a, b) => b.y - a.y || a.x - b.x);
+  const rows: (typeof glyphs)[] = [];
+  const yTol = 3;
+  for (const g of glyphs) {
+    const row = rows[rows.length - 1];
+    if (row && Math.abs(row[0].y - g.y) <= yTol) row.push(g);
+    else rows.push([g]);
+  }
+
+  const colGap = Math.max(40, pageWidth * 0.12);
+  const lines: string[] = [];
+  for (const row of rows) {
+    row.sort((a, b) => a.x - b.x);
+    let segment = '';
+    let prevEnd = -Infinity;
+    for (const g of row) {
+      if (prevEnd !== -Infinity && g.x - prevEnd > colGap) {
+        if (segment.trim()) lines.push(segment.trim());
+        segment = '';
+      }
+      const needsSpace =
+        segment.length > 0 && g.x - prevEnd > 1 && !segment.endsWith(' ');
+      segment += (needsSpace ? ' ' : '') + g.str;
+      prevEnd = g.x + g.w;
     }
+    if (segment.trim()) lines.push(segment.trim());
   }
-
-  if (!rawPhone) return '';
-
-  // Clean non-digit characters except leading +
-  let digits = rawPhone.replace(/[^\d+]/g, '');
-
-  // Normalize Indonesian numbers starting with 08 or 628
-  if (digits.startsWith('08')) {
-    digits = '+628' + digits.slice(2);
-  } else if (digits.startsWith('628')) {
-    digits = '+' + digits;
-  }
-
-  // Format into standard clean Indonesian number (+62 8xx-xxxx-xxxx)
-  if (digits.startsWith('+628') && digits.length >= 11 && digits.length <= 14) {
-    const prefix = digits.slice(0, 3); // +62
-    const provider = digits.slice(3, 6); // 812
-    const middle = digits.slice(6, 10); // 3456
-    const rest = digits.slice(10); // 7890
-    return rest ? `${prefix} ${provider}-${middle}-${rest}` : `${prefix} ${provider}-${middle}`;
-  }
-
-  return digits.length > 5 ? digits : rawPhone.trim();
+  return lines.join('\n');
 }
 
 export function cleanOcrText(text: string): string {
@@ -79,10 +138,12 @@ export function cleanOcrText(text: string): string {
 
 export function extractCVSections(fullText: string): Record<string, string> {
   const sections: Record<string, string> = {
+    summary: '',
     experience: '',
     education: '',
     skills: '',
     projects: '',
+    publications: '',
     awards: '',
     other: '',
   };
@@ -94,25 +155,41 @@ export function extractCVSections(fullText: string): Record<string, string> {
   let currentSection = 'other';
 
   const sectionPatterns: { key: keyof typeof sections; regex: RegExp }[] = [
+    { key: 'summary', regex: /^(?:PROFESSIONAL\s+SUMMARY|SUMMARY|PROFILE|ABOUT\s+ME|OBJECTIVE|CAREER\s+OBJECTIVE|RINGKASAN|PROFIL|TENTANG\s+SAYA|RINGKASAN\s+PROFESIONAL)$/i },
     { key: 'experience', regex: /^(?:WORK\s+EXPERIENCE|PROFESSIONAL\s+EXPERIENCE|EMPLOYMENT\s+HISTORY|CAREER\s+HISTORY|WORK\s+HISTORY|RELEVANT\s+EXPERIENCE|EXPERIENCE|PENGALAMAN\s+KERJA|PENGALAMAN\s+PROFESIONAL|RIWAYAT\s+PEKERJAAN|RIWAYAT\s+KARIR|PENGALAMAN)$/i },
-    { key: 'education', regex: /^(?:EDUCATION\s+&\s+QUALIFICATIONS|ACADEMIC\s+BACKGROUND|ACADEMIC\s+HISTORY|HIGHER\s+EDUCATION|EDUCATION|PENDIDIKAN\s+FORMAL|RIWAYAT\s+PENDIDIKAN|LATAR\s+BELAKANG\s+AKADEMIK|PENDIDIKAN|AKADEMIK)$/i },
-    { key: 'skills', regex: /^(?:TECHNICAL\s+SKILLS|SKILLS\s+&\s+COMPETENCIES|CORE\s+COMPETENCIES|TECHNOLOGIES|TOOLS\s+&\s+TECHNOLOGIES|SKILL\s+HIGHLIGHTS|AREAS\s+OF\s+EXPERTISE|TECH\s+STACK|SKILLS|SKILL|KEAHLIAN\s+TEKNIS|KEAHLIAN|SKILL\s+YANG\s+DIKUASAI|SKILL\s+&\s+KEMAMPUAN|KEMAMPUAN\s+TEKNIS|KEMAMPUAN|KOMPETENSI|ALAT\s+&\s+TEKNOLOGI)$/i },
-    { key: 'projects', regex: /^(?:PROJECTS|KEY\s+PROJECTS|FEATURED\s+PROJECTS|PORTFOLIO\s+PROJECTS|PUBLICATIONS\s+&\s+INTELLECTUAL\s+PROPERTY|PUBLICATIONS|SELECTED\s+PROJECTS|PORTFOLIO|PROYEK\s+UTAMA|PROYEK|PROJECT|PORTFOLIO\s+PROYEK|PUBLIKASI\s+&\s+HAK\s+CIPTA|PUBLIKASI|KARYA)$/i },
-    { key: 'awards', regex: /^(?:LICENSES\s+&\s+CERTIFICATIONS|CERTIFICATIONS|CERTIFICATES|AWARDS\s+&\s+HONORS|HONORS\s+&\s+AWARDS|ACHIEVEMENTS|SERTIFIKASI|SERTIFIKAT|PRESTASI\s+&\s+PENGHARGAAN|LISENSI\s+&\s+SERTIFIKASI|PENGHARGAAN|PRESTASI)$/i },
+    { key: 'education', regex: /^(?:EDUCATION\s*(?:&\s*QUALIFICATIONS)?|ACADEMIC\s+BACKGROUND|ACADEMIC\s+HISTORY|HIGHER\s+EDUCATION|PENDIDIKAN\s+FORMAL|RIWAYAT\s+PENDIDIKAN|LATAR\s+BELAKANG\s+AKADEMIK|PENDIDIKAN|AKADEMIK)$/i },
+    { key: 'skills', regex: /^(?:TECHNICAL\s+SKILLS|SKILLS\s*(?:&\s*COMPETENCIES)?|CORE\s+COMPETENCIES|TECHNOLOGIES|TOOLS\s*&\s*TECHNOLOGIES|SKILL\s+HIGHLIGHTS|AREAS\s+OF\s+EXPERTISE|TECH\s+STACK|SKILL|KEAHLIAN\s+TEKNIS|KEAHLIAN|SKILL\s+YANG\s+DIKUASAI|KEMAMPUAN\s+TEKNIS|KEMAMPUAN|KOMPETENSI|ALAT\s*&\s*TEKNOLOGI)$/i },
+    { key: 'projects', regex: /^(?:PROJECTS|KEY\s+PROJECTS|FEATURED\s+PROJECTS|PORTFOLIO\s+PROJECTS|SELECTED\s+PROJECTS|PERSONAL\s+PROJECTS|PORTFOLIO|PROYEK\s+UTAMA|PROYEK|PROJECT|PORTFOLIO\s+PROYEK|KARYA)$/i },
+    { key: 'publications', regex: /^(?:PUBLICATIONS\s*(?:&\s*INTELLECTUAL\s+PROPERTY)?|RESEARCH|RESEARCH\s+&\s+PUBLICATIONS|PUBLIKASI\s*(?:&\s*HAK\s+CIPTA)?|PENELITIAN)$/i },
+    { key: 'awards', regex: /^(?:LICENSES\s*&\s*CERTIFICATIONS|CERTIFICATIONS|CERTIFICATES|AWARDS\s*(?:&\s*HONORS)?|HONORS\s*&\s*AWARDS|ACHIEVEMENTS|SERTIFIKASI|SERTIFIKAT|PRESTASI\s*(?:&\s*PENGHARGAAN)?|LISENSI\s*&\s*SERTIFIKASI|PENGHARGAAN|PRESTASI)$/i },
   ];
+
+  const looksLikeHeader = (s: string) =>
+    s.length >= 3 &&
+    s.length <= 45 &&
+    s === s.toUpperCase() &&
+    /[A-Z]/.test(s) &&
+    !/[.:;•]/.test(s) &&
+    !/\d{3}/.test(s);
 
   for (const line of lines) {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
     let matchedKey: string | null = null;
-    if (trimmed.length < 55 && !/^(?:Experienced|Skilled|Expert|Responsible|Working|Terbiasa|Memiliki|Memahami)\b/i.test(trimmed)) {
+    const headerCandidate = trimmed.replace(/[^A-Za-z\s&]/g, '').trim();
+    if (
+      trimmed.length < 55 &&
+      !/^(?:Experienced|Skilled|Expert|Responsible|Working|Terbiasa|Memiliki|Memahami)\b/i.test(trimmed)
+    ) {
       for (const pat of sectionPatterns) {
-        if (pat.regex.test(trimmed)) {
+        if (pat.regex.test(headerCandidate)) {
           matchedKey = pat.key;
           break;
         }
       }
+      // Unknown ALL-CAPS heading -> stop feeding the previous section (dump to other)
+      if (!matchedKey && looksLikeHeader(trimmed)) matchedKey = 'other';
     }
 
     if (matchedKey) {
@@ -125,9 +202,328 @@ export function extractCVSections(fullText: string): Record<string, string> {
   return sections;
 }
 
+/**
+ * Parse a PROJECTS section into structured entries. Handles the common
+ * two-column CV layout where a header row carries "<Name> — <subtitle>" plus a
+ * tech-stack list, and the row below carries a one-line description plus a
+ * date range, followed by achievement bullets.
+ */
+export interface ProjectEntry {
+  name: string;
+  subtitle: string;
+  tech: string[];
+  description: string;
+  start_year: number | null;
+  end_year: number | null;
+  is_current: boolean;
+}
+
+const YEAR_RANGE = /((?:19|20)\d{2})\s*(?:[–\-—]|to|s\/d|sd|until)?\s*((?:19|20)\d{2}|Present|Sekarang|Now|Current|Saat\s+Ini)?/i;
+
+const isBullet = (l: string) => /^\s*[•▪●○‣*·]|^\s*-\s/.test(l);
+
+const DATE_ONLY_RE =
+  /^\(?(?:19|20)\d{2}\)?\s*(?:[–—-]\s*(?:(?:19|20)\d{2}|Present|Sekarang|Now|Current|Saat\s*Ini))?\s*$/i;
+const TRAILING_DATE_RE =
+  /\s*\(?((?:19|20)\d{2})\)?\s*(?:[–—-]\s*((?:19|20)\d{2}|Present|Sekarang|Now|Current|Saat\s*Ini))?\s*$/i;
+
+const looksLikeTechList = (s: string) => {
+  const parts = s.split(',').map((t) => t.trim());
+  return (
+    parts.length >= 2 &&
+    parts.every((t) => t.length > 0 && t.length < 40 && !/[.!?]$/.test(t) && !/\b(the|and|with|for|to)\b/i.test(t)) &&
+    /^[A-Za-z0-9]/.test(s.trim()) &&
+    !/(?:19|20)\d{2}/.test(s)
+  );
+};
+
+/** Split "<subtitle> Tech, Tech, Tech" into a subtitle and a tech array. */
+const splitSubtitleTech = (rest: string): { subtitle: string; tech: string[] } => {
+  if (!rest.includes(',')) return { subtitle: rest.trim(), tech: [] };
+  const tokens = rest.split(',').map((t) => t.trim()).filter(Boolean);
+  const firstWords = tokens[0].split(/\s+/);
+  if (firstWords.length >= 3) {
+    // first token carries "<subtitle words> <first tech>"
+    const firstTech = firstWords.pop() as string;
+    return { subtitle: firstWords.join(' '), tech: [firstTech, ...tokens.slice(1)] };
+  }
+  if (looksLikeTechList(rest)) return { subtitle: '', tech: tokens };
+  return { subtitle: rest.trim(), tech: [] };
+};
+
+export function parseProjectEntries(fullText: string): ProjectEntry[] {
+  const sections = extractCVSections(fullText);
+  const src = sections.projects && sections.projects.trim().length > 20 ? sections.projects : '';
+  if (!src) return [];
+
+  // Split two-column rows on wide whitespace gaps (mirrors geometry reconstruction
+  // for text that arrived space-padded), then normalise each segment.
+  const segments: string[] = [];
+  for (const raw of src.split(/\r?\n/)) {
+    const line = raw.replace(/\s+$/, '');
+    if (!line.trim()) continue;
+    if (isBullet(line)) {
+      segments.push(line.trim());
+      continue;
+    }
+    for (const seg of line.split(/\s{3,}/)) {
+      const s = seg.trim();
+      if (s) segments.push(s);
+    }
+  }
+
+  const rows = segments.map((l) => {
+    if (DATE_ONLY_RE.test(l)) return { text: '', date: l, bullet: false };
+    const bullet = isBullet(l);
+    const dm = l.match(TRAILING_DATE_RE);
+    if (dm && !bullet && (dm.index ?? 0) > 6) {
+      return { text: l.slice(0, dm.index).trim(), date: dm[0].trim(), bullet: false };
+    }
+    return { text: l, date: '', bullet };
+  });
+
+  const entries: ProjectEntry[] = [];
+  let cur: ProjectEntry | null = null;
+  const flush = () => {
+    if (cur && cur.name) {
+      cur.description = cur.description.trim();
+      entries.push(cur);
+    }
+    cur = null;
+  };
+
+  const applyDate = (target: ProjectEntry | null, date: string) => {
+    if (!target || !date) return;
+    const m = date.match(YEAR_RANGE);
+    if (!m) return;
+    const start = parseInt(m[1], 10);
+    if (!target.start_year || start < target.start_year) target.start_year = start;
+    if (m[2]) {
+      if (/present|sekarang|now|current|saat/i.test(m[2])) {
+        target.is_current = true;
+        target.end_year = new Date().getFullYear();
+      } else {
+        target.end_year = parseInt(m[2], 10);
+      }
+    } else if (!target.end_year) {
+      target.end_year = start;
+    }
+  };
+
+  const hasSep = (t: string) => /\S\s[–—]\s\S|\S\s-\s\S/.test(t);
+  const titleCaseish = (t: string) => {
+    const words = t.replace(/[(),.]/g, '').split(/\s+/).filter(Boolean);
+    if (words.length === 0 || words.length > 9) return false;
+    const stray = words.filter(
+      (w) => /^[a-z]/.test(w) && !/^(a|an|the|of|and|or|for|to|in|on|at|with|via|&|de)$/i.test(w)
+    );
+    return stray.length === 0;
+  };
+
+  for (let i = 0; i < rows.length; i++) {
+    const { text, date, bullet } = rows[i];
+
+    if (!text) {
+      applyDate(cur, date);
+      continue;
+    }
+
+    if (bullet) {
+      if (cur) cur.description += (cur.description ? ' ' : '') + text.replace(/^\s*[•▪●○‣*·-]\s*/, '');
+      continue;
+    }
+
+    const lookahead = rows.slice(i + 1, i + 6);
+    const followedByBullet = lookahead.some((r) => r.bullet);
+    const followedByTechOrDate = lookahead.some((r) => r.date || (r.text && looksLikeTechList(r.text)));
+    const isTech = looksLikeTechList(text);
+    const startsUpper = /^[A-Z0-9"']/.test(text);
+    const endsSentence = /[.!?]$/.test(text);
+
+    const isHeader =
+      startsUpper &&
+      !isTech &&
+      !endsSentence &&
+      text.length >= 3 &&
+      text.length <= 130 &&
+      (hasSep(text) || titleCaseish(text)) &&
+      (hasSep(text) || followedByBullet || followedByTechOrDate);
+
+    if (isHeader) {
+      flush();
+      let name = text;
+      let subtitle = '';
+      let tech: string[] = [];
+      if (hasSep(text)) {
+        const [n, ...restParts] = text.split(/\s[–—-]\s/);
+        name = n.trim();
+        const st = splitSubtitleTech(restParts.join(' - ').trim());
+        subtitle = st.subtitle;
+        tech = st.tech;
+      }
+      cur = { name, subtitle, tech, description: '', start_year: null, end_year: null, is_current: false };
+      applyDate(cur, date);
+      continue;
+    }
+
+    if (!cur) continue;
+
+    applyDate(cur, date);
+
+    if (cur.tech.length === 0 && isTech) {
+      cur.tech = text.split(',').map((t) => t.trim());
+      continue;
+    }
+    if (!cur.subtitle && text.length < 90 && !/[.!?]$/.test(text)) {
+      cur.subtitle = text;
+      continue;
+    }
+    cur.description += (cur.description ? ' ' : '') + text;
+  }
+  flush();
+
+  return entries;
+}
+
+const INSTITUTION_RE =
+  /\b(Universitas|University|Institut(?:e)?|Politeknik|Polytechnic|STMIK|STIE|STT|Sekolah\s+Tinggi|Academy|Akademi|College|Madrasah\s+Aliyah|Madrasah\s+Tsanawiyah|Madrasah\s+Ibtidaiyah|SMA(?:\s+Negeri)?|SMK(?:\s+Negeri)?|SMP(?:\s+Negeri)?|SD(?:\s+Negeri)?|MAN|MTsN?|MIN?)\b/i;
+
+/** Map a degree line to a normalised Indonesian qualification label. */
+export function classifyDegree(text: string): string {
+  const t = ` ${text.toLowerCase()} `;
+  if (/\b(s-?3|doktor(al)?|ph\.?\s?d|d\.?phil|doctor(ate)?)\b|\bdr\.\s/.test(t)) return 'Doktoral (S3 / Ph.D)';
+  if (/\b(s-?2|magister|master(?:'s)?|m\.kom|m\.t\b|m\.sc|m\.eng|m\.si|m\.pd|m\.ba|mba|m\.hum|m\.h\b|m\.m\b|m\.e\b)\b/.test(t))
+    return 'Magister (S2 / Master)';
+  if (/\b(s-?1|sarjana|bachelor(?:'s)?|b\.sc|b\.eng|b\.a\b|s\.kom|s\.t\b|s\.si|s\.e\b|s\.sos|s\.h\b|s\.pd|s\.ds|s\.ars|s\.ak|undergraduate)\b/.test(t))
+    return 'Sarjana (S1 / Bachelor)';
+  if (/\b(d-?4|d-?3|d-?1|d-?2|diploma|ahli\s+madya|a\.md|associate\s+degree|vocational\s+diploma)\b/.test(t))
+    return 'Diploma (D1-D4)';
+  if (/\b(smk|vocational\s+high\s+school|sekolah\s+menengah\s+kejuruan)\b/.test(t)) return 'SMK / Vocational';
+  if (/\b(sma|man\b|madrasah\s+aliyah|senior\s+high\s+school|high\s+school|sekolah\s+menengah\s+atas)\b/.test(t))
+    return 'SMA / MA';
+  if (/\b(smp|mts\b|madrasah\s+tsanawiyah|junior\s+high\s+school|sekolah\s+menengah\s+pertama)\b/.test(t))
+    return 'SMP / MTs';
+  if (/\b(\bsd\b|min\b|mi\b|madrasah\s+ibtidaiyah|elementary\s+school|sekolah\s+dasar)\b/.test(t)) return 'SD / MI';
+  return '';
+}
+
+const degreeRank = (d = ''): number => {
+  if (/S3|Ph\.D|Doktor/i.test(d)) return 1;
+  if (/S2|Master|Magister/i.test(d)) return 2;
+  if (/S1|Bachelor|Sarjana/i.test(d)) return 3;
+  if (/Diploma|D1-D4|D3|D4/i.test(d)) return 4;
+  if (/SMK|SMA|MA\b/i.test(d)) return 5;
+  if (/SMP|MTs/i.test(d)) return 6;
+  return 7;
+};
+
+export function sortEducations(list: EducationDTO[]): EducationDTO[] {
+  return [...list].sort(
+    (a, b) =>
+      degreeRank(a.degree || '') - degreeRank(b.degree || '') ||
+      (b.end_year || 0) - (a.end_year || 0)
+  );
+}
+
+const LOCATION_TAIL_RE =
+  /\s*[,•|]?\s*(?:Semarang|Jakarta|Bandung|Surabaya|Yogyakarta|Malang|Medan|Depok|Bogor|Tangerang|Bekasi|Indonesia|Remote|Hybrid|On-?site|[A-Z][a-z]+,\s*Indonesia)\s*$/;
+
+const pickMajor = (degreeLine: string): string => {
+  // "Master of Computer Science (M.Kom.), Informatics Engineering — GPA: 3.96 / 4.00"
+  const afterParen = degreeLine.match(/\)\s*[,-]\s*([A-Za-z][A-Za-z&/ .-]{2,50})/);
+  let major = afterParen ? afterParen[1] : '';
+  if (!major) {
+    const afterComma = degreeLine.split(',')[1];
+    if (afterComma) major = afterComma;
+  }
+  if (!major) {
+    const inField = degreeLine.match(/(?:of|in|jurusan|prodi|program studi)\s+([A-Za-z][A-Za-z&/ .-]{2,50})/i);
+    if (inField) major = inField[1];
+  }
+  return major
+    .replace(/[—–-]\s*GPA.*/i, '')
+    .replace(/\bGPA.*/i, '')
+    .replace(/(?:19|20)\d{2}.*/, '')
+    .replace(/[—–-]\s*$/, '')
+    .trim();
+};
+
+/** Parse a clean EDUCATION section: institution line, then a degree/major line. */
+function parseEducationSection(sectionText: string): EducationDTO[] {
+  const lines = sectionText
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0 && !/^[•\-*·]/.test(l));
+
+  const out: EducationDTO[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!INSTITUTION_RE.test(line)) continue;
+
+    const institution = line
+      .replace(LOCATION_TAIL_RE, '')
+      .replace(/\s{2,}.*$/, '')
+      .replace(/[,•|].*$/, '')
+      .trim();
+
+    // Look ahead for the degree line; join wrapped continuation lines up to the
+    // next institution (pdftotext often wraps a long degree across 2 lines).
+    const window: string[] = [];
+    for (let k = i + 1; k < Math.min(lines.length, i + 6); k++) {
+      if (INSTITUTION_RE.test(lines[k])) break;
+      window.push(lines[k]);
+    }
+    let degreeLine = '';
+    const degStart = window.findIndex((w) => classifyDegree(w));
+    if (degStart >= 0) {
+      degreeLine = window
+        .slice(degStart, degStart + 3)
+        .join(' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    }
+
+    const yearHay = [line, ...window].join(' ');
+    const ym = yearHay.match(/((?:19|20)\d{2})\s*[–\-—]\s*((?:19|20)\d{2}|Present|Sekarang|Now)?/i);
+    let startYear: number | undefined;
+    let endYear: number | undefined;
+    if (ym) {
+      startYear = parseInt(ym[1], 10);
+      if (ym[2] && /\d{4}/.test(ym[2])) endYear = parseInt(ym[2], 10);
+      else if (ym[2]) endYear = new Date().getFullYear();
+    } else {
+      const single = yearHay.match(/\b((?:19|20)\d{2})\b/);
+      if (single) endYear = parseInt(single[1], 10);
+    }
+
+    const degree = classifyDegree(degreeLine || line) || 'Sarjana (S1 / Bachelor)';
+    const major = pickMajor(degreeLine) || '';
+
+    if (institution.length >= 3) {
+      out.push({
+        institution,
+        degree,
+        major: major || 'Tidak tercantum',
+        start_year: startYear,
+        end_year: endYear,
+      });
+    }
+  }
+  return out;
+}
+
 export function extractMultipleEducations(fullText: string): EducationDTO[] {
   if (!fullText) return [];
 
+  // --- Preferred path: parse the EDUCATION section line by line ---
+  const sections = extractCVSections(fullText);
+  const eduSrc = sections.education && sections.education.trim().length > 10 ? sections.education : '';
+  if (eduSrc) {
+    const parsed = parseEducationSection(eduSrc);
+    if (parsed.length > 0) return sortEducations(parsed);
+  }
+
+  // --- Fallback: scan whole text with institution regex + local snippet ---
   const results: EducationDTO[] = [];
   const instRegex = /(?:Universitas|Institut|Politeknik|STMIK|Sekolah\s+Tinggi|Academy|University|College|\bSMA\b|\bSMK\b|Madrasah\s+Aliyah|\bMAN\s+\d|\bMAN\s+[A-Z]|\bMA\s+(?:Negeri|Swasta|IPA|IPS|Keagamaan|Model)|Madrasah\s+Tsanawiyah|\bMTs\b|Madrasah\s+Ibtidaiyah|\bMI\b|\bSMP\b|\bSD\b|Sekolah\s+Dasar|Sekolah)\s+[A-Za-z0-9\s.&'-]{2,35}/gi;
 
@@ -219,99 +615,122 @@ export function extractMultipleEducations(fullText: string): EducationDTO[] {
     });
   }
 
-  // Sort education entries by qualification level priority (S3 -> S2 -> S1 -> D3 -> SMA/SMK/MAN -> Basic)
-  const degreeRank = (d: string) => {
-    if (d.includes('S3') || d.includes('Ph.D')) return 1;
-    if (d.includes('S2') || d.includes('Master')) return 2;
-    if (d.includes('S1') || d.includes('Bachelor')) return 3;
-    if (d.includes('D3') || d.includes('Diploma')) return 4;
-    if (d.includes('SMA') || d.includes('SMK') || d.includes('MAN')) return 5;
-    return 6;
-  };
-
-  return results.sort((a, b) => degreeRank(a.degree || '') - degreeRank(b.degree || ''));
+  return sortEducations(results);
 }
 
+const monthsBetween = (start: number | null, end: number | null, current: boolean): number => {
+  const now = new Date().getFullYear();
+  const s = start || (end ? end - 1 : now - 1);
+  const e = current ? now : end || s;
+  return Math.max(3, Math.round((e - s) * 12) || 12);
+};
+
+const projectEntryToExperience = (p: ProjectEntry): WorkExperienceDTO => ({
+  company: p.name,
+  role: p.subtitle || 'Project / Research',
+  start_date: p.start_year ? `${p.start_year}-01` : '',
+  end_date: p.is_current ? 'Present' : p.end_year ? `${p.end_year}-12` : '',
+  is_current: p.is_current,
+  duration_months: monthsBetween(p.start_year, p.end_year, p.is_current),
+  description: p.description || p.subtitle || `Proyek: ${p.name}.`,
+  projects: p.tech.length > 0 ? p.tech : [p.name],
+  technologies: p.tech,
+});
+
+/**
+ * Structured work-experience list. Uses a real WORK EXPERIENCE section when
+ * present; otherwise derives entries from the PROJECTS section so a
+ * project-centric CV still yields a proper list (never a single blob entry).
+ */
 export function extractMultipleWorkExperiences(fullText: string): WorkExperienceDTO[] {
   if (!fullText) return [];
 
   const sections = extractCVSections(fullText);
-  const expText = (sections.experience && sections.experience.trim().length > 50) 
-    ? sections.experience 
-    : ((sections.projects && sections.projects.trim().length > 50) ? sections.projects : fullText);
+  const expText =
+    sections.experience && sections.experience.trim().length > 50 ? sections.experience : '';
+
+  if (!expText) {
+    const projectEntries = parseProjectEntries(fullText);
+    return projectEntries.map(projectEntryToExperience);
+  }
 
   const results: WorkExperienceDTO[] = [];
-  const lines = expText.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
+  const lines = expText
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
 
-  let currentBlock: string[] = [];
+  const isDateLine = (l: string) =>
+    /((?:19|20)\d{2})\s*[–—\-s/d]+\s*((?:19|20)\d{2}|Present|Sekarang|Saat\s*Ini|Now)/i.test(l) ||
+    /\b(?:Jan|Feb|Mar|Apr|Mei|May|Jun|Jul|Aug(?:ust)?|Agu|Sep|Okt|Oct|Nov|Des|Dec)[a-z]*\.?\s*(?:19|20)\d{2}/i.test(l);
+
   const blocks: string[][] = [];
-
+  let block: string[] = [];
   for (const line of lines) {
-    if (/(19\d{2}|20\d{2})\s*[\-—–\u2013\u2014s\/d]*\s*(19\d{2}|20\d{2}|Present|Sekarang|Saat Ini)?/i.test(line)) {
-      if (currentBlock.length > 0) {
-        blocks.push(currentBlock);
-        currentBlock = [];
-      }
+    if (isDateLine(line) && block.some((b) => !isDateLine(b))) {
+      block.push(line);
+      blocks.push(block);
+      block = [];
+      continue;
     }
-    currentBlock.push(line);
+    block.push(line);
   }
-  if (currentBlock.length > 0) blocks.push(currentBlock);
+  if (block.length) blocks.push(block);
 
-  for (const block of blocks) {
-    const blockText = block.join('\n');
-    const yearsMatch = blockText.match(/(19\d{2}|20\d{2})\s*[\-—–\u2013\u2014s\/d]*\s*(19\d{2}|20\d{2}|Present|Sekarang|Saat Ini)?/i);
-
-    let startDate = '2021-01';
-    let endDate = 'Present';
-    let durationMonths = 12;
-
-    if (yearsMatch) {
-      const startYear = parseInt(yearsMatch[1], 10);
-      startDate = `${startYear}-01`;
-      if (yearsMatch[2] && /\d{4}/.test(yearsMatch[2])) {
-        const endYear = parseInt(yearsMatch[2], 10);
-        endDate = `${endYear}-12`;
-        durationMonths = Math.max(6, (endYear - startYear) * 12);
-      } else {
+  for (const b of blocks) {
+    const text = b.join('\n');
+    const ym = text.match(
+      /((?:19|20)\d{2})\s*[–—\-s/d]*\s*((?:19|20)\d{2}|Present|Sekarang|Saat\s*Ini|Now)?/i
+    );
+    let startDate = '';
+    let endDate = '';
+    let isCurrent = false;
+    let months = 12;
+    if (ym) {
+      const sy = parseInt(ym[1], 10);
+      startDate = `${sy}-01`;
+      if (ym[2] && /\d{4}/.test(ym[2])) {
+        const ey = parseInt(ym[2], 10);
+        endDate = `${ey}-12`;
+        months = Math.max(3, (ey - sy) * 12);
+      } else if (ym[2]) {
+        isCurrent = true;
         endDate = 'Present';
-        durationMonths = Math.max(12, (2026 - startYear) * 12);
+        months = Math.max(6, (new Date().getFullYear() - sy) * 12);
+      } else {
+        endDate = `${sy}-12`;
+        months = 12;
       }
     }
+
+    const headerLines = b.filter((l) => !isDateLine(l) && !/^[•\-*·]/.test(l));
+    const bulletLines = b
+      .filter((l) => /^[•\-*·]/.test(l))
+      .map((l) => l.replace(/^[•\-*·]\s*/, ''));
 
     let role = '';
     let company = '';
-    const descLines: string[] = [];
-
-    for (const line of block) {
-      if (/(19\d{2}|20\d{2})/.test(line) && line.length < 35) continue;
-
-      if (line.includes(' - ') || line.includes(' — ') || line.includes(' | ')) {
-        const parts = line.split(/[\-—|]/).map((p) => p.trim());
-        if (parts.length >= 2) {
-          role = role || parts[0];
-          company = company || parts[1];
-          continue;
-        }
-      }
-
-      if (!role) {
-        role = line;
-      } else if (!company) {
-        company = line;
-      } else {
-        descLines.push(line);
-      }
+    const header = headerLines[0] || '';
+    if (/\s[–—|]\s|\sat\s|\s@\s|,\s/.test(header)) {
+      const parts = header.split(/\s[–—|@]\s|\sat\s|,\s/).map((p) => p.trim());
+      role = parts[0] || '';
+      company = parts[1] || '';
+    } else {
+      role = header;
+      company = headerLines[1] || '';
     }
 
-    if (company || role) {
+    const descText = [...headerLines.slice(company ? 2 : 1), ...bulletLines].join(' ').trim();
+
+    if (role || company) {
       results.push({
-        company: company || role || 'Perusahaan / Organisasi',
-        role: role || 'Spesialis / Staf',
+        company: company || role,
+        role: role || 'Staf',
         start_date: startDate,
         end_date: endDate,
-        is_current: endDate === 'Present',
-        duration_months: durationMonths,
-        description: descLines.join(' ') || `Tanggung jawab dan aktivitas profesional pada ${company || role}.`,
+        is_current: isCurrent,
+        duration_months: months,
+        description: descText || `Aktivitas profesional pada ${company || role}.`,
         projects: [],
       });
     }
@@ -320,27 +739,23 @@ export function extractMultipleWorkExperiences(fullText: string): WorkExperience
   return results;
 }
 
-export function extractProjectsAndAwards(fullText: string): { projects: string[]; certifications: string[] } {
+export function extractProjectsAndAwards(fullText: string): {
+  projects: string[];
+  certifications: string[];
+} {
   if (!fullText) return { projects: [], certifications: [] };
 
   const sections = extractCVSections(fullText);
+  const projects = parseProjectEntries(fullText)
+    .map((p) => (p.subtitle ? `${p.name} — ${p.subtitle}` : p.name))
+    .filter((v, i, a) => v.length > 2 && a.indexOf(v) === i);
 
-  const projects: string[] = [];
   const certifications: string[] = [];
-
-  if (sections.projects) {
-    const pLines = sections.projects.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 2);
-    for (const line of pLines) {
-      if (!projects.includes(line) && line.length < 120) {
-        projects.push(line);
-      }
-    }
-  }
-
-  if (sections.awards) {
-    const cLines = sections.awards.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 2);
-    for (const line of cLines) {
-      if (!certifications.includes(line) && line.length < 100) {
+  const certSrc = [sections.awards, sections.publications].filter(Boolean).join('\n');
+  if (certSrc) {
+    for (const raw of certSrc.split(/\r?\n/)) {
+      const line = raw.replace(/^[•\-*·▪]\s*/, '').trim();
+      if (line.length > 4 && line.length < 200 && !certifications.includes(line)) {
         certifications.push(line);
       }
     }
@@ -487,34 +902,36 @@ export function extractPortfoliosAndReferences(fullText: string): {
   const portfolios: { title: string; url?: string; description?: string }[] = [];
   const references: { name: string; role?: string; company?: string; contact_info?: string }[] = [];
 
-  // 1. Detect Portfolio URLs in text (github, figma, behance, dribbble, linkedin, drive, etc.)
-  const urlRegex = /(https?:\/\/[^\s<">]+|github\.com\/[^\s<">]+|gitlab\.com\/[^\s<">]+|figma\.com\/[^\s<">]+|behance\.net\/[^\s<">]+|dribbble\.com\/[^\s<">]+|drive\.google\.com\/[^\s<">]+)/gi;
+  // 1. Detect portfolio / profile / live-demo URLs (with or without protocol).
+  const urlRegex =
+    /(https?:\/\/[^\s<">)]+|(?:www\.)?(?:github|gitlab|linkedin|figma|behance|dribbble|medium|kaggle|huggingface|colab\.research\.google|drive\.google|notion|dev\.to|hashnode|gitbook)\.[a-z]+\/[^\s<">)]+|[a-z0-9][a-z0-9-]*\.(?:vercel\.app|netlify\.app|web\.app|fly\.dev|pages\.dev|github\.io|herokuapp\.com|streamlit\.app|onrender\.com)(?:\/[^\s<">)]*)?|[a-z0-9][a-z0-9-]{2,}\.(?:com|dev|io|ai|id|net|app|tech|me)\/[^\s<">)]+)/gi;
   const urlMatches = Array.from(fullText.matchAll(urlRegex));
   const seenUrls = new Set<string>();
 
   for (const match of urlMatches) {
-    let url = match[0].trim().replace(/[\).,;]+$/, '');
-    if (!url.startsWith('http')) {
-      url = 'https://' + url;
-    }
+    let url = match[0].trim().replace(/[).,;:]+$/, '');
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
-    if (seenUrls.has(url.toLowerCase())) continue;
-    seenUrls.add(url.toLowerCase());
+    const key = url.toLowerCase().replace(/\/$/, '');
+    if (seenUrls.has(key)) continue;
+    seenUrls.add(key);
 
-    let title = 'Portofolio Project';
-    if (url.includes('github.com')) title = 'GitHub Repository / Code Profile';
-    else if (url.includes('gitlab.com')) title = 'GitLab Repository';
-    else if (url.includes('figma.com')) title = 'Figma Design Prototype';
-    else if (url.includes('behance.net')) title = 'Behance Design Showcase';
-    else if (url.includes('dribbble.com')) title = 'Dribbble Shots Portfolio';
-    else if (url.includes('drive.google.com')) title = 'Google Drive Portfolio Document';
-    else if (url.includes('linkedin.com')) title = 'LinkedIn Executive Profile';
+    let title = 'Portofolio / Tautan';
+    if (/github\.com/i.test(url)) title = 'GitHub';
+    else if (/gitlab\.com/i.test(url)) title = 'GitLab';
+    else if (/linkedin\.com/i.test(url)) title = 'LinkedIn';
+    else if (/figma\.com/i.test(url)) title = 'Figma';
+    else if (/behance\.net/i.test(url)) title = 'Behance';
+    else if (/dribbble\.com/i.test(url)) title = 'Dribbble';
+    else if (/kaggle\.com/i.test(url)) title = 'Kaggle';
+    else if (/huggingface\.co/i.test(url)) title = 'Hugging Face';
+    else if (/medium\.com|dev\.to|hashnode|hashnode\.dev/i.test(url)) title = 'Artikel / Blog';
+    else if (/drive\.google|colab\.research/i.test(url)) title = 'Google Drive / Colab';
+    else if (/(vercel|netlify|web|fly|pages|github\.io|herokuapp|streamlit|onrender)\.(app|dev|io|com)/i.test(url))
+      title = 'Live Demo';
+    else if (/github\.io/i.test(url)) title = 'Live Demo';
 
-    portfolios.push({
-      title,
-      url,
-      description: `Tautan terverifikasi dari CV (${url})`,
-    });
+    portfolios.push({ title, url, description: `Tautan dari CV: ${url}` });
   }
 
   // 2. Strict Detect References Section (HANYA jika ada seksi REFERENSI/REFERENCES eksplisit)
