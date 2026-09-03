@@ -110,6 +110,12 @@ export default function HRDashboardPage() {
     setAuditLogs((prev) => [newLog, ...prev]);
   };
 
+  const handleClearAuditLogs = () => {
+    setAuditLogs([]);
+    if (typeof window !== 'undefined') localStorage.setItem('cv_ats_audit_logs', '[]');
+    addToast('info', 'Audit log dibersihkan', 'Seluruh catatan aktivitas dihapus.');
+  };
+
   const confirmResetData = () => {
     setJobs(INITIAL_JOBS);
     setApplications(INITIAL_APPLICATIONS);
@@ -457,6 +463,7 @@ export default function HRDashboardPage() {
           isOpen={isAuditLogModalOpen}
           onClose={() => setIsAuditLogModalOpen(false)}
           logs={auditLogs}
+          onClearLogs={handleClearAuditLogs}
         />
 
         <CandidateDetailDrawer
