@@ -2,6 +2,8 @@
 node_modules/
 .venv/
 venv/
+models/
+apps/ai-service/models/
 __pycache__/
 *.pyc
 *.pyo

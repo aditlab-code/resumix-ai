@@ -1,13 +1,20 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
+from typing import Any, Dict, List, Optional
 from app.schemas.cv_schema import JobFitScoreBreakdown
 from app.services.pdf_extractor import extract_pdf_text
 from app.services.skill_normalizer import normalize_skill_name
 from app.services.scoring_service import compute_job_fit_score
 from app.services.llm_provider import function_extract_via_groq
+from app.services.embedding_service import (
+    DEFAULT_EMBEDDING_MODEL_NAME,
+    generate_embedding,
+    prepare_candidate_profile_text,
+    compute_cosine_similarity,
+)
 
 app = FastAPI(
     title="CV ATS AI Microservice",
-    description="Microservice for PDF text extraction (PyMuPDF), zero-text rejection rule, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, and job-fit scoring",
+    description="Microservice for PDF text extraction (PyMuPDF), zero-text rejection rule, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, multilingual embeddings, and job-fit scoring",
     version="1.0.0",
 )
 
@@ -20,7 +27,8 @@ def health_check():
         "status": "ok",
         "service": "ai-service",
         "provider": "groq",
-        "model": "llama-3.1-8b-instant"
+        "model": "llama-3.1-8b-instant",
+        "embedding_model": DEFAULT_EMBEDDING_MODEL_NAME,
     }
 
 
@@ -85,6 +93,30 @@ def normalize_skills_endpoint(skills: list[str] = Body(...)):
     return {"skills": skills, "normalized_skills": normalized}
 
 
+@app.post("/v1/cv/generate-embedding")
+def generate_embedding_endpoint(
+    text: Optional[str] = Body(default=None),
+    cv_extraction: Optional[Dict[str, Any]] = Body(default=None),
+):
+    """Generate 384-dimensional vector embedding using sentence-transformers (multilingual: id/en)."""
+    if text and text.strip():
+        target_text = text.strip()
+    elif cv_extraction:
+        target_text = prepare_candidate_profile_text(cv_extraction)
+    else:
+        raise HTTPException(status_code=400, detail="Harap sediakan 'text' atau 'cv_extraction'.")
+
+    try:
+        embedding = generate_embedding(target_text)
+        return {
+            "model": DEFAULT_EMBEDDING_MODEL_NAME,
+            "dimensions": len(embedding),
+            "embedding": embedding,
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Gagal membuat embedding: {str(exc)}")
+
+
 @app.post("/v1/cv/calculate-score", response_model=JobFitScoreBreakdown)
 def calculate_score_endpoint(
     candidate_skills: list[str] = Body(...),
@@ -93,12 +125,19 @@ def calculate_score_endpoint(
     preferred_skills: list[str] | None = Body(default=None),
     required_experience_months: int = Body(default=24),
     semantic_similarity: float = Body(default=0.80),
+    candidate_embedding: Optional[List[float]] = Body(default=None),
+    job_embedding: Optional[List[float]] = Body(default=None),
 ):
+    computed_similarity = semantic_similarity
+    if candidate_embedding and job_embedding and len(candidate_embedding) == len(job_embedding):
+        computed_similarity = compute_cosine_similarity(candidate_embedding, job_embedding)
+
     return compute_job_fit_score(
         candidate_skills=candidate_skills,
         candidate_experience_months=candidate_experience_months,
         mandatory_skills=mandatory_skills,
         preferred_skills=preferred_skills,
         required_experience_months=required_experience_months,
-        semantic_similarity=semantic_similarity,
+        semantic_similarity=computed_similarity,
     )
+

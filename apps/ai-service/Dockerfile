@@ -24,6 +24,10 @@ RUN useradd -m -u 1000 appuser
 COPY requirements.txt .
 RUN pip install --default-timeout=1000 --retries 10 --no-cache-dir -r requirements.txt
 
+# Pre-download multilingual embedding model into Docker image layer
+ENV MODEL_CACHE_DIR=/app/models
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', cache_folder='/app/models')"
+
 COPY . .
 RUN chown -R appuser:appuser /app
 
