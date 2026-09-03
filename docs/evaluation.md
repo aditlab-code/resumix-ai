@@ -18,7 +18,7 @@ Dokumen ini berisi pedoman evaluasi, metrik kinerja, dan hasil pengujian **200 P
 
 ## 2. Hasil Benchmark Evaluasi 200 PDF CV Synthetic Dataset (v2)
 
-Pengujian komprehensif dilakukan menggunakan **200 PDF CV sintetis** ([tests/benchmark_dataset_v2](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/apps/ai-service/tests/benchmark_dataset_v2)) dengan data ground truth ([metadata_ground_truth.csv](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/apps/ai-service/tests/benchmark_dataset_v2/metadata_ground_truth.csv)).
+Pengujian komprehensif dilakukan menggunakan **200 PDF CV sintetis** ([tests/benchmark_dataset_v2](../apps/ai-service/tests/benchmark_dataset_v2)) dengan data ground truth ([metadata_ground_truth.csv](../apps/ai-service/tests/benchmark_dataset_v2/metadata_ground_truth.csv)).
 
 ### Summary Statistics
 
@@ -80,5 +80,5 @@ Pengujian komprehensif dilakukan menggunakan **200 PDF CV sintetis** ([tests/ben
 
 ## 6. Laporan Lengkap & Script Test
 
-* Laporan evaluasi visual komprehensif: [docs/benchmark_report.md](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/benchmark_report.md)
-* Script pengujian benchmark otomatis: [apps/ai-service/tests/run_benchmark_suite.py](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/apps/ai-service/tests/run_benchmark_suite.py)
+* Laporan evaluasi visual komprehensif: [docs/benchmark_report.md](./benchmark_report.md)
+* Script pengujian benchmark otomatis: [apps/ai-service/tests/run_benchmark_suite.py](../apps/ai-service/tests/run_benchmark_suite.py)

@@ -387,7 +387,7 @@ Pipeline AI diuji secara berkala menggunakan *CV Test Corpus* anonim untuk memas
 | **Textless Rejection Latency** | Waktu deteksi dan penolakan PDF scanned/tanpa layer teks. | $< 0.5\text{ detik}$ |
 | **Manual Correction Rate** | Persentase data hasil ekstraksi yang memerlukan koreksi manual oleh HR. | $< 20\%$ |
 
-Dokumentasi detail mengenai corpus pengujian dapat diakses pada [docs/evaluation.md](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/evaluation.md).
+Dokumentasi detail mengenai corpus pengujian dapat diakses pada [docs/evaluation.md](docs/evaluation.md).
 
 ---
 
@@ -423,10 +423,10 @@ docker compose -f docker-compose.dev.yml up --build
 
 Untuk informasi teknis yang lebih terperinci, silakan merujuk pada dokumen di folder `docs/`:
 
-- [Spesifikasi Arsitektur Sistem](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/architecture.md)
-- [Dokumen Analisis & Brainstorming Pipeline RAG/ATS](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/brainstorming-rag-pipeline.md)
-- [Spesifikasi Front-End & Desain UX](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/front-end-pipeline.md)
-- [Spesifikasi Kontrak REST API v1](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/api.md)
-- [Formulasi & Spesifikasi Job-Fit Scoring](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/scoring.md)
-- [Kebijakan Keamanan Data, PII, & RBAC](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/security.md)
-- [Laporan Evaluasi Metrik & Corpus AI](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/evaluation.md)
+- [Spesifikasi Arsitektur Sistem](docs/architecture.md)
+- [Dokumen Analisis & Brainstorming Pipeline RAG/ATS](docs/brainstorming-rag-pipeline.md)
+- [Spesifikasi Front-End & Desain UX](docs/front-end-pipeline.md)
+- [Spesifikasi Kontrak REST API v1](docs/api.md)
+- [Formulasi & Spesifikasi Job-Fit Scoring](docs/scoring.md)
+- [Kebijakan Keamanan Data, PII, & RBAC](docs/security.md)
+- [Laporan Evaluasi Metrik & Corpus AI](docs/evaluation.md)
