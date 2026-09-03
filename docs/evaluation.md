@@ -1,6 +1,6 @@
 # AI Extraction, Robust Scoring & Benchmark Evaluation
 
-Dokumen ini berisi pedoman evaluasi, metrik kinerja, dan hasil pengujian **200 PDF CV Synthetic Benchmark Dataset (v2)** pada monorepo **CV ATS Pipeline**.
+Dokumen ini berisi pedoman evaluasi, metrik kinerja, dan hasil pengujian **200 PDF CV Synthetic Benchmark Dataset (v2)** pada monorepo **Resumix AI**.
 
 ---
 

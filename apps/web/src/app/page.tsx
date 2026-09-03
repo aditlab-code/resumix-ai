@@ -12,6 +12,7 @@ import { ScoreBreakdownCard } from '@/components/scoring/score-breakdown';
 import { JobsManagerView } from '@/components/dashboard/jobs-manager-view';
 import { GlobalCandidatesView } from '@/components/dashboard/global-candidates-view';
 import { PipelineSettingsView } from '@/components/dashboard/pipeline-settings-view';
+import { DocumentationView } from '@/components/dashboard/documentation-view';
 
 import { CvUploadModal } from '@/components/dashboard/cv-upload-modal';
 import { JobFormModal } from '@/components/dashboard/job-form-modal';
@@ -547,6 +548,10 @@ export default function HRDashboardPage() {
           <PipelineSettingsView
             onSaveSettings={(msg) => addToast('success', 'Pengaturan disimpan', msg)}
           />
+        )}
+
+        {activeView === 'docs' && (
+          <DocumentationView />
         )}
 
         <CvUploadModal

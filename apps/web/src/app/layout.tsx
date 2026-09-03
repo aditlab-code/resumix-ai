@@ -2,8 +2,8 @@ import React from 'react';
 import './globals.css';
 
 export const metadata = {
-  title: 'CV ATS Pipeline',
-  description: 'AI-Assisted Candidate Screening & Job-Fit Scoring',
+  title: 'Resumix AI | Enterprise Candidate Intelligence',
+  description: 'AI-Assisted Candidate Screening & Dual-Vector ATS',
 };
 
 export default function RootLayout({

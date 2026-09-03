@@ -13,7 +13,7 @@ from app.services.embedding_service import (
 )
 
 app = FastAPI(
-    title="CV ATS AI Microservice",
+    title="Resumix AI Microservice",
     description="Microservice for PDF text extraction (PyMuPDF), zero-text rejection rule, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, multilingual embeddings, and job-fit scoring",
     version="1.0.0",
 )

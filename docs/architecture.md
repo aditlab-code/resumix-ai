@@ -1,6 +1,6 @@
-# Architecture Specification: CV ATS Pipeline
+# Architecture Specification: Resumix AI
 
-Dokumen ini menjelaskan arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database, serta standar teknis untuk proyek **CV ATS Pipeline**.
+Dokumen ini menjelaskan arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database, serta standar teknis untuk proyek **Resumix AI** (Enterprise Candidate Intelligence & Dual-Vector ATS).
 
 ---
 

@@ -8,9 +8,12 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@cv-ats/contracts'],
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'mermaid'];
+    }
     return config;
   },
 };

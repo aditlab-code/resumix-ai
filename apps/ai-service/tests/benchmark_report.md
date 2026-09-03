@@ -1,6 +1,6 @@
 # Laporan Evaluasi Benchmark - 200 PDF CV Synthetic Dataset (v2)
 
-Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pada monorepo **CV ATS Pipeline** menggunakan **200 dokumen PDF sintetis** bervariasi layout dan domain.
+Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pada monorepo **Resumix AI** menggunakan **200 dokumen PDF sintetis** bervariasi layout dan domain.
 
 ---
 

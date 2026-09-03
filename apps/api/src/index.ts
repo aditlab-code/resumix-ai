@@ -25,7 +25,7 @@ try {
 // Root API info
 app.get('/', (req, res) => {
   res.json({
-    service: 'CV ATS Core API',
+    service: 'Resumix AI Core API',
     version: '1.0.0',
     status: 'online',
     endpoints: {
