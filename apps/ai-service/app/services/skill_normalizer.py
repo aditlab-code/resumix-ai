@@ -1,6 +1,13 @@
 from typing import Dict, List, Set, Union
 
 
+def normalize_skill_name(raw_name: str) -> str:
+    """Normalize skill name to lowercase stripped string."""
+    if not raw_name or not isinstance(raw_name, str):
+        return ""
+    return raw_name.strip().lower()
+
+
 def match_single_skill(candidate_skills_lower: Set[str], required_skill: str, skill_equivalents: Dict[str, List[str]] | None = None) -> bool:
     """Check if a required skill or any of its LLM-extracted equivalents match the candidate's normalized skills."""
     if not required_skill or not required_skill.strip():

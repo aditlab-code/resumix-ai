@@ -45,3 +45,7 @@ yarn-error.log*
 # Test & Coverage
 coverage/
 .pytest_cache/
+*.pdf
+apps/ai-service/tests/benchmark_dataset/
+apps/ai-service/tests/benchmark_dataset_v2/
+apps/ai-service/tests/benchmark_results.json
