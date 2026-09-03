@@ -60,19 +60,19 @@ export const Overlay: React.FC<OverlayProps> = ({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex',
-        isSide ? 'justify-end' : 'items-center justify-center p-4 overflow-y-auto'
+        'fixed inset-0 z-50',
+        !isSide && 'flex items-center justify-center p-4 overflow-y-auto'
       )}
     >
       <div className="fixed inset-0 bg-ink/40" onClick={onClose} />
 
       <div
         className={cn(
-          'relative z-10 bg-surface flex flex-col',
+          'z-10 bg-surface flex flex-col',
           isSide
-            ? 'h-full w-screen max-w-3xl border-l border-line'
+            ? 'fixed inset-y-0 right-0 w-full max-w-3xl border-l border-line'
             : cn(
-                'w-full my-8 rounded overflow-hidden border border-line max-h-[calc(100vh-4rem)]',
+                'relative w-full my-8 rounded overflow-hidden border border-line max-h-[calc(100vh-4rem)]',
                 centerSize[size]
               )
         )}
