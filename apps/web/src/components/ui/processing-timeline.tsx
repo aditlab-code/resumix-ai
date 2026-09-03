@@ -29,7 +29,7 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
   const currentIndex = stepIndex(currentStatus);
 
   return (
-    <div className="bg-canvas rounded p-4 space-y-4">
+    <div className="bg-surface rounded p-4 space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="uppercase tracking-wider text-ink-subtle">Alur Pemrosesan Dokumen</h4>
         <span className="text-xs font-mono text-ink-muted">

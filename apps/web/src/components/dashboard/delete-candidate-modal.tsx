@@ -65,7 +65,7 @@ export const DeleteCandidateModal: React.FC<DeleteCandidateModalProps> = ({
 
         <div className="space-y-1">
           <label className="block font-bold text-ink-muted">
-            Ketik <code className="bg-canvas px-1 rounded font-mono text-ink">{application.candidate_name}</code>{' '}
+            Ketik <code className="bg-surface px-1 rounded font-mono text-ink">{application.candidate_name}</code>{' '}
             untuk konfirmasi
           </label>
           <Input

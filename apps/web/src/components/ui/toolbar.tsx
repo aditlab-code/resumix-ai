@@ -10,10 +10,7 @@ export const Toolbar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => (
   <div
-    className={cn(
-      'flex flex-col sm:flex-row sm:items-center gap-2 bg-surface rounded p-2',
-      className
-    )}
+    className={cn('flex flex-col sm:flex-row sm:items-center gap-2', className)}
     {...props}
   >
     {children}
@@ -34,7 +31,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     <input
       type="text"
       className={cn(
-        'w-full rounded bg-canvas pl-8 pr-3 py-2 text-xs text-ink placeholder:text-ink-subtle border border-line focus:border-accent transition-colors',
+        'w-full rounded bg-surface pl-8 pr-3 py-2 text-xs text-ink placeholder:text-ink-subtle border border-line focus:border-accent transition-colors',
         className
       )}
       {...props}
@@ -49,7 +46,7 @@ export const FilterSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement
 }) => (
   <select
     className={cn(
-      'rounded bg-canvas px-2.5 py-2 text-xs font-semibold text-ink-muted border border-line focus:border-accent cursor-pointer transition-colors',
+      'rounded bg-surface px-2.5 py-2 text-xs font-semibold text-ink-muted border border-line focus:border-accent cursor-pointer transition-colors',
       className
     )}
     {...props}

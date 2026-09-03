@@ -28,7 +28,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({ isOpen, onClose, l
     ) : (
       <div className="space-y-2">
         {logs.map((log) => (
-          <div key={log.id} className="bg-canvas rounded p-3 space-y-1 text-xs">
+          <div key={log.id} className="bg-surface rounded p-3 space-y-1 text-xs">
             <div className="flex justify-between items-center text-[11px]">
               <span className="font-bold text-accent flex items-center gap-1.5">
                 <ShieldAlert className="w-3.5 h-3.5" />

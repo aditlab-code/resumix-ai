@@ -30,7 +30,7 @@ const EntryCard: React.FC<{
   onDelete: () => void;
   children: React.ReactNode;
 }> = ({ label, onDelete, children }) => (
-  <div className="bg-canvas rounded p-3 space-y-2.5">
+  <div className="bg-surface rounded p-3 space-y-2.5">
     <div className="flex justify-between items-center border-b border-line pb-1.5">
       <span className="font-mono text-[10px] font-bold text-ink-subtle uppercase">{label}</span>
       <button
@@ -239,7 +239,7 @@ export const ExtractionReviewModal: React.FC<ExtractionReviewModalProps> = ({
       }
     >
       <form id="extraction-form" onSubmit={handleSave} className="space-y-5 text-xs">
-        <div className="bg-canvas rounded p-3 space-y-3">
+        <div className="bg-surface rounded p-3 space-y-3">
           <SectionLabel>Kontak & ringkasan</SectionLabel>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Field label="Nama lengkap" required>

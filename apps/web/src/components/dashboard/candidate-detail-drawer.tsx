@@ -140,7 +140,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
         items={TABS}
         active={activeTab}
         onChange={setActiveTab}
-        className="sticky top-0 bg-surface z-10"
+        className="sticky top-0 bg-canvas z-10"
       />
 
       {activeTab === 'profile' && <CandidateProfile extraction={application.cv_extraction} />}

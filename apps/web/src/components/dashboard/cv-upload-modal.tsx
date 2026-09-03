@@ -441,7 +441,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
             className={`rounded p-8 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-3 border border-dashed ${
-              isDragOver ? 'border-accent bg-accent-soft' : 'border-line bg-canvas hover:border-accent'
+              isDragOver ? 'border-accent bg-accent-soft' : 'border-line bg-surface hover:border-accent'
             }`}
           >
             <input
@@ -463,9 +463,9 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
 
         {file && !isProcessing && (
           <div className="space-y-3">
-            <div className="bg-canvas rounded p-3 flex items-center justify-between gap-3">
+            <div className="bg-surface rounded p-3 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-9 h-9 rounded bg-surface flex items-center justify-center text-ink-muted shrink-0">
+                <div className="w-9 h-9 rounded bg-canvas flex items-center justify-center text-ink-muted shrink-0">
                   <FileText className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">

@@ -22,10 +22,10 @@ interface CandidateProfileProps {
 
 export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }) => (
   <div className="space-y-4">
-    <Card className="bg-canvas space-y-3">
+    <Card className="space-y-3">
       <div className="flex items-center justify-between gap-2">
         <h3>{extraction.full_name || 'Nama tidak ditemukan'}</h3>
-        <span className="text-xs font-semibold px-2 py-0.5 bg-surface text-ink-muted rounded">
+        <span className="text-xs font-semibold px-2 py-0.5 bg-canvas text-ink-muted rounded">
           {extraction.total_experience_months || 0} bln
         </span>
       </div>

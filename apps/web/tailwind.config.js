@@ -8,9 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#f4f5f7',
+        canvas: '#e9eaee',
         surface: '#ffffff',
-        line: '#e4e6eb',
+        line: '#d9dce2',
         ink: {
           DEFAULT: '#1a1c1e',
           muted: '#5f6570',

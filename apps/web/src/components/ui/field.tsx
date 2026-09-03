@@ -4,7 +4,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 const controlBase =
-  'w-full rounded bg-canvas px-3 py-2 text-xs text-ink placeholder:text-ink-subtle border border-line focus:border-accent transition-colors disabled:opacity-50';
+  'w-full rounded bg-surface px-3 py-2 text-xs text-ink placeholder:text-ink-subtle border border-line focus:border-accent transition-colors disabled:opacity-50';
 
 interface FieldProps {
   label?: React.ReactNode;
