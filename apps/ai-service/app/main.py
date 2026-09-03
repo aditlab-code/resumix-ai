@@ -7,7 +7,7 @@ from app.services.llm_provider import function_extract_via_groq
 
 app = FastAPI(
     title="CV ATS AI Microservice",
-    description="Microservice for PDF text extraction, OCR fallback, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, and job-fit scoring",
+    description="Microservice for PDF text extraction (PyMuPDF), zero-text rejection rule, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, and job-fit scoring",
     version="1.0.0",
 )
 
@@ -44,7 +44,17 @@ async def extract_text_endpoint(file: UploadFile = File(...)):
     try:
         raw_text, metadata = extract_pdf_text(file_bytes)
     except ValueError as val_err:
-        raise HTTPException(status_code=400, detail=str(val_err))
+        err_msg = str(val_err)
+        if err_msg.startswith("NO_TEXT_LAYER:"):
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "code": "NO_TEXT_LAYER",
+                    "message": "Berkas PDF tidak memiliki layer teks yang dapat dibaca. Harap unggah PDF asli berbasis teks.",
+                    "parse_status_recommendation": "needs_review"
+                }
+            )
+        raise HTTPException(status_code=400, detail=err_msg)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Gagal mengekstrak teks PDF: {str(exc)}")
 

@@ -1,6 +1,6 @@
 # CV ATS Pipeline - Enterprise Candidate Screening System
 
-Sistem Applicant Tracking System (ATS) modern berbasis arsitektur mikroservis terpisah (decoupled monorepo) yang dirancang untuk pengolahan CV kandidat secara otomatis. Sistem ini menggabungkan ekstraksi teks PDF, OCR fallback untuk dokumen hasil pemindaian (scan), ekstraksi terstruktur berbantuan LLM dengan skema Pydantic, normalisasi skill deterministik, pencarian vektor via `pgvector`, serta engine perhitungan *job-fit score* yang transparan dan dapat diaudit.
+Sistem Applicant Tracking System (ATS) modern berbasis arsitektur mikroservis terpisah (decoupled monorepo) yang dirancang untuk pengolahan CV kandidat secara otomatis. Sistem ini menggabungkan ekstraksi teks PDF berbasis PyMuPDF, penolakan ketat PDF tanpa layer teks (*zero-text rejection rule*), ekstraksi terstruktur berbantuan LLM dengan skema Pydantic, normalisasi skill deterministik, pencarian vektor via `pgvector`, serta engine perhitungan *job-fit score* yang transparan dan dapat diaudit.
 
 ---
 
@@ -10,7 +10,7 @@ CV ATS Pipeline dirancang khusus sebagai **decision-support tool** bagi tim HR /
 
 ### Prinsip Utama Sistem
 - **Human-in-the-Loop**: AI tidak pernah membuat keputusan penolakan atau penerimaan kandidat secara independen. Sistem menyediakan skor kecocokan beserta rincian alasannya (*score breakdown*) agar HR dapat membuat keputusan yang terukur.
-- **Asynchronous Processing**: Pemrosesan dokumen CV (OCR, LLM, embedding) dilakukan secara asinkron menggunakan antrean (*job queue*) untuk mencegah *request timeout* dan memastikan respons API tetap di bawah 200 md.
+- **Asynchronous Processing**: Pemrosesan dokumen CV (LLM, embedding, scoring) dilakukan secara asinkron menggunakan antrean (*job queue*) untuk mencegah *request timeout* dan memastikan respons API tetap di bawah 200 md.
 - **Keamanan Data dan Privasi (PII)**: Berkas CV disimpan dalam penyimpanan objek privat (*private object storage*). Akses berkas oleh pengguna dilakukan melalui *Signed URL* berjangka waktu singkat.
 - **Scoring Fairness**: Proses penilaian kecocokan (*job-fit scoring*) murni didasarkan pada kompetensi teknis, kualifikasi skill wajib, dan durasi pengalaman kerja. Atribut sensitif seperti foto, usia, jenis kelamin, agama, lokasi detail, atau status pernikahan dilarang digunakan dalam scoring.
 
@@ -31,9 +31,8 @@ graph TD
     
     subgraph AI Processing Pipeline
         AIService -->|1. Text Extraction| PyMuPDF[PyMuPDF Parser]
-        PyMuPDF -->|Fallback check: <65% readable| OCR[Tesseract OCR Engine]
-        PyMuPDF -->|2. Structured Extraction| LLM[LLM Engine - Pydantic Schema]
-        OCR --> LLM
+        PyMuPDF -->|Reject if len==0| Reject[HTTP 400 NO_TEXT_LAYER -> needs_review]
+        AIService -->|2. Structured Extraction| LLM[LLM Engine - Pydantic Schema]
         LLM -->|3. Skill Normalization| Normalizer[Skill Normalizer Dictionary]
         LLM -->|4. Embedding Generation| Embedder[Sentence Transformers]
         LLM -->|5. Job-Fit Scoring| Scoring[Hybrid Scoring Engine]
@@ -48,9 +47,9 @@ graph TD
 | Layanan / Komponen | Tanggung Jawab Utama | Hal yang Dilarang |
 | :--- | :--- | :--- |
 | **Frontend (`apps/web`)** | UI/UX HR, form lowongan kerja, upload dropzone CV, visualisasi status proses, preview PDF, dan form review/edit hasil AI. | Memegang API key/secret internal, menghitung skor otoritatif, atau melakukan query langsung ke database. |
-| **Core API (`apps/api`)** | Auth/RBAC, manajemen domain (Jobs, Candidates, Applications), enkapsulasi signed URL storage, dan orkestrasi queue. | Melakukan parsing PDF, OCR, atau pemanggilan LLM langsung di dalam request handler HTTP sinkron. |
+| **Core API (`apps/api`)** | Auth/RBAC, manajemen domain (Jobs, Candidates, Applications), enkapsulasi signed URL storage, dan orkestrasi queue. | Melakukan parsing PDF atau pemanggilan LLM langsung di dalam request handler HTTP sinkron. |
 | **Job Worker (`apps/api/src/worker`)** | Mengambil job dari Redis Queue, mengelola mekanisme retry, memanggil AI Microservice, dan mengonfirmasi pembaruan status DB. | Menentukan keputusan rekrutmen kandidat secara otomatis tanpa pengawasan HR. |
-| **AI Service (`apps/ai-service`)** | Parsing PDF, OCR fallback, ekstraksi terstruktur LLM, validasi Pydantic, normalisasi skill, pembuatan embedding, dan perhitungan scoring. | Menulis atau mengubah data langsung ke PostgreSQL tanpa melalui kontrak API/Worker. |
+| **AI Service (`apps/ai-service`)** | Parsing PDF (PyMuPDF), zero-text rejection, ekstraksi terstruktur LLM, validasi Pydantic, normalisasi skill, pembuatan embedding, dan perhitungan scoring. | Menulis atau mengubah data langsung ke PostgreSQL tanpa melalui kontrak API/Worker. |
 | **PostgreSQL + `pgvector`** | Menyimpan data relasional ternormalisasi, indeks pencarian vektor kemiripan, audit log, dan tracking status pekerjaan. | Menyimpan berkas biner PDF CV secara langsung di dalam kolom tabel. |
 | **Storage (`Supabase Storage`)** | Menyimpan berkas CV asli secara privat dalam struktur terisolasi. | Menjadikan bucket berstatus publik tanpa proteksi signed URL. |
 
@@ -58,7 +57,7 @@ graph TD
 
 ## 3. Alur Kerja Ingestion dan Pemrosesan Asinkron
 
-Untuk menangani unggahan berkas CV dalam jumlah besar dan mengantisipasi latensi pemrosesan LLM/OCR, sistem menggunakan alur ingestion asinkron sebagai berikut:
+Untuk menangani unggahan berkas CV dalam jumlah besar dan mengantisipasi latensi pemrosesan LLM & embedding, sistem menggunakan alur ingestion asinkron sebagai berikut:
 
 ```text
 1. HR / Kandidat Mengunggah CV PDF via Web UI
@@ -72,8 +71,8 @@ Untuk menangani unggahan berkas CV dalam jumlah besar dan mengantisipasi latensi
 2. Pemrosesan Asinkron oleh Worker Engine
    └─> Worker mengambil job dari queue dan memperbarui parse_status menjadi 'processing'.
    └─> Worker memanggil FastAPI AI Service pada endpoint /v1/cv/process.
-   └─> FastAPI mengeksekusi ekstraksi teks PyMuPDF dan melakukan evaluasi kualitas teks.
-   └─> Jika kualitas teks terdeteksi buruk (< 65% readable characters atau word count < 40), OCR fallback (Tesseract) dipicu.
+   └─> FastAPI mengeksekusi ekstraksi teks PyMuPDF.
+   └─> Jika PDF tidak memiliki layer teks (len == 0), sistem menolak pemrosesan dengan error HTTP 400 NO_TEXT_LAYER dan menandai parse_status dokumen sebagai 'needs_review'.
    └─> Teks mentah dikirim ke LLM untuk ekstraksi terstruktur sesuai skema Pydantic.
    └─> Skill yang diekstrak melewati kamus normalisasi deterministik.
    └─> Model Sentence Transformers menghasilkan profile_embedding untuk kandidat.
@@ -121,23 +120,15 @@ cv-ats-pipeline/
 
 ## 5. Pipeline Pemrosesan AI dan LLM Extraction
 
-### A. Ekstraksi Teks PDF dan OCR Fallback
+### A. Ekstraksi Teks PDF dan Zero-Text Rejection Rule
 
-Ekstraksi awal menggunakan PyMuPDF karena latensinya yang sangat rendah (< 1 detik). Namun, untuk menangani CV berupa gambar/scan atau CV dengan pengodean font yang rusak, sistem menerapkan evaluasi kualitas teks sebelum memanggil LLM.
+Ekstraksi awal menggunakan PyMuPDF karena latensinya yang sangat rendah (< 1 detik). Untuk mengoptimalkan efisiensi sumber daya dan kecepatan pemrosesan, sistem tidak menggunakan fallback OCR. Jika PDF terdeteksi berupa gambar/scan tanpa layer teks (`len(raw_text.strip()) == 0`), sistem langsung menghentikan pipeline dengan error `NO_TEXT_LAYER` (HTTP 400) dan menandai status dokumen sebagai `needs_review` untuk tindakan tim HR.
 
-Kondisi pemicu OCR Fallback diimplementasikan dalam Python sebagai berikut:
+Aturan penolakan teks diimplementasikan dalam Python sebagai berikut:
 
 ```python
-def check_needs_ocr(raw_text: str, extracted_word_count: int, readable_char_ratio: float) -> bool:
-    """
-    Mengevaluasi apakah hasil ekstraksi teks PDF PyMuPDF memerlukan OCR fallback.
-    """
-    return (
-        len(raw_text.strip()) < 200
-        or extracted_word_count < 40
-        or readable_char_ratio < 0.65
-        or has_garbled_patterns(raw_text)
-    )
+if len(raw_text.strip()) == 0:
+    raise ValueError("NO_TEXT_LAYER: Berkas PDF tidak memiliki layer teks yang dapat dibaca. Harap unggah PDF asli berbasis teks.")
 ```
 
 Setiap proses ekstraksi menghasilkan metadata kualitas:
@@ -359,7 +350,7 @@ Seluruh endpoint REST API diakses melalui prefix `/api/v1`.
 
 ### Respon Asinkron Endpoint Upload
 
-Saat CV diunggah via `POST /api/v1/jobs/:jobId/applications`, API mengembalikan respons cepat tanpa menunggu proses LLM/OCR selesai:
+Saat CV diunggah via `POST /api/v1/jobs/:jobId/applications`, API mengembalikan respons cepat tanpa menunggu proses LLM selesai:
 
 ```json
 {
@@ -393,7 +384,7 @@ Pipeline AI diuji secara berkala menggunakan *CV Test Corpus* anonim untuk memas
 | **Contact Extraction Accuracy** | Akurasi ekstraksi field email dan nomor telepon terhadap data acuan (*ground truth*). | $\ge 98\%$ |
 | **Skill Extraction F1-Score** | *Harmonic mean* dari presisi dan recall ekstraksi skill kandidat. | $\ge 0.80$ |
 | **Digital PDF Latency** | Waktu pemrosesan total untuk PDF berbasis teks digital. | $< 10\text{ detik}$ |
-| **Scanned PDF (OCR) Latency** | Waktu pemrosesan total untuk PDF berbasis gambar/scan. | $< 45\text{ detik}$ |
+| **Textless Rejection Latency** | Waktu deteksi dan penolakan PDF scanned/tanpa layer teks. | $< 0.5\text{ detik}$ |
 | **Manual Correction Rate** | Persentase data hasil ekstraksi yang memerlukan koreksi manual oleh HR. | $< 20\%$ |
 
 Dokumentasi detail mengenai corpus pengujian dapat diakses pada [docs/evaluation.md](file:///home/aditlinux/Dokumen/GitFolder/Architecture-RAG-pipeline/docs/evaluation.md).

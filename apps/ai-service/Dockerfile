@@ -11,11 +11,8 @@ RUN pip install --default-timeout=1000 --retries 10 --no-cache-dir torch --extra
 
 WORKDIR /app
 
-# Install Tesseract OCR & system dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    tesseract-ocr \
-    tesseract-ocr-ind \
-    tesseract-ocr-eng \
     libgl1 \
     libglib2.0-0 \
     libgomp1 \

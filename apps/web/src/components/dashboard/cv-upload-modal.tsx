@@ -216,7 +216,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const isScannedPdf = fullTextLength < 50;
 
     if (isScannedPdf) {
-      warnings.unshift('Halaman PDF berupa gambar ter-scan tanpa text layer. Tesseract OCR diaktifkan otomatis.');
+      warnings.unshift('Halaman PDF tidak memiliki layer teks. Sistem tidak menggunakan OCR untuk efisiensi; dokumen ditandai untuk tinjauan HR.');
     }
 
     return {
@@ -304,7 +304,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     } else if (isScan || realData.warnings.length > 0) {
       finalParseStatus = 'needs_review';
       if (isScan) {
-        combinedWarnings.unshift('Halaman PDF berupa gambar ter-scan tanpa text layer. Tesseract OCR diaktifkan dengan akurasi 88%.');
+        combinedWarnings.unshift('Halaman PDF berupa gambar/scan tanpa layer teks. Dokumen memerlukan perhatian HR (needs_review).');
       }
     }
 

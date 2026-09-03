@@ -7,7 +7,7 @@ GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 DEFAULT_GROQ_API_KEY = os.getenv("LLM_API_KEY", "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")
 DEFAULT_GROQ_MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
 
-SYSTEM_PROMPT = """You are an expert AI ATS System parser. Analyze the provided CV raw text (or OCR text) and extract ALL structured facts without skipping any entry.
+SYSTEM_PROMPT = """You are an expert AI ATS System parser. Analyze the provided CV raw text and extract ALL structured facts without skipping any entry.
 OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
 {
   "full_name": "Candidate Full Name",

@@ -160,7 +160,7 @@ export const INITIAL_APPLICATIONS: CandidateApplication[] = [
         phone_number: '+62 856-9876-5432',
         location: 'Bandung, Indonesia',
       },
-      summary: 'Backend developer berpengalaman dalam Python dan relational database. Hasil parsing OCR mengindikasikan halaman scanned PDF.',
+      summary: 'Backend developer berpengalaman dalam Python dan relational database. Dokumen memerlukan peninjauan HR.',
       total_experience_months: 48,
       skills: [
         { name: 'Python', normalized_name: 'Python', category: 'Language' },
@@ -190,7 +190,7 @@ export const INITIAL_APPLICATIONS: CandidateApplication[] = [
       certifications: ['Oracle Certified Associate'],
       projects: ['Core Payment Service Refactoring'],
       extraction_warnings: [
-        'PDF berupa scan image - OCR fallback diaktifkan dengan tingkat kepercayaan 78%.',
+        'Halaman PDF tidak memuat layer teks lengkap. Dokumen ditandai untuk tinjauan HR.',
         'Mandatory skill "Docker" tidak terdeteksi secara otomatis, mohon verifikasi manual.',
       ],
     },
@@ -414,6 +414,6 @@ export const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
     action: 'cv_processing_completed',
     target_entity: 'applications',
     entity_id: 'app-102',
-    details: 'OCR Fallback diaktifkan (Scanned PDF). Status diset ke "needs_review".',
+    details: 'Penolakan PDF tanpa layer teks (Zero-Text Rule). Status diset ke "needs_review".',
   },
 ];

@@ -13,7 +13,7 @@ interface ProcessingTimelineProps {
 const STEPS: { key: ParseStatus; label: string; description: string }[] = [
   { key: 'uploaded', label: 'CV Uploaded', description: 'Berkas PDF tersimpan aman di storage privat.' },
   { key: 'queued', label: 'In Worker Queue', description: 'Pekerjaan antrean dipasang ke Redis/BullMQ.' },
-  { key: 'processing', label: 'PyMuPDF & LLM Extraction', description: 'Mengekstrak teks, OCR fallback & skema Pydantic.' },
+  { key: 'processing', label: 'PyMuPDF & LLM Extraction', description: 'Mengekstrak teks PDF & skema Pydantic.' },
   { key: 'processed', label: 'Normalized & Scored', description: 'Embedding vector & Job-Fit Score selesai.' },
 ];
 
