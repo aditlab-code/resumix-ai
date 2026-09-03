@@ -11,17 +11,17 @@ export default function GlobalError({
 }) {
   return (
     <html lang="id">
-      <body className="bg-slate-50 text-slate-900 flex flex-col items-center justify-center min-h-screen">
-        <div className="p-8 bg-white border border-slate-300 rounded-xl text-center space-y-4 max-w-md">
-          <h2 className="text-xl font-bold text-slate-900">Terjadi Kesalahan Sistem</h2>
-          <p className="text-xs text-slate-600 leading-relaxed">
+      <body className="bg-canvas text-ink flex flex-col items-center justify-center min-h-screen">
+        <div className="p-8 bg-surface rounded text-center space-y-3 max-w-md">
+          <h2>Terjadi kesalahan sistem</h2>
+          <p className="text-xs text-ink-muted leading-relaxed">
             {error.message || 'Sistem mengalami kendala tak terduga. Silakan muat ulang halaman.'}
           </p>
           <button
             onClick={() => reset()}
-            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-lg border border-sky-600 transition"
+            className="inline-flex items-center justify-center h-9 px-4 text-xs font-bold rounded bg-accent text-accent-fg hover:bg-accent/90 transition-colors"
           >
-            Muat Ulang Dashboard
+            Muat ulang
           </button>
         </div>
       </body>

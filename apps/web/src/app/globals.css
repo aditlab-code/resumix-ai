@@ -2,13 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 248 250 252;
-  --foreground: 15 23 42;
-}
+@layer base {
+  body {
+    @apply bg-canvas text-ink;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
 
-body {
-  background-color: #f8fafc;
-  color: #0f172a;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  h1 {
+    @apply text-[0.9375rem] font-bold tracking-tight text-ink;
+  }
+
+  h2 {
+    @apply text-[0.875rem] font-bold tracking-tight text-ink;
+  }
+
+  h3,
+  h4 {
+    @apply text-xs font-bold text-ink;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: theme('colors.accent.soft');
+    color: theme('colors.accent.DEFAULT');
+  }
 }

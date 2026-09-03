@@ -12,13 +12,13 @@ import { GlobalCandidatesView } from '@/components/dashboard/global-candidates-v
 import { PipelineSettingsView } from '@/components/dashboard/pipeline-settings-view';
 
 import { CvUploadModal } from '@/components/dashboard/cv-upload-modal';
-import { CreateJobModal } from '@/components/dashboard/create-job-modal';
-import { EditJobModal } from '@/components/dashboard/edit-job-modal';
+import { JobFormModal } from '@/components/dashboard/job-form-modal';
 import { AuditLogModal } from '@/components/dashboard/audit-log-modal';
 import { ExtractionReviewModal } from '@/components/dashboard/extraction-review-modal';
 import { CandidateDetailDrawer } from '@/components/dashboard/candidate-detail-drawer';
 import { DeleteCandidateModal } from '@/components/dashboard/delete-candidate-modal';
 import { ToastContainer, ToastMessage } from '@/components/ui/toast';
+import { Card, CardHeader, ConfirmDialog } from '@/components/ui';
 
 import { INITIAL_JOBS, INITIAL_APPLICATIONS, INITIAL_AUDIT_LOGS } from '@/lib/mock-data';
 import { JobPosting, CandidateApplication, AuditLogItem } from '@/lib/types';
@@ -30,12 +30,10 @@ export default function HRDashboardPage() {
   const [activeView, setActiveView] = useState<ActiveViewType>('dashboard');
   const [isMounted, setIsMounted] = useState(false);
 
-  // Initial State initialized consistently for SSR & Client Hydration
   const [jobs, setJobs] = useState<JobPosting[]>(INITIAL_JOBS);
   const [applications, setApplications] = useState<CandidateApplication[]>(INITIAL_APPLICATIONS);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>(INITIAL_AUDIT_LOGS);
 
-  // Hydration Safe: Load from localStorage ONLY after client mount
   useEffect(() => {
     try {
       const savedJobs = localStorage.getItem('cv_ats_jobs');
@@ -48,10 +46,12 @@ export default function HRDashboardPage() {
       if (savedApps) {
         const parsed = JSON.parse(savedApps);
         if (Array.isArray(parsed)) {
-          setApplications(parsed.map((app: any) => ({
-            ...app,
-            pdf_url: app.pdf_url || SAMPLE_PDF_BASE64,
-          })));
+          setApplications(
+            parsed.map((app: any) => ({
+              ...app,
+              pdf_url: app.pdf_url || SAMPLE_PDF_BASE64,
+            }))
+          );
         }
       }
 
@@ -66,23 +66,16 @@ export default function HRDashboardPage() {
     setIsMounted(true);
   }, []);
 
-  // Save to localStorage after initial mount
   useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem('cv_ats_jobs', JSON.stringify(jobs));
-    }
+    if (isMounted) localStorage.setItem('cv_ats_jobs', JSON.stringify(jobs));
   }, [jobs, isMounted]);
 
   useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem('cv_ats_applications', JSON.stringify(applications));
-    }
+    if (isMounted) localStorage.setItem('cv_ats_applications', JSON.stringify(applications));
   }, [applications, isMounted]);
 
   useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem('cv_ats_audit_logs', JSON.stringify(auditLogs));
-    }
+    if (isMounted) localStorage.setItem('cv_ats_audit_logs', JSON.stringify(auditLogs));
   }, [auditLogs, isMounted]);
 
   const [selectedJobId, setSelectedJobId] = useState<string>('job-1');
@@ -90,6 +83,8 @@ export default function HRDashboardPage() {
   const [editingApplication, setEditingApplication] = useState<CandidateApplication | null>(null);
   const [deletingApplication, setDeletingApplication] = useState<CandidateApplication | null>(null);
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null);
+  const [deletingJob, setDeletingJob] = useState<JobPosting | null>(null);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isCreateJobModalOpen, setIsCreateJobModalOpen] = useState(false);
@@ -98,13 +93,10 @@ export default function HRDashboardPage() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const addToast = (type: 'success' | 'error' | 'info', title: string, description?: string) => {
-    const newToast: ToastMessage = {
-      id: `toast-${Date.now()}-${Math.random()}`,
-      type,
-      title,
-      description,
-    };
-    setToasts((prev) => [...prev, newToast]);
+    setToasts((prev) => [
+      ...prev,
+      { id: `toast-${Date.now()}-${Math.random()}`, type, title, description },
+    ]);
   };
 
   const addAuditLog = (action: string, entity: string, entityId: string, details: string) => {
@@ -120,116 +112,93 @@ export default function HRDashboardPage() {
     setAuditLogs((prev) => [newLog, ...prev]);
   };
 
-  // Reset to initial demo data
-  const handleResetData = () => {
-    if (window.confirm('Apakah Anda yakin ingin mengembalikan seluruh data ke sampel awal? Data hasil hapus & tambah baru akan direset.')) {
-      setJobs(INITIAL_JOBS);
-      setApplications(INITIAL_APPLICATIONS);
-      setAuditLogs(INITIAL_AUDIT_LOGS);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('cv_ats_jobs');
-        localStorage.removeItem('cv_ats_applications');
-        localStorage.removeItem('cv_ats_audit_logs');
-      }
-      addToast('info', 'Data Direset ke Sample Awal', 'Seluruh database telah dikembalikan ke data awal.');
+  const confirmResetData = () => {
+    setJobs(INITIAL_JOBS);
+    setApplications(INITIAL_APPLICATIONS);
+    setAuditLogs(INITIAL_AUDIT_LOGS);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cv_ats_jobs');
+      localStorage.removeItem('cv_ats_applications');
+      localStorage.removeItem('cv_ats_audit_logs');
     }
+    addToast('info', 'Data direset ke sample awal', 'Seluruh database dikembalikan ke data awal.');
   };
 
-  // Job selection
-  const handleSelectJob = (jobId: string) => {
-    setSelectedJobId(jobId);
-  };
+  const handleSelectJob = (jobId: string) => setSelectedJobId(jobId);
 
-  // Switch to candidates table for a specific job from JobsManager
   const handleSelectJobForCandidates = (jobId: string) => {
     setSelectedJobId(jobId);
     setActiveView('dashboard');
   };
 
-  // Applications for currently selected job
   const jobApplications = applications.filter((app) => app.job_id === selectedJobId);
   const activeJob = jobs.find((j) => j.id === selectedJobId) || jobs[0] || INITIAL_JOBS[0];
 
-  // Featured Candidate for Score Breakdown card
   const featuredCandidate =
     selectedCandidate && selectedCandidate.job_id === selectedJobId
       ? selectedCandidate
       : jobApplications.length > 0
-      ? [...jobApplications].sort((a, b) => b.job_fit_score - a.job_fit_score)[0]
-      : null;
+        ? [...jobApplications].sort((a, b) => b.job_fit_score - a.job_fit_score)[0]
+        : null;
 
-  // Job Handlers
   const handleCreateJobSuccess = (newJob: JobPosting) => {
     setJobs((prev) => [newJob, ...prev]);
     setSelectedJobId(newJob.id);
-
     addAuditLog(
       'job_created',
       'job_postings',
       newJob.id,
       `Menerbitkan lowongan baru "${newJob.title}" dengan skill wajib [${newJob.mandatory_skills.join(', ')}].`
     );
-
-    addToast('success', 'Lowongan Baru Diterbitkan', `Posisi ${newJob.title} siap menerima berkas CV.`);
+    addToast('success', 'Lowongan baru diterbitkan', `Posisi ${newJob.title} siap menerima CV.`);
   };
 
   const handleEditJobSuccess = (updatedJob: JobPosting) => {
     setJobs((prev) => prev.map((j) => (j.id === updatedJob.id ? updatedJob : j)));
-
     addAuditLog(
       'job_updated',
       'job_postings',
       updatedJob.id,
-      `Memperbarui kriteria lowongan "${updatedJob.title}" (Skill wajib: [${updatedJob.mandatory_skills.join(', ')}]).`
+      `Memperbarui kriteria lowongan "${updatedJob.title}" (skill wajib: [${updatedJob.mandatory_skills.join(', ')}]).`
     );
-
-    addToast('success', 'Lowongan Diperbarui', `Kriteria posisi ${updatedJob.title} berhasil disimpan.`);
+    addToast('success', 'Lowongan diperbarui', `Kriteria posisi ${updatedJob.title} disimpan.`);
   };
 
-  const handleDeleteJob = (jobId: string) => {
-    const jobToDelete = jobs.find((j) => j.id === jobId);
+  const confirmDeleteJob = () => {
+    const jobToDelete = deletingJob;
     if (!jobToDelete) return;
 
-    if (window.confirm(`Apakah Anda yakin ingin menghapus lowongan "${jobToDelete.title}"?`)) {
-      setJobs((prev) => prev.filter((j) => j.id !== jobId));
-      if (selectedJobId === jobId && jobs.length > 1) {
-        setSelectedJobId(jobs.find((j) => j.id !== jobId)?.id || '');
-      }
-
-      addAuditLog(
-        'job_deleted',
-        'job_postings',
-        jobId,
-        `Menghapus lowongan kerja "${jobToDelete.title}".`
-      );
-
-      addToast('error', 'Lowongan Dihapus', `Posisi ${jobToDelete.title} telah dihapus.`);
+    setJobs((prev) => prev.filter((j) => j.id !== jobToDelete.id));
+    if (selectedJobId === jobToDelete.id && jobs.length > 1) {
+      setSelectedJobId(jobs.find((j) => j.id !== jobToDelete.id)?.id || '');
     }
+    addAuditLog(
+      'job_deleted',
+      'job_postings',
+      jobToDelete.id,
+      `Menghapus lowongan kerja "${jobToDelete.title}".`
+    );
+    addToast('error', 'Lowongan dihapus', `Posisi ${jobToDelete.title} telah dihapus.`);
   };
 
-  // Candidate Handlers
   const handleUploadSuccess = (newApp: CandidateApplication) => {
     setApplications((prev) => [newApp, ...prev]);
-
     setJobs((prev) =>
       prev.map((j) =>
         j.id === newApp.job_id ? { ...j, applications_count: j.applications_count + 1 } : j
       )
     );
-
     addAuditLog(
       'cv_uploaded',
       'candidate_documents',
       newApp.document_id,
       `Berhasil mengunggah CV ${newApp.original_filename} untuk kandidat ${newApp.candidate_name}. Parse status: ${newApp.parse_status}.`
     );
-
     addToast(
       'success',
-      'CV Berhasil Diunggah & Diproses AI',
+      'CV diunggah & diproses AI',
       `Kandidat ${newApp.candidate_name} mendapat Job-Fit Score ${newApp.job_fit_score}/100.`
     );
-
     setSelectedCandidate(newApp);
   };
 
@@ -237,42 +206,31 @@ export default function HRDashboardPage() {
     setApplications((prev) =>
       prev.map((app) => (app.id === appId ? { ...app, status: newStatus } : app))
     );
-
     if (selectedCandidate?.id === appId) {
       setSelectedCandidate((prev) => (prev ? { ...prev, status: newStatus } : null));
     }
-
     const appName = applications.find((a) => a.id === appId)?.candidate_name || 'Kandidat';
-
     addAuditLog(
       'application_status_changed',
       'applications',
       appId,
       `Mengubah status rekrutmen kandidat ${appName} menjadi "${newStatus}".`
     );
-
-    addToast('info', 'Status Aplikasi Diperbarui', `Status ${appName} kini menjadi "${newStatus}".`);
+    addToast('info', 'Status aplikasi diperbarui', `Status ${appName} kini "${newStatus}".`);
   };
 
   const handleSaveEditSuccess = (updatedApp: CandidateApplication) => {
-    setApplications((prev) =>
-      prev.map((app) => (app.id === updatedApp.id ? updatedApp : app))
-    );
-
-    if (selectedCandidate?.id === updatedApp.id) {
-      setSelectedCandidate(updatedApp);
-    }
-
+    setApplications((prev) => prev.map((app) => (app.id === updatedApp.id ? updatedApp : app)));
+    if (selectedCandidate?.id === updatedApp.id) setSelectedCandidate(updatedApp);
     addAuditLog(
       'candidate_profile_edited',
       'candidates',
       updatedApp.candidate_id,
       `HR melakukan koreksi manual data ekstraksi AI untuk ${updatedApp.candidate_name}. Job-Fit score baru: ${updatedApp.job_fit_score}.`
     );
-
     addToast(
       'success',
-      'Data Ekstraksi Berhasil Diperbarui',
+      'Data ekstraksi diperbarui',
       `Skor Job-Fit ${updatedApp.candidate_name} dihitung ulang menjadi ${updatedApp.job_fit_score}/100.`
     );
   };
@@ -281,8 +239,7 @@ export default function HRDashboardPage() {
     const app = applications.find((a) => a.id === appId);
     if (!app) return;
 
-    addToast('info', 'Reprocessing CV Diantrekan', `Mulai pemrosesan ulang AI untuk ${app.candidate_name}...`);
-
+    addToast('info', 'Reprocessing diantrekan', `Mulai pemrosesan ulang AI untuk ${app.candidate_name}...`);
     setApplications((prev) =>
       prev.map((a) => (a.id === appId ? { ...a, parse_status: 'processing' } : a))
     );
@@ -321,17 +278,14 @@ export default function HRDashboardPage() {
       appId,
       `Pekerjaan reprocessing CV selesai untuk ${app.candidate_name}. Status diset ke "processed".`
     );
-
-    addToast('success', 'Reprocessing Selesai', `CV ${app.candidate_name} sukses diproses ulang.`);
+    addToast('success', 'Reprocessing selesai', `CV ${app.candidate_name} sukses diproses ulang.`);
   };
 
-  // Hard Delete Candidate Handler
   const handleConfirmDeleteCandidate = (appId: string) => {
     const targetApp = applications.find((a) => a.id === appId);
     if (!targetApp) return;
 
     setApplications((prev) => prev.filter((a) => a.id !== appId));
-
     setJobs((prev) =>
       prev.map((j) =>
         j.id === targetApp.job_id
@@ -339,10 +293,7 @@ export default function HRDashboardPage() {
           : j
       )
     );
-
-    if (selectedCandidate?.id === appId) {
-      setSelectedCandidate(null);
-    }
+    if (selectedCandidate?.id === appId) setSelectedCandidate(null);
 
     addAuditLog(
       'candidate_data_deleted',
@@ -350,10 +301,9 @@ export default function HRDashboardPage() {
       targetApp.candidate_id,
       `Hapus permanen kandidat ${targetApp.candidate_name} (${targetApp.email}) beserta dokumen privat dan Job-Fit score dari database.`
     );
-
     addToast(
       'error',
-      'Kandidat Berhasil Dihapus Permanen',
+      'Kandidat dihapus permanen',
       `Data kandidat ${targetApp.candidate_name} telah dihapus total.`
     );
   };
@@ -368,29 +318,30 @@ export default function HRDashboardPage() {
     );
   };
 
-  // Prevent Hydration mismatch: return skeleton before mount
   if (!isMounted) {
     return (
-      <div className="space-y-8 pb-12 text-slate-900 animate-pulse">
-        <div className="h-20 bg-white rounded-2xl border border-slate-200" />
-        <div className="grid grid-cols-4 gap-4 h-24 bg-white rounded-2xl border border-slate-200" />
-        <div className="h-64 bg-white rounded-2xl border border-slate-200" />
+      <div className="p-6 space-y-3 animate-pulse">
+        <div className="h-10 bg-surface rounded" />
+        <div className="grid grid-cols-4 gap-3 h-24">
+          <div className="bg-surface rounded" />
+          <div className="bg-surface rounded" />
+          <div className="bg-surface rounded" />
+          <div className="bg-surface rounded" />
+        </div>
+        <div className="h-64 bg-surface rounded" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-100 text-slate-900">
-      {/* Left Sidebar (ERP Module Navigation) */}
+    <div className="flex min-h-screen bg-canvas text-ink">
       <Sidebar
         activeView={activeView}
-        onViewChange={(view) => setActiveView(view)}
-        onResetData={handleResetData}
+        onViewChange={setActiveView}
+        onResetData={() => setIsResetConfirmOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-6 space-y-6 overflow-y-auto w-full min-w-0">
-        {/* TopBar (Breadcrumb Context & Primary Global Actions) */}
+      <main className="flex-1 p-6 space-y-4 overflow-y-auto w-full min-w-0">
         <Header
           activeView={activeView}
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
@@ -398,161 +349,176 @@ export default function HRDashboardPage() {
           onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
         />
 
-      {/* VIEW 1: Dashboard HR (Default View) */}
-      {activeView === 'dashboard' && (
-        <>
-          {/* Metric Stat Cards */}
-          <StatsOverview
-            jobs={jobs}
-            applications={applications}
-            onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
-          />
-
-          {/* Target Job Selector Tabs */}
-          {jobs.length > 0 && (
-            <JobSelector
+        {activeView === 'dashboard' && (
+          <>
+            <StatsOverview
               jobs={jobs}
-              selectedJobId={selectedJobId}
-              onSelectJob={handleSelectJob}
+              applications={applications}
+              onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
             />
-          )}
 
-          {/* Main Content Grid: Candidate Table + Score Breakdown */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column (2/3): Candidate Table */}
-            <div className="lg:col-span-2 space-y-3">
-              <div className="flex justify-between items-center bg-white p-3.5 rounded-xl border border-slate-300">
-                <div>
-                  <h2 className="text-base font-bold text-slate-900">
-                    Peringkat & Tabel Kandidat ({activeJob?.title || 'Posisi Lowongan'})
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Pilih baris kandidat untuk melihat detail profil, resume PDF, dan aksi HR.
-                  </p>
-                </div>
-                <span className="text-xs font-mono font-bold px-3 py-1 bg-slate-100 text-sky-800 border border-slate-300 rounded-lg">
-                  {jobApplications.length} Pelamar
-                </span>
+            {jobs.length > 0 && (
+              <JobSelector
+                jobs={jobs}
+                selectedJobId={selectedJobId}
+                onSelectJob={handleSelectJob}
+              />
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2 space-y-2">
+                <Card className="py-2.5">
+                  <CardHeader
+                    title={<h2>Kandidat — {activeJob?.title || 'Posisi'}</h2>}
+                    action={
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 bg-canvas text-accent rounded">
+                        {jobApplications.length} pelamar
+                      </span>
+                    }
+                  />
+                </Card>
+
+                <CandidateTable
+                  applications={jobApplications}
+                  onSelectCandidate={handleSelectCandidate}
+                  onReprocessCv={handleReprocessCv}
+                  onOpenUploadModal={() => setIsUploadModalOpen(true)}
+                  onDeleteCandidate={(app) => setDeletingApplication(app)}
+                />
               </div>
 
-              <CandidateTable
-                applications={jobApplications}
-                onSelectCandidate={handleSelectCandidate}
-                onReprocessCv={handleReprocessCv}
-                onOpenUploadModal={() => setIsUploadModalOpen(true)}
-                onDeleteCandidate={(app) => setDeletingApplication(app)}
-              />
-            </div>
+              <div className="space-y-2">
+                <Card className="py-2.5">
+                  <CardHeader
+                    title={<h2>Penjelasan Skor AI</h2>}
+                    action={
+                      featuredCandidate && (
+                        <span className="text-xs font-bold text-accent truncate max-w-[140px]">
+                          {featuredCandidate.candidate_name}
+                        </span>
+                      )
+                    }
+                  />
+                </Card>
 
-            {/* Right Column (1/3): Active Candidate Score Breakdown Card */}
-            <div className="space-y-3">
-              <div className="flex justify-between items-center bg-white p-3.5 rounded-xl border border-slate-300">
-                <h2 className="text-base font-bold text-slate-900">Penjelasan Skor AI</h2>
-                {featuredCandidate && (
-                  <span className="text-xs font-bold text-sky-800 truncate max-w-[140px]">
-                    {featuredCandidate.candidate_name}
-                  </span>
+                {featuredCandidate ? (
+                  <ScoreBreakdownCard score={featuredCandidate.score_breakdown} />
+                ) : (
+                  <Card className="text-center text-ink-subtle text-xs py-6">
+                    Belum ada kandidat pada lowongan ini.
+                  </Card>
                 )}
               </div>
-
-              {featuredCandidate ? (
-                <ScoreBreakdownCard score={featuredCandidate.score_breakdown} />
-              ) : (
-                <div className="bg-white border border-slate-300 rounded-xl p-6 text-center text-slate-500 text-xs">
-                  Belum ada kandidat pada lowongan ini. Unggah CV untuk melihat kalkulasi skor AI.
-                </div>
-              )}
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      {/* VIEW 2: Lowongan Kerja Manager View */}
-      {activeView === 'jobs' && (
-        <JobsManagerView
+        {activeView === 'jobs' && (
+          <JobsManagerView
+            jobs={jobs}
+            onOpenCreateJobModal={() => setIsCreateJobModalOpen(true)}
+            onSelectJobForCandidates={handleSelectJobForCandidates}
+            onEditJob={(job) => setEditingJob(job)}
+            onDeleteJob={(jobId) => setDeletingJob(jobs.find((j) => j.id === jobId) || null)}
+          />
+        )}
+
+        {activeView === 'candidates' && (
+          <GlobalCandidatesView
+            applications={applications}
+            jobs={jobs}
+            onSelectCandidate={handleSelectCandidate}
+            onOpenUploadModal={() => setIsUploadModalOpen(true)}
+            onDeleteCandidate={(app) => setDeletingApplication(app)}
+            onReprocessCv={handleReprocessCv}
+          />
+        )}
+
+        {activeView === 'settings' && (
+          <PipelineSettingsView
+            onSaveSettings={(msg) => addToast('success', 'Pengaturan disimpan', msg)}
+          />
+        )}
+
+        <CvUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
           jobs={jobs}
-          onOpenCreateJobModal={() => setIsCreateJobModalOpen(true)}
-          onSelectJobForCandidates={handleSelectJobForCandidates}
-          onEditJob={(job) => setEditingJob(job)}
-          onDeleteJob={handleDeleteJob}
+          selectedJobId={selectedJobId}
+          onUploadSuccess={handleUploadSuccess}
         />
-      )}
 
-      {/* VIEW 3: Global Candidates Database View */}
-      {activeView === 'candidates' && (
-        <GlobalCandidatesView
-          applications={applications}
-          jobs={jobs}
-          onSelectCandidate={handleSelectCandidate}
-          onOpenUploadModal={() => setIsUploadModalOpen(true)}
-          onDeleteCandidate={(app) => setDeletingApplication(app)}
+        <JobFormModal
+          mode="create"
+          isOpen={isCreateJobModalOpen}
+          onClose={() => setIsCreateJobModalOpen(false)}
+          onSuccess={handleCreateJobSuccess}
+        />
+
+        <JobFormModal
+          mode="edit"
+          isOpen={!!editingJob}
+          job={editingJob}
+          onClose={() => setEditingJob(null)}
+          onSuccess={handleEditJobSuccess}
+        />
+
+        <AuditLogModal
+          isOpen={isAuditLogModalOpen}
+          onClose={() => setIsAuditLogModalOpen(false)}
+          logs={auditLogs}
+        />
+
+        <ExtractionReviewModal
+          isOpen={!!editingApplication}
+          onClose={() => setEditingApplication(null)}
+          application={editingApplication}
+          job={activeJob}
+          onSaveSuccess={handleSaveEditSuccess}
+        />
+
+        <CandidateDetailDrawer
+          isOpen={!!selectedCandidate}
+          onClose={() => setSelectedCandidate(null)}
+          application={selectedCandidate}
+          job={activeJob}
+          onStatusChange={handleStatusChange}
+          onOpenEditModal={(app) => setEditingApplication(app)}
           onReprocessCv={handleReprocessCv}
+          onDeleteCandidate={(app) => setDeletingApplication(app)}
         />
-      )}
 
-      {/* VIEW 4: Pengaturan Pipeline View */}
-      {activeView === 'settings' && (
-        <PipelineSettingsView
-          onSaveSettings={(msg) => addToast('success', 'Pengaturan Berhasil Disimpan', msg)}
+        <DeleteCandidateModal
+          isOpen={!!deletingApplication}
+          onClose={() => setDeletingApplication(null)}
+          application={deletingApplication}
+          onConfirmDelete={handleConfirmDeleteCandidate}
         />
-      )}
 
-      {/* Modals & Drawers */}
-      <CvUploadModal
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        jobs={jobs}
-        selectedJobId={selectedJobId}
-        onUploadSuccess={handleUploadSuccess}
-      />
+        <ConfirmDialog
+          isOpen={isResetConfirmOpen}
+          onClose={() => setIsResetConfirmOpen(false)}
+          onConfirm={confirmResetData}
+          title="Reset data demo"
+          message="Seluruh data dikembalikan ke sample awal. Data hasil hapus & tambah baru akan hilang."
+          confirmLabel="Reset"
+          tone="danger"
+        />
 
-      <CreateJobModal
-        isOpen={isCreateJobModalOpen}
-        onClose={() => setIsCreateJobModalOpen(false)}
-        onCreateSuccess={handleCreateJobSuccess}
-      />
+        <ConfirmDialog
+          isOpen={!!deletingJob}
+          onClose={() => setDeletingJob(null)}
+          onConfirm={confirmDeleteJob}
+          title="Hapus lowongan"
+          message={`Hapus lowongan "${deletingJob?.title}"? Tindakan ini tidak dapat dibatalkan.`}
+          confirmLabel="Hapus"
+          tone="danger"
+        />
 
-      <EditJobModal
-        isOpen={!!editingJob}
-        onClose={() => setEditingJob(null)}
-        job={editingJob}
-        onSaveSuccess={handleEditJobSuccess}
-      />
-
-      <AuditLogModal
-        isOpen={isAuditLogModalOpen}
-        onClose={() => setIsAuditLogModalOpen(false)}
-        logs={auditLogs}
-      />
-
-      <ExtractionReviewModal
-        isOpen={!!editingApplication}
-        onClose={() => setEditingApplication(null)}
-        application={editingApplication}
-        job={activeJob}
-        onSaveSuccess={handleSaveEditSuccess}
-      />
-
-      <CandidateDetailDrawer
-        isOpen={!!selectedCandidate}
-        onClose={() => setSelectedCandidate(null)}
-        application={selectedCandidate}
-        job={activeJob}
-        onStatusChange={handleStatusChange}
-        onOpenEditModal={(app) => setEditingApplication(app)}
-        onReprocessCv={handleReprocessCv}
-        onDeleteCandidate={(app) => setDeletingApplication(app)}
-      />
-
-      <DeleteCandidateModal
-        isOpen={!!deletingApplication}
-        onClose={() => setDeletingApplication(null)}
-        application={deletingApplication}
-        onConfirmDelete={handleConfirmDeleteCandidate}
-      />
-
-      {/* Toast Notifications Container */}
-      <ToastContainer toasts={toasts} onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))} />
+        <ToastContainer
+          toasts={toasts}
+          onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))}
+        />
       </main>
     </div>
   );

@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ParseStatus } from '@cv-ats/contracts';
-import { CheckCircle2, Clock, Loader2, AlertTriangle, XCircle } from 'lucide-react';
+import { CheckCircle2, Loader2, AlertTriangle, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ProcessingTimelineProps {
   currentStatus: ParseStatus;
@@ -11,75 +12,77 @@ interface ProcessingTimelineProps {
 }
 
 const STEPS: { key: ParseStatus; label: string; description: string }[] = [
-  { key: 'uploaded', label: 'CV Uploaded', description: 'Berkas PDF tersimpan aman di storage privat.' },
-  { key: 'queued', label: 'In Worker Queue', description: 'Pekerjaan antrean dipasang ke Redis/BullMQ.' },
-  { key: 'processing', label: 'PyMuPDF & LLM Extraction', description: 'Mengekstrak teks PDF & skema Pydantic.' },
-  { key: 'processed', label: 'Normalized & Scored', description: 'Embedding vector & Job-Fit Score selesai.' },
+  { key: 'uploaded', label: 'CV Uploaded', description: 'Berkas PDF tersimpan di storage privat.' },
+  { key: 'queued', label: 'Worker Queue', description: 'Pekerjaan antrean dipasang ke worker.' },
+  { key: 'processing', label: 'Ekstraksi PDF & LLM', description: 'Ekstrak teks PDF & skema data.' },
+  { key: 'processed', label: 'Normalized & Scored', description: 'Embedding & Job-Fit Score selesai.' },
 ];
+
+const stepIndex = (status: ParseStatus) =>
+  ({ uploaded: 0, queued: 1, processing: 2, processed: 3, needs_review: 3, failed: 3 })[status] ?? 0;
 
 export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
   currentStatus,
   errorMessage,
   warnings = [],
 }) => {
-  const getStepIndex = (status: ParseStatus) => {
-    switch (status) {
-      case 'uploaded': return 0;
-      case 'queued': return 1;
-      case 'processing': return 2;
-      case 'processed':
-      case 'needs_review':
-      case 'failed':
-        return 3;
-      default: return 0;
-    }
-  };
-
-  const currentIndex = getStepIndex(currentStatus);
+  const currentIndex = stepIndex(currentStatus);
 
   return (
-    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-4">
+    <div className="bg-canvas rounded p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5 text-sky-600" />
-          Alur Pemrosesan Dokumen AI
-        </h4>
-        <span className="text-xs text-slate-500 font-mono">
-          Status: <strong className="text-slate-900">{currentStatus}</strong>
+        <h4 className="uppercase tracking-wider text-ink-subtle">Alur Pemrosesan Dokumen</h4>
+        <span className="text-xs font-mono text-ink-muted">
+          Status: <strong className="text-ink">{currentStatus}</strong>
         </span>
       </div>
 
-      <div className="relative pl-6 border-l border-slate-200 space-y-4">
+      <div className="relative pl-6 border-l border-line space-y-4">
         {STEPS.map((step, idx) => {
-          const isDone = idx < currentIndex || currentStatus === 'processed' || (idx === 3 && currentStatus === 'needs_review');
-          const isCurrent = idx === currentIndex && currentStatus !== 'processed' && currentStatus !== 'failed' && currentStatus !== 'needs_review';
+          const isDone =
+            idx < currentIndex ||
+            currentStatus === 'processed' ||
+            (idx === 3 && currentStatus === 'needs_review');
+          const isCurrent =
+            idx === currentIndex &&
+            !['processed', 'failed', 'needs_review'].includes(currentStatus);
           const isFailed = idx === 3 && currentStatus === 'failed';
           const isWarning = idx === 3 && currentStatus === 'needs_review';
 
           return (
             <div key={step.key} className="relative flex items-start gap-3">
-              {/* Timeline Node Icon */}
-              <div className="absolute -left-[31px] top-0.5 bg-white rounded-full p-0.5 border border-slate-200">
+              <div className="absolute -left-[31px] top-0.5 bg-surface rounded-full p-0.5">
                 {isDone ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-ok" />
                 ) : isCurrent ? (
-                  <Loader2 className="w-4 h-4 text-sky-600 animate-spin" />
+                  <Loader2 className="w-4 h-4 text-accent animate-spin" />
                 ) : isFailed ? (
-                  <XCircle className="w-4 h-4 text-rose-600" />
+                  <XCircle className="w-4 h-4 text-danger" />
                 ) : isWarning ? (
-                  <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  <AlertTriangle className="w-4 h-4 text-warn" />
                 ) : (
-                  <div className="w-4 h-4 rounded-full border border-slate-300 bg-slate-100" />
+                  <div className="w-4 h-4 rounded-full bg-line" />
                 )}
               </div>
 
               <div>
-                <p className={`text-xs font-semibold ${isDone ? 'text-slate-800' : isCurrent ? 'text-sky-700 font-bold' : isFailed ? 'text-rose-700' : isWarning ? 'text-amber-800' : 'text-slate-400'}`}>
+                <p
+                  className={cn(
+                    'text-xs font-semibold',
+                    isDone
+                      ? 'text-ink'
+                      : isCurrent
+                        ? 'text-accent font-bold'
+                        : isFailed
+                          ? 'text-danger'
+                          : isWarning
+                            ? 'text-warn'
+                            : 'text-ink-subtle'
+                  )}
+                >
                   {step.label}
                 </p>
-                <p className="text-[11px] text-slate-500 leading-relaxed mt-0.5">
-                  {step.description}
-                </p>
+                <p className="text-[11px] text-ink-subtle leading-snug mt-0.5">{step.description}</p>
               </div>
             </div>
           );
@@ -87,22 +90,22 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
       </div>
 
       {currentStatus === 'failed' && errorMessage && (
-        <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
-          <XCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+        <div className="p-3 rounded bg-danger-soft text-danger text-xs flex items-start gap-2">
+          <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
-            <strong className="block font-semibold">Kegagalan Parsing CV:</strong>
-            <p className="text-rose-700 text-[11px]">{errorMessage}</p>
+            <strong className="block font-semibold">Kegagalan Parsing CV</strong>
+            <p className="text-[11px]">{errorMessage}</p>
           </div>
         </div>
       )}
 
       {currentStatus === 'needs_review' && warnings.length > 0 && (
-        <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-1">
-          <div className="flex items-center gap-1.5 font-semibold text-amber-800">
-            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-            Catatan Perhatian AI Parsing ({warnings.length}):
+        <div className="p-3 rounded bg-warn-soft text-warn text-xs space-y-1">
+          <div className="flex items-center gap-1.5 font-semibold">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            Catatan AI Parsing ({warnings.length})
           </div>
-          <ul className="list-disc list-inside text-[11px] text-amber-800/90 space-y-0.5 pl-1">
+          <ul className="list-disc list-inside text-[11px] space-y-0.5 pl-1">
             {warnings.map((w, i) => (
               <li key={i}>{w}</li>
             ))}

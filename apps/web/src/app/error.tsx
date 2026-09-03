@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { Button } from '@/components/ui';
 
 export default function Error({
   error,
@@ -14,17 +15,14 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center space-y-4 bg-white border border-slate-300 rounded-xl my-8 p-6">
-      <h2 className="text-xl font-bold text-slate-900">Kendala pada Halaman ATS</h2>
-      <p className="text-xs text-slate-600 max-w-sm">
+    <div className="flex flex-col items-center justify-center gap-3 bg-surface rounded my-8 p-8 text-center">
+      <h2>Kendala pada halaman</h2>
+      <p className="text-xs text-ink-muted max-w-sm">
         {error.message || 'Terjadi kesalahan sistem saat memproses halaman ini.'}
       </p>
-      <button
-        onClick={() => reset()}
-        className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-lg border border-sky-600 transition"
-      >
-        Coba Lagi
-      </button>
+      <Button size="sm" onClick={() => reset()}>
+        Coba lagi
+      </Button>
     </div>
   );
 }

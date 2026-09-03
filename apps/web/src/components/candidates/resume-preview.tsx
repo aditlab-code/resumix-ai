@@ -5,18 +5,17 @@ import {
   FileText,
   ShieldCheck,
   RefreshCw,
-  Eye,
   ZoomIn,
   ZoomOut,
   RotateCw,
   Download,
   ChevronLeft,
   ChevronRight,
-  ExternalLink,
 } from 'lucide-react';
-import { formatBytes } from '@/lib/utils';
+import { formatBytes, cn } from '@/lib/utils';
 import { CVExtractionDTO } from '@cv-ats/contracts';
 import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
+import { Card } from '@/components/ui';
 
 interface ResumePreviewProps {
   originalFilename: string;
@@ -27,6 +26,9 @@ interface ResumePreviewProps {
   extraction?: CVExtractionDTO;
   pageCount?: number;
 }
+
+const iconBtn =
+  'p-1.5 bg-surface rounded text-ink-muted hover:text-ink hover:bg-line transition-colors disabled:opacity-40';
 
 export const ResumePreview: React.FC<ResumePreviewProps> = ({
   originalFilename,
@@ -39,33 +41,22 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
 }) => {
   const effectivePdfUrl = pdfUrl || SAMPLE_PDF_BASE64;
   const [signedUrlTtl, setSignedUrlTtl] = useState(300);
-  const [zoomLevel, setZoomLevel] = useState(100); // 50 to 200%
-  const [rotation, setRotation] = useState(0); // 0, 90, 180, 270
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const [rotation, setRotation] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<'embed' | 'vector'>('embed');
   const totalPages = Math.max(1, pageCount);
 
   useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(1);
-    }
+    if (currentPage > totalPages) setCurrentPage(1);
   }, [totalPages, currentPage]);
 
-  // Real-time TTL countdown simulation
   useEffect(() => {
     const interval = setInterval(() => {
       setSignedUrlTtl((prev) => (prev > 0 ? prev - 1 : 300));
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleRefreshSignedUrl = () => {
-    setSignedUrlTtl(300);
-  };
-
-  const handleZoomIn = () => setZoomLevel((prev) => Math.min(200, prev + 25));
-  const handleZoomOut = () => setZoomLevel((prev) => Math.max(50, prev - 25));
-  const handleRotate = () => setRotation((prev) => (prev + 90) % 360);
 
   const handleDownload = () => {
     const a = document.createElement('a');
@@ -74,218 +65,169 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
     a.click();
   };
 
+  const section = (title: string, body: React.ReactNode) => (
+    <div>
+      <h3 className="uppercase tracking-wider text-[11px] border-b border-line pb-1 mb-2">{title}</h3>
+      {body}
+    </div>
+  );
+
+  const emptyLine = (text: string) => (
+    <p className="text-ink-subtle italic text-[11px]">{text}</p>
+  );
+
   return (
-    <div className="bg-white border border-slate-300 rounded-xl p-5 space-y-4">
-      {/* Top File Metadata & Signed URL Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-sky-100 border border-sky-300 text-sky-800 flex items-center justify-center font-bold">
-            <FileText className="w-5 h-5" />
+    <Card className="space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-line pb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded bg-canvas text-ink-muted flex items-center justify-center">
+            <FileText className="w-4 h-4" />
           </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-900 flex items-center gap-2">
-              {originalFilename}
-              <span className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono border border-slate-300">
-                PDF Document
-              </span>
-            </h4>
-            <p className="text-[10px] text-slate-500 font-mono mt-0.5">
-              {formatBytes(fileSizeBytes)} | Storage Path: <span className="text-slate-500">{storagePath}</span>
+          <div className="min-w-0">
+            <h4 className="truncate">{originalFilename}</h4>
+            <p className="text-[10px] text-ink-subtle font-mono truncate">
+              {formatBytes(fileSizeBytes)} · {storagePath}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Signed URL Security Badge */}
+        <div className="flex items-center gap-2 shrink-0">
           <span
-            className={`text-[10px] border px-2.5 py-1 rounded-full flex items-center gap-1 font-mono font-bold transition ${
-              signedUrlTtl > 60
-                ? 'text-emerald-900 bg-emerald-50 border-emerald-300'
-                : 'text-amber-900 bg-amber-50 border-amber-300'
-            }`}
+            className={cn(
+              'text-[10px] px-2 py-1 rounded-full flex items-center gap-1 font-mono font-bold',
+              signedUrlTtl > 60 ? 'bg-ok-soft text-ok' : 'bg-warn-soft text-warn'
+            )}
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-            Signed URL TTL: {signedUrlTtl}s
+            <ShieldCheck className="w-3.5 h-3.5" />
+            TTL {signedUrlTtl}s
           </span>
-
-          <button
-            onClick={handleRefreshSignedUrl}
-            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition rounded-lg border border-slate-300"
-            title="Refresh Signed URL"
-          >
+          <button onClick={() => setSignedUrlTtl(300)} className={iconBtn} aria-label="Refresh signed URL">
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Main PDF Viewer Control Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-300 text-xs">
-        {/* Left: View Mode Toggle */}
-        <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-300">
-          <button
-            onClick={() => setViewMode('embed')}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition ${
-              viewMode === 'embed'
-                ? 'bg-sky-700 text-white'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Native Stream (PDF)
-          </button>
-          <button
-            onClick={() => setViewMode('vector')}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition ${
-              viewMode === 'vector'
-                ? 'bg-sky-700 text-white'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Structured Vector View
-          </button>
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-canvas p-2 rounded text-xs">
+        <div className="flex items-center gap-1 bg-surface p-0.5 rounded">
+          {(['embed', 'vector'] as const).map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setViewMode(mode)}
+              className={cn(
+                'px-2.5 py-1 rounded text-[11px] font-bold transition-colors',
+                viewMode === mode ? 'bg-accent text-accent-fg' : 'text-ink-muted hover:text-ink'
+              )}
+            >
+              {mode === 'embed' ? 'Native PDF' : 'Structured'}
+            </button>
+          ))}
         </div>
 
-        {/* Center: Page Navigation */}
         <div className="flex items-center gap-2">
           <button
             disabled={currentPage <= 1}
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            className="p-1 bg-white border border-slate-300 rounded-md text-slate-700 hover:bg-slate-100 disabled:opacity-40 transition"
+            className={iconBtn}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="text-slate-700 font-mono font-bold text-[11px]">
-            Halaman {currentPage} / {totalPages}
+          <span className="text-ink-muted font-mono font-bold text-[11px]">
+            {currentPage} / {totalPages}
           </span>
           <button
             disabled={currentPage >= totalPages}
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            className="p-1 bg-white border border-slate-200 rounded-md text-slate-700 hover:bg-slate-100 disabled:opacity-40 transition"
+            className={iconBtn}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Right: Zoom, Rotate & Download Controls */}
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={handleZoomOut}
-            className="p-1.5 bg-white border border-slate-200 rounded-md text-slate-700 hover:bg-slate-100 transition"
-            title="Zoom Out (-25%)"
-          >
+        <div className="flex items-center gap-1">
+          <button onClick={() => setZoomLevel((p) => Math.max(50, p - 25))} className={iconBtn} aria-label="Zoom out">
             <ZoomOut className="w-3.5 h-3.5" />
           </button>
-
-          <span className="text-[11px] font-mono font-bold text-slate-700 min-w-[45px] text-center bg-white px-2 py-1 rounded border border-slate-200">
+          <span className="text-[11px] font-mono font-bold text-ink-muted min-w-[42px] text-center">
             {zoomLevel}%
           </span>
-
-          <button
-            onClick={handleZoomIn}
-            className="p-1.5 bg-white border border-slate-200 rounded-md text-slate-700 hover:bg-slate-100 transition"
-            title="Zoom In (+25%)"
-          >
+          <button onClick={() => setZoomLevel((p) => Math.min(200, p + 25))} className={iconBtn} aria-label="Zoom in">
             <ZoomIn className="w-3.5 h-3.5" />
           </button>
-
-          <button
-            onClick={handleRotate}
-            className="p-1.5 bg-white border border-slate-200 rounded-md text-slate-700 hover:bg-slate-100 transition ml-1"
-            title="Putar Dokumen (90°)"
-          >
+          <button onClick={() => setRotation((p) => (p + 90) % 360)} className={iconBtn} aria-label="Rotate">
             <RotateCw className="w-3.5 h-3.5" />
           </button>
-
-          <button
-            onClick={handleDownload}
-            className="p-1.5 bg-white border border-slate-200 rounded-md text-slate-700 hover:bg-slate-100 transition"
-            title="Unduh Berkas PDF"
-          >
+          <button onClick={handleDownload} className={iconBtn} aria-label="Download">
             <Download className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* PDF Viewport Canvas Area */}
-      <div className="w-full bg-slate-100 border border-slate-300 rounded-xl p-4 min-h-[500px] flex items-center justify-center overflow-auto relative">
-        {/* Stream Native PDF Embed */}
+      <div className="w-full bg-canvas rounded p-3 min-h-[500px] flex items-start justify-center overflow-auto">
         {viewMode === 'embed' ? (
           <iframe
             src={effectivePdfUrl}
             title={originalFilename}
-            className="w-full h-[600px] rounded-lg border border-slate-300 bg-white shadow-sm"
+            className="w-full h-[600px] rounded bg-surface"
           />
         ) : (
-          /* Vector Structured Document View displaying 100% REAL data */
           <div
-            className="w-full max-w-2xl bg-white border border-slate-300 rounded-lg p-8 text-slate-900 transition-all duration-300 space-y-6"
+            className="w-full max-w-2xl bg-surface rounded p-6 text-ink space-y-5 transition-transform duration-300"
             style={{
               transform: `scale(${zoomLevel / 100}) rotate(${rotation}deg)`,
               transformOrigin: 'top center',
             }}
           >
-            {/* Document Page Header */}
-            <div className="border-b-2 border-slate-900 pb-4 flex justify-between items-end">
-              <div>
-                <h2 className="text-xl font-extrabold tracking-tight text-slate-900 uppercase">
-                  {extraction?.full_name || candidateName}
-                </h2>
-                <p className="text-xs text-slate-600 font-medium mt-1">
-                  {extraction?.contact?.email || 'Email tidak tercantum'} {extraction?.contact?.phone_number ? `| ${extraction.contact.phone_number}` : ''}
-                </p>
-                {extraction?.contact?.location && (
-                  <p className="text-[11px] text-slate-500 font-mono">
-                    Lokasi: {extraction.contact.location}
-                  </p>
-                )}
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] font-mono uppercase bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300">
-                  STRUCTURED VECTOR VIEW
-                </span>
-              </div>
+            <div className="border-b-2 border-ink pb-3">
+              <h2 className="text-lg font-extrabold tracking-tight uppercase">
+                {extraction?.full_name || candidateName}
+              </h2>
+              <p className="text-xs text-ink-muted mt-1">
+                {extraction?.contact?.email || 'Email tidak tercantum'}
+                {extraction?.contact?.phone_number ? ` · ${extraction.contact.phone_number}` : ''}
+              </p>
+              {extraction?.contact?.location && (
+                <p className="text-[11px] text-ink-subtle font-mono">{extraction.contact.location}</p>
+              )}
             </div>
 
-            {/* Single Unified Vector View Displaying ALL Sections */}
-            <div className="space-y-6 text-xs">
-              {/* 1. Profile Summary */}
-              <div>
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
-                  <span>📝</span> RINGKASAN PROFIL KANDIDAT (AI SUMMARY)
-                </h3>
-                {extraction?.summary ? (
-                  <p className="text-slate-700 leading-relaxed italic bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    "{extraction.summary}"
+            <div className="space-y-5 text-xs">
+              {section(
+                'Ringkasan Profil',
+                extraction?.summary ? (
+                  <p className="text-ink-muted leading-relaxed italic bg-canvas p-3 rounded">
+                    &ldquo;{extraction.summary}&rdquo;
                   </p>
                 ) : (
-                  <p className="text-slate-400 italic text-[11px]">
-                    Ringkasan profil belum tersedia.
-                  </p>
-                )}
-              </div>
+                  emptyLine('Ringkasan profil belum tersedia.')
+                )
+              )}
 
-              {/* 2. Work Experience */}
-              <div>
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
-                  <span>💼</span> RIWAYAT PENGALAMAN KERJA (WORK EXPERIENCE)
-                </h3>
-                {extraction?.work_experience && extraction.work_experience.length > 0 ? (
-                  <div className="space-y-3">
+              {section(
+                'Riwayat Pengalaman Kerja',
+                extraction?.work_experience && extraction.work_experience.length > 0 ? (
+                  <div className="space-y-2">
                     {extraction.work_experience.map((exp, i) => (
-                      <div key={i} className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                        <div className="flex justify-between font-bold text-slate-900">
-                          <span>{exp.role || 'Software Engineer'} — <span className="text-sky-700">{exp.company || 'Tech Corp'}</span></span>
-                          <span className="text-[10px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
-                            {exp.start_date || '2022'} s/d {exp.is_current ? 'Present' : exp.end_date || '2024'} ({exp.duration_months || 12} bln)
+                      <div key={i} className="p-3 bg-canvas rounded space-y-1">
+                        <div className="flex justify-between font-bold gap-2">
+                          <span>
+                            {exp.role || 'Role'} — <span className="text-accent">{exp.company || 'Perusahaan'}</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-ink-subtle shrink-0">
+                            {exp.start_date || '?'} s/d {exp.is_current ? 'Present' : exp.end_date || '?'} (
+                            {exp.duration_months || 0} bln)
                           </span>
                         </div>
                         {exp.description && (
-                          <p className="text-slate-600 text-[11px] leading-relaxed mt-1">{exp.description}</p>
+                          <p className="text-ink-muted text-[11px] leading-relaxed">{exp.description}</p>
                         )}
                         {exp.projects && exp.projects.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-2">
+                          <div className="flex flex-wrap gap-1 mt-1">
                             {exp.projects.map((proj, pidx) => (
-                              <span key={pidx} className="text-[9px] font-mono bg-sky-50 text-sky-800 px-1.5 py-0.5 rounded border border-sky-200">
-                                🚀 {proj}
+                              <span
+                                key={pidx}
+                                className="text-[10px] font-mono bg-accent-soft text-accent px-1.5 py-0.5 rounded"
+                              >
+                                {proj}
                               </span>
                             ))}
                           </div>
@@ -294,50 +236,42 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-400 italic text-[11px]">
-                    Tidak ada riwayat pengalaman kerja yang terdaftar.
-                  </p>
-                )}
-              </div>
+                  emptyLine('Tidak ada riwayat pengalaman kerja.')
+                )
+              )}
 
-              {/* 3. Technical Skills */}
-              <div>
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
-                  <span>⚡</span> SKILL & KEMAMPUAN TEKNIS
-                </h3>
-                {extraction?.skills && extraction.skills.length > 0 ? (
+              {section(
+                'Skill & Kemampuan Teknis',
+                extraction?.skills && extraction.skills.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
                     {extraction.skills.map((skill, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 bg-slate-100 text-slate-800 border border-slate-300 font-semibold text-[11px] rounded-md shadow-sm"
+                        className="px-2 py-0.5 bg-canvas text-ink font-semibold text-[11px] rounded"
                       >
                         {skill.normalized_name || skill.name}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-400 italic text-[11px]">
-                    Tidak ada daftar skill terdeteksi.
-                  </p>
-                )}
-              </div>
+                  emptyLine('Tidak ada daftar skill terdeteksi.')
+                )
+              )}
 
-              {/* 4. Education History */}
-              <div>
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
-                  <span>🎓</span> RIWAYAT PENDIDIKAN (EDUCATION)
-                </h3>
-                {extraction?.education && extraction.education.length > 0 ? (
-                  <div className="space-y-2">
+              {section(
+                'Riwayat Pendidikan',
+                extraction?.education && extraction.education.length > 0 ? (
+                  <div className="space-y-1.5">
                     {extraction.education.map((edu, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-start">
+                      <div key={idx} className="p-3 bg-canvas rounded flex justify-between items-start gap-2">
                         <div>
-                          <p className="font-bold text-slate-900">{edu.institution || 'Institusi Pendidikan'}</p>
-                          <p className="text-slate-700 text-[11px] font-medium">{edu.degree} — {edu.major}</p>
+                          <p className="font-bold">{edu.institution || 'Institusi'}</p>
+                          <p className="text-ink-muted text-[11px] font-medium">
+                            {edu.degree} — {edu.major}
+                          </p>
                         </div>
                         {(edu.start_year || edu.end_year) && (
-                          <span className="font-mono text-[10px] text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                          <span className="font-mono text-[10px] text-ink-subtle shrink-0">
                             {edu.start_year || '?'} – {edu.end_year || '?'}
                           </span>
                         )}
@@ -345,75 +279,68 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-400 italic text-[11px]">
-                    Tidak ada riwayat pendidikan formal terdaftar.
-                  </p>
-                )}
-              </div>
+                  emptyLine('Tidak ada riwayat pendidikan formal.')
+                )
+              )}
 
-              {/* 5. Projects & Portfolios */}
-              <div>
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
-                  <span>🚀</span> PORTOFOLIO KARYA & PROYEK UTAMA
-                </h3>
-                {extraction?.portfolios && extraction.portfolios.length > 0 ? (
-                  <div className="space-y-2">
+              {section(
+                'Portofolio & Proyek',
+                extraction?.portfolios && extraction.portfolios.length > 0 ? (
+                  <div className="space-y-1.5">
                     {extraction.portfolios.map((p, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-start">
+                      <div key={idx} className="p-3 bg-canvas rounded flex justify-between items-start gap-2">
                         <div>
-                          <strong className="block text-slate-900 font-bold">{p.title}</strong>
-                          {p.description && <p className="text-[11px] text-slate-600 mt-0.5">{p.description}</p>}
+                          <strong className="block font-bold">{p.title}</strong>
+                          {p.description && <p className="text-[11px] text-ink-muted mt-0.5">{p.description}</p>}
                         </div>
                         {p.url && (
-                          <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-sky-700 hover:underline font-mono text-[10px] bg-sky-50 px-2 py-1 rounded border border-sky-200">
-                            {p.url}
+                          <a
+                            href={p.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent hover:underline font-mono text-[10px] shrink-0"
+                          >
+                            link
                           </a>
                         )}
                       </div>
                     ))}
                   </div>
                 ) : extraction?.projects && extraction.projects.length > 0 ? (
-                  <div className="space-y-2 text-slate-700">
+                  <div className="space-y-1.5">
                     {extraction.projects.map((proj, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                        <strong className="block text-slate-900 font-bold">{proj}</strong>
+                      <div key={idx} className="p-3 bg-canvas rounded font-bold">
+                        {proj}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-400 italic text-[11px]">
-                    Tidak ada data proyek portofolio.
-                  </p>
-                )}
-              </div>
+                  emptyLine('Tidak ada data proyek portofolio.')
+                )
+              )}
 
-              {/* 6. Work References */}
-              {extraction?.references && extraction.references.length > 0 && (
-                <div>
-                  <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
-                    <span>👥</span> REFERENSI KERJA PROFESSIONAL
-                  </h3>
+              {extraction?.references &&
+                extraction.references.length > 0 &&
+                section(
+                  'Referensi Kerja',
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {extraction.references.map((ref, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-0.5">
-                        <p className="font-bold text-slate-900">{ref.name}</p>
-                        <p className="text-[11px] text-sky-700 font-medium">{ref.role || 'Referensi Professional'} {ref.company ? `— ${ref.company}` : ''}</p>
-                        {ref.contact_info && <p className="text-[10px] font-mono text-slate-500">{ref.contact_info}</p>}
+                      <div key={idx} className="p-3 bg-canvas rounded space-y-0.5">
+                        <p className="font-bold">{ref.name}</p>
+                        <p className="text-[11px] text-accent font-medium">
+                          {ref.role || 'Referensi'} {ref.company ? `— ${ref.company}` : ''}
+                        </p>
+                        {ref.contact_info && (
+                          <p className="text-[10px] font-mono text-ink-subtle">{ref.contact_info}</p>
+                        )}
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
-
-            {/* Document Footer Page Indicator */}
-            <div className="pt-6 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-              <span>Original File: {originalFilename}</span>
-              <span>STRUCTURED VECTOR VIEW — PAGE 1/1</span>
+                )}
             </div>
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 };

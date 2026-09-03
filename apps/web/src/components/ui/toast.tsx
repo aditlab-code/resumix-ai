@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -17,15 +18,19 @@ interface ToastContainerProps {
   onDismiss: (id: string) => void;
 }
 
-export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismiss }) => {
-  return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-3 max-w-md pointer-events-none">
-      {toasts.map((toast) => (
-        <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
-      ))}
-    </div>
-  );
+const ICONS: Record<ToastType, React.ReactNode> = {
+  success: <CheckCircle2 className="w-4 h-4 text-ok shrink-0" />,
+  error: <AlertCircle className="w-4 h-4 text-danger shrink-0" />,
+  info: <Info className="w-4 h-4 text-accent shrink-0" />,
 };
+
+export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismiss }) => (
+  <div className="fixed bottom-4 right-4 z-[60] flex flex-col gap-2 max-w-sm pointer-events-none">
+    {toasts.map((toast) => (
+      <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
+    ))}
+  </div>
+);
 
 const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void }> = ({
   toast,
@@ -36,34 +41,23 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
     return () => clearTimeout(timer);
   }, [toast.id, onDismiss]);
 
-  const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />,
-    info: <Info className="w-5 h-5 text-sky-600 shrink-0" />,
-  };
-
-  const borderColors = {
-    success: 'border-emerald-300 bg-white text-emerald-950',
-    error: 'border-rose-300 bg-white text-rose-950',
-    info: 'border-sky-300 bg-white text-sky-950',
-  };
-
   return (
     <div
-      className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border transition-all animate-in slide-in-from-bottom-5 duration-300 ${
-        borderColors[toast.type]
-      }`}
+      className={cn(
+        'pointer-events-auto flex items-start gap-2.5 p-3 rounded bg-surface border border-line'
+      )}
     >
-      {icons[toast.type]}
-      <div className="flex-1 pr-2">
-        <h5 className="text-xs font-bold text-slate-900">{toast.title}</h5>
+      {ICONS[toast.type]}
+      <div className="flex-1 min-w-0">
+        <h5 className="text-xs font-bold text-ink">{toast.title}</h5>
         {toast.description && (
-          <p className="text-[11px] text-slate-600 mt-0.5 leading-normal">{toast.description}</p>
+          <p className="text-[11px] text-ink-muted mt-0.5 leading-snug">{toast.description}</p>
         )}
       </div>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="text-slate-400 hover:text-slate-700 transition p-0.5 rounded"
+        className="text-ink-subtle hover:text-ink transition-colors shrink-0"
+        aria-label="Tutup"
       >
         <X className="w-4 h-4" />
       </button>
