@@ -1,0 +1,94 @@
+from fastapi import FastAPI, File, UploadFile, HTTPException, Body
+from app.schemas.cv_schema import JobFitScoreBreakdown
+from app.services.pdf_extractor import extract_pdf_text
+from app.services.skill_normalizer import normalize_skill_name
+from app.services.scoring_service import compute_job_fit_score
+from app.services.llm_provider import function_extract_via_groq
+
+app = FastAPI(
+    title="CV ATS AI Microservice",
+    description="Microservice for PDF text extraction, OCR fallback, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, and job-fit scoring",
+    version="1.0.0",
+)
+
+MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
+
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "ai-service",
+        "provider": "groq",
+        "model": "llama-3.1-8b-instant"
+    }
+
+
+@app.post("/v1/cv/extract-text")
+async def extract_text_endpoint(file: UploadFile = File(...)):
+    is_pdf = (
+        file.content_type in ["application/pdf", "application/x-pdf", "application/octet-stream"]
+        or (file.filename and file.filename.lower().endswith(".pdf"))
+    )
+    if not is_pdf:
+        raise HTTPException(
+            status_code=400, detail="Hanya berkas format PDF yang didukung."
+        )
+
+    file_bytes = await file.read()
+    if len(file_bytes) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(
+            status_code=400, detail=f"Ukuran berkas melebihi batas maksimum {MAX_FILE_SIZE_BYTES // (1024*1024)}MB."
+        )
+
+    try:
+        raw_text, metadata = extract_pdf_text(file_bytes)
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Gagal mengekstrak teks PDF: {str(exc)}")
+
+    return {
+        "raw_text": raw_text,
+        "metadata": metadata,
+    }
+
+
+@app.post("/v1/cv/llm-extract")
+async def llm_extract_endpoint(raw_text: str = Body(..., embed=True)):
+    if not raw_text.strip():
+        raise HTTPException(status_code=400, detail="Teks CV tidak boleh kosong.")
+    try:
+        extraction = await function_extract_via_groq(raw_text)
+        return {
+            "provider": "groq",
+            "model": "llama-3.1-8b-instant",
+            "extraction": extraction
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Gagal pemrosesan Groq LLM: {str(exc)}")
+
+
+@app.post("/v1/cv/normalize-skills")
+def normalize_skills_endpoint(skills: list[str] = Body(...)):
+    normalized = [normalize_skill_name(s) for s in skills]
+    return {"skills": skills, "normalized_skills": normalized}
+
+
+@app.post("/v1/cv/calculate-score", response_model=JobFitScoreBreakdown)
+def calculate_score_endpoint(
+    candidate_skills: list[str] = Body(...),
+    candidate_experience_months: int | None = Body(default=0),
+    mandatory_skills: list[str] = Body(...),
+    preferred_skills: list[str] | None = Body(default=None),
+    required_experience_months: int = Body(default=24),
+    semantic_similarity: float = Body(default=0.80),
+):
+    return compute_job_fit_score(
+        candidate_skills=candidate_skills,
+        candidate_experience_months=candidate_experience_months,
+        mandatory_skills=mandatory_skills,
+        preferred_skills=preferred_skills,
+        required_experience_months=required_experience_months,
+        semantic_similarity=semantic_similarity,
+    )

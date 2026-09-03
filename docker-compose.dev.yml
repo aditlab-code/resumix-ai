@@ -1,0 +1,63 @@
+name: architecture-rag-pipeline
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ats_postgres_dev
+    environment:
+      POSTGRES_DB: cv_ats_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./database/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/001_initial_schema.sql
+
+  redis:
+    image: redis:7-alpine
+    container_name: ats_redis_dev
+    ports:
+      - "6379:6379"
+
+  ai-service:
+    build:
+      context: ./apps/ai-service
+      dockerfile: Dockerfile
+    container_name: ats_ai_service_dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/ai-service:/app
+    environment:
+      - PORT=8000
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: ats_core_api_dev
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+      - API_PORT=3000
+      - AI_SERVICE_URL=http://ai-service:8000
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/cv_ats_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+      - ai-service
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: ats_web_dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
+    depends_on:
+      - api
