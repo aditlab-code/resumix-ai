@@ -8,17 +8,17 @@ export type StatusType = ApplicationStatus | ParseStatus;
 type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
 
 const toneClass: Record<Tone, string> = {
-  neutral: 'bg-slate-100 text-slate-800 border border-slate-300',
-  accent: 'bg-blue-50 text-blue-800 border border-blue-300 font-bold',
-  ok: 'bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold',
-  warn: 'bg-amber-50 text-amber-900 border border-amber-300 font-bold',
-  danger: 'bg-red-50 text-red-800 border border-red-300 font-bold',
+  neutral: 'bg-surface-sunken text-ink-subtle border border-surface-border',
+  accent: 'bg-semantic-info_soft text-semantic-info border border-semantic-info/20 font-semibold',
+  ok: 'bg-semantic-success_soft text-semantic-success border border-semantic-success/20 font-semibold',
+  warn: 'bg-semantic-warning_soft text-semantic-warning border border-semantic-warning/20 font-semibold',
+  danger: 'bg-semantic-danger_soft text-semantic-danger border border-semantic-danger/20 font-semibold',
 };
 
 const statusMap: Record<StatusType, { label: string; tone: Tone }> = {
   // Parse statuses
   uploaded: { label: 'UPLOADED', tone: 'neutral' },
-  queued: { label: 'QUEUED', tone: 'accent' },
+  queued: { label: 'QUEUED', tone: 'warn' },
   processing: { label: 'PROCESSING', tone: 'accent' },
   processed: { label: 'PROCESSED', tone: 'ok' },
   needs_review: { label: 'NEEDS REVIEW', tone: 'warn' },
@@ -27,7 +27,7 @@ const statusMap: Record<StatusType, { label: string; tone: Tone }> = {
   applied: { label: 'APPLIED', tone: 'neutral' },
   screening: { label: 'SCREENING', tone: 'accent' },
   interview: { label: 'INTERVIEW', tone: 'accent' },
-  rejected: { label: 'REJECTED', tone: 'neutral' },
+  rejected: { label: 'REJECTED', tone: 'danger' },
   hired: { label: 'HIRED', tone: 'ok' },
   withdrawn: { label: 'WITHDRAWN', tone: 'neutral' },
 };
@@ -45,7 +45,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-mono tracking-wider uppercase shadow-2xs',
+        'inline-flex items-center gap-1.5 rounded-pill px-2.5 py-0.5 text-caption font-semibold tracking-wider uppercase',
         toneClass[config.tone],
         className
       )}

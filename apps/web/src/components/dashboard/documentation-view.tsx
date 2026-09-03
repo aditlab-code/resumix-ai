@@ -11,9 +11,9 @@ const Badge: React.FC<{ variant?: 'accent' | 'neutral'; children: React.ReactNod
   children,
   className = '',
 }) => {
-  const bgClass = variant === 'accent' ? 'bg-blue-50 text-blue-800 border border-blue-300' : 'bg-slate-100 text-slate-800 border border-slate-300';
+  const bgClass = variant === 'accent' ? 'bg-semantic-info_soft text-semantic-info border border-semantic-info/20' : 'bg-surface-sunken text-ink-subtle border border-surface-border';
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${bgClass} ${className}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-pill text-caption font-semibold uppercase tracking-wider ${bgClass} ${className}`}>
       {children}
     </span>
   );

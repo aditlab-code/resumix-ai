@@ -379,14 +379,14 @@ export default function HRDashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-canvas text-ink">
+    <div className="flex min-h-screen bg-surface-canvas text-ink-default">
       <Sidebar
         activeView={activeView}
         onViewChange={setActiveView}
         onResetData={() => setIsResetConfirmOpen(true)}
       />
 
-      <main className="flex-1 p-6 space-y-4 overflow-y-auto w-full min-w-0">
+      <main className="flex-1 p-6 space-y-6 overflow-y-auto w-full min-w-0 max-w-[1440px] mx-auto">
         <Header
           activeView={activeView}
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
@@ -405,7 +405,7 @@ export default function HRDashboardPage() {
 
             {jobs.length === 0 ? (
               <EmptyState
-                icon={<Briefcase className="w-8 h-8 text-accent" />}
+                icon={<Briefcase className="w-8 h-8 text-brand-accent" />}
                 title="Belum Ada Lowongan Kerja Diterbitkan"
                 description="Sistem siap menerima kriteria lowongan. Buat lowongan kerja baru atau impor deskripsi posisi dari LinkedIn/Glints untuk mulai menerima dan meng-analisis CV pelamar."
                 actionLabel="Buat Lowongan Kerja Baru"
@@ -420,50 +420,50 @@ export default function HRDashboardPage() {
                 />
 
                 {/* Unified Candidate Navigation Bar & View Content */}
-                <div className="space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-3 px-1 border-b border-line pb-2.5">
+                <div className="space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 px-1 border-b border-surface-border pb-3">
                     <div>
-                      <h2>Kandidat — {activeJob?.title || 'Posisi'}</h2>
-                      <p className="text-xs text-ink-muted">
+                      <h2 className="text-h2 font-bold text-ink-default">Kandidat — {activeJob?.title || 'Posisi'}</h2>
+                      <p className="text-caption text-ink-subtle mt-0.5">
                         {jobApplications.length} pelamar terdaftar
                       </p>
                     </div>
 
                     {/* Unified Segmented Nav Tab Control */}
-                    <div className="flex items-center bg-surface border border-line p-1 rounded-lg shadow-2xs">
+                    <div className="flex items-center bg-surface-sunken border border-surface-border p-1 rounded-md shadow-e1">
                       <button
                         onClick={() => setCandidateViewMode('table')}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all text-xs font-semibold ${
+                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-caption font-semibold focus-ring ${
                           candidateViewMode === 'table'
-                            ? 'bg-accent text-accent-fg shadow-2xs font-bold'
-                            : 'text-ink-muted hover:text-ink hover:bg-canvas'
+                            ? 'bg-brand-accent text-white font-bold shadow-e1'
+                            : 'text-ink-subtle hover:text-ink-default hover:bg-surface-border'
                         }`}
                       >
-                        <Table className="w-3.5 h-3.5" />
+                        <Table className="w-4 h-4 text-current" />
                         Table
                       </button>
                       
                       <button
                         onClick={() => setCandidateViewMode('kanban')}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all text-xs font-semibold ${
+                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-caption font-semibold focus-ring ${
                           candidateViewMode === 'kanban'
-                            ? 'bg-accent text-accent-fg shadow-2xs font-bold'
-                            : 'text-ink-muted hover:text-ink hover:bg-canvas'
+                            ? 'bg-brand-accent text-white font-bold shadow-e1'
+                            : 'text-ink-subtle hover:text-ink-default hover:bg-surface-border'
                         }`}
                       >
-                        <Kanban className="w-3.5 h-3.5" />
+                        <Kanban className="w-4 h-4 text-current" />
                         Kanban
                       </button>
 
                       <button
                         onClick={() => setCandidateViewMode('compare')}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all text-xs font-semibold ${
+                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-caption font-semibold focus-ring ${
                           candidateViewMode === 'compare'
-                            ? 'bg-accent text-accent-fg shadow-2xs font-bold'
-                            : 'text-ink-muted hover:text-ink hover:bg-canvas'
+                            ? 'bg-brand-accent text-white font-bold shadow-e1'
+                            : 'text-ink-subtle hover:text-ink-default hover:bg-surface-border'
                         }`}
                       >
-                        <Scale className="w-3.5 h-3.5" />
+                        <Scale className="w-4 h-4 text-current" />
                         Compare ({jobApplications.length})
                       </button>
                     </div>

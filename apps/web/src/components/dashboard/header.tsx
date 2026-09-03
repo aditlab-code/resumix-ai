@@ -29,22 +29,26 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAuditLogs,
   onOpenSkillTaxonomyModal,
 }) => (
-  <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface border border-slate-300 p-4 rounded-lg shadow-2xs">
+  <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-raised border border-surface-border p-5 rounded-md shadow-e1">
     <div className="flex items-center gap-3">
-      <div className="w-1.5 h-6 bg-accent rounded-full hidden sm:block"></div>
+      <div className="flex items-center gap-1 hidden sm:flex shrink-0">
+        <span className="w-2.5 h-2.5 rounded-full bg-brand-accent"></span>
+        <span className="w-2.5 h-2.5 rounded-full bg-brand-accent/60"></span>
+        <span className="w-2.5 h-2.5 rounded-full bg-brand-accent/30"></span>
+      </div>
       <div>
-        <h1 className="text-base font-black tracking-tight text-slate-900">{TITLES[activeView]}</h1>
-        <p className="text-[11px] font-medium text-slate-600">Resumix AI Enterprise Candidate Intelligence</p>
+        <h1 className="text-h1 font-bold text-ink-default tracking-tight">{TITLES[activeView]}</h1>
+        <p className="text-caption font-medium text-ink-subtle mt-0.5">Resumix AI Enterprise Candidate Intelligence & Dual-Vector ATS</p>
       </div>
     </div>
 
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2.5">
       {onOpenSkillTaxonomyModal && (
         <Button
           variant="secondary"
           size="sm"
           onClick={onOpenSkillTaxonomyModal}
-          iconLeft={<BookOpen className="w-3.5 h-3.5 text-slate-700" />}
+          iconLeft={<BookOpen className="w-4 h-4 text-ink-subtle" />}
         >
           Taksonomi Skill
         </Button>
@@ -53,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
         variant="secondary"
         size="sm"
         onClick={onOpenAuditLogs}
-        iconLeft={<Shield className="w-3.5 h-3.5 text-slate-700" />}
+        iconLeft={<Shield className="w-4 h-4 text-ink-subtle" />}
       >
         Audit Log
       </Button>
@@ -61,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({
         variant="secondary"
         size="sm"
         onClick={onOpenCreateJobModal}
-        iconLeft={<Plus className="w-3.5 h-3.5 text-slate-700" />}
+        iconLeft={<Plus className="w-4 h-4 text-ink-subtle" />}
       >
         Lowongan
       </Button>
@@ -69,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
         variant="primary"
         size="sm"
         onClick={onOpenUploadModal}
-        iconLeft={<FileText className="w-3.5 h-3.5" />}
+        iconLeft={<FileText className="w-4 h-4 text-white" />}
       >
         Unggah CV
       </Button>

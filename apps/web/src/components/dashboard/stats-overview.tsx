@@ -24,7 +24,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
   ).length;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
       <Stat label="Lowongan Aktif" value={activeJobs} hint="terbuka" />
       <Stat label="Total Kandidat" value={applications.length} hint="aplikasi" />
       <Stat

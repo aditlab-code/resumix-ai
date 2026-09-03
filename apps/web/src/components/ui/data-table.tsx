@@ -23,36 +23,36 @@ export function DataTable<T>({ columns, rows, rowKey, onRowClick, empty }: DataT
   if (rows.length === 0 && empty) return <>{empty}</>;
 
   return (
-    <div className="bg-surface border border-line rounded overflow-hidden">
+    <div className="bg-surface-base border border-surface-border rounded-md overflow-hidden shadow-e1">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead className="text-ink-subtle uppercase text-[11px] font-bold border-b border-line">
+        <table className="w-full text-left text-body">
+          <thead className="bg-surface-sunken text-ink-subtle uppercase text-caption font-semibold border-b border-surface-border">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={cn('px-4 py-2.5', col.align === 'right' && 'text-right')}
+                  className={cn('px-4 py-3', col.align === 'right' && 'text-right')}
                 >
                   {col.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-line">
+          <tbody className="divide-y divide-surface-border">
             {rows.map((row) => (
               <tr
                 key={rowKey(row)}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
                 className={cn(
-                  'group transition-colors',
-                  onRowClick && 'cursor-pointer hover:bg-canvas'
+                  'group transition-colors duration-fast',
+                  onRowClick && 'cursor-pointer hover:bg-surface-canvas'
                 )}
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
                     className={cn(
-                      'px-4 py-3 align-middle text-ink',
+                      'px-4 py-3.5 align-middle text-ink-default',
                       col.align === 'right' && 'text-right',
                       col.className
                     )}

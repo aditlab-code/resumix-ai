@@ -21,18 +21,21 @@ const NAV: { id: ActiveViewType; label: string; icon: typeof LayoutDashboard }[]
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onResetData }) => (
-  <aside className="w-56 bg-slate-100/95 border-r border-slate-300 h-screen sticky top-0 flex flex-col justify-between shrink-0 shadow-2xs">
+  <aside className="w-[264px] bg-ink-default border-r border-slate-800 h-screen sticky top-0 flex flex-col justify-between shrink-0 shadow-e2 text-white">
     <div>
       {/* Brand Header */}
-      <div className="px-4 h-14 flex items-center gap-2.5 border-b border-slate-300 bg-slate-100/50">
-        <div className="w-7 h-7 rounded bg-accent text-accent-fg flex items-center justify-center font-black text-sm shadow-2xs">
+      <div className="px-5 h-16 flex items-center gap-3 border-b border-slate-800 bg-ink-default/90">
+        <div className="w-8 h-8 rounded-md bg-brand-accent text-white flex items-center justify-center font-bold text-base shadow-e1">
           R
         </div>
-        <span className="font-black text-sm tracking-tight text-slate-900">Resumix AI</span>
+        <div className="flex flex-col">
+          <span className="font-bold text-body tracking-tight text-white">Resumix AI</span>
+          <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Enterprise ATS</span>
+        </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="p-2 space-y-1">
+      <nav className="p-3 space-y-1.5">
         {NAV.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
@@ -41,13 +44,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onRe
               key={item.id}
               onClick={() => onViewChange(item.id)}
               className={cn(
-                'w-full px-3 py-2 rounded-r-md rounded-l-xs text-xs font-bold flex items-center gap-2.5 transition-all',
+                'w-full px-3.5 py-2.5 rounded-md text-body font-semibold flex items-center gap-3 focus-ring',
                 isActive
-                  ? 'bg-blue-100/90 text-accent border-l-4 border-accent shadow-2xs'
-                  : 'text-slate-700 hover:bg-slate-200/80 hover:text-slate-900 font-semibold'
+                  ? 'bg-brand-accent text-white shadow-e1 font-bold'
+                  : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
               )}
             >
-              <Icon className={cn('w-4 h-4', isActive ? 'text-accent' : 'text-slate-600')} />
+              <Icon className={cn('w-4 h-4', isActive ? 'text-white' : 'text-slate-400')} />
               {item.label}
             </button>
           );
@@ -57,16 +60,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onRe
 
     {/* Reset Data Footer */}
     {onResetData && (
-      <div className="p-2 border-t border-slate-300 bg-slate-100/50">
-        <Button
-          variant="ghost"
-          size="sm"
+      <div className="p-3 border-t border-slate-800 bg-ink-default/50">
+        <button
           onClick={onResetData}
-          iconLeft={<RotateCcw className="w-3.5 h-3.5 text-slate-600" />}
-          className="w-full justify-start text-slate-700 hover:bg-slate-200/80 hover:text-slate-900"
+          className="w-full px-3.5 py-2 rounded-md text-caption font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 flex items-center justify-start gap-2.5 focus-ring"
         >
+          <RotateCcw className="w-4 h-4 text-slate-400" />
           Reset Demo Data
-        </Button>
+        </button>
       </div>
     )}
   </aside>

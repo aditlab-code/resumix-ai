@@ -50,7 +50,7 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
 
       {filtered.length === 0 ? (
         <EmptyState
-          icon={<Briefcase className="w-8 h-8 text-accent" />}
+          icon={<Briefcase className="w-8 h-8 text-brand-accent" />}
           title={jobs.length === 0 ? 'Belum Ada Lowongan Kerja Diterbitkan' : 'Lowongan Tidak Ditemukan'}
           description={
             jobs.length === 0
@@ -61,28 +61,28 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
           onAction={onOpenCreateJobModal}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((job) => (
-            <Card key={job.id} className="flex flex-col justify-between gap-3">
-              <div className="space-y-3">
+            <Card key={job.id} interactive className="flex flex-col justify-between gap-4">
+              <div className="space-y-3.5">
                 <div className="flex justify-between items-start gap-2">
                   <div>
-                    <span className="text-[11px] font-bold uppercase text-ink-subtle">
+                    <span className="text-caption font-semibold uppercase tracking-wider text-ink-subtle">
                       {job.department}
                     </span>
-                    <h3 className="mt-0.5">{job.title}</h3>
+                    <h3 className="text-h3 font-bold text-ink-default mt-0.5">{job.title}</h3>
                   </div>
-                  <div className="flex items-center gap-0.5 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0">
                     <button
                       onClick={() => onEditJob(job)}
-                      className="p-1.5 text-ink-subtle hover:text-accent hover:bg-canvas rounded transition-colors"
+                      className="p-1.5 text-ink-subtle hover:text-brand-accent hover:bg-surface-sunken rounded-md transition-colors focus-ring"
                       aria-label="Edit lowongan"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => onDeleteJob(job.id)}
-                      className="p-1.5 text-ink-subtle hover:text-danger hover:bg-canvas rounded transition-colors"
+                      className="p-1.5 text-ink-subtle hover:text-semantic-danger hover:bg-semantic-danger_soft rounded-md transition-colors focus-ring"
                       aria-label="Hapus lowongan"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -90,26 +90,26 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                   </div>
                 </div>
 
-                <div className="space-y-1 text-xs text-ink-muted">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 shrink-0" />
+                <div className="space-y-1.5 text-caption text-ink-muted">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-ink-subtle shrink-0" />
                     {job.location}
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 shrink-0" />
-                    Min. <strong className="text-ink">{job.minimum_experience_months} bln</strong>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-ink-subtle shrink-0" />
+                    Min. <strong className="text-ink-default font-semibold">{job.minimum_experience_months} bln</strong>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 shrink-0" />
-                    <strong className="text-ink">{job.applications_count}</strong> pelamar
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-ink-subtle shrink-0" />
+                    <strong className="text-ink-default font-semibold">{job.applications_count}</strong> pelamar
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1 pt-2 border-t border-line">
+                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-surface-border">
                   {job.mandatory_skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-1.5 py-0.5 bg-canvas text-ink text-[11px] font-semibold rounded"
+                      className="px-2 py-0.5 bg-surface-sunken text-ink-default text-caption font-semibold rounded-sm border border-surface-border"
                     >
                       {skill}
                     </span>
@@ -121,7 +121,7 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                 variant="secondary"
                 size="sm"
                 onClick={() => onSelectJobForCandidates(job.id)}
-                className="w-full"
+                className="w-full mt-2"
               >
                 Lihat pelamar ({job.applications_count})
               </Button>

@@ -64,42 +64,42 @@ export const Overlay: React.FC<OverlayProps> = ({
         !isSide && 'flex items-center justify-center p-4 overflow-y-auto'
       )}
     >
-      <div className="fixed inset-0 bg-ink/40" onClick={onClose} />
+      <div className="fixed inset-0 bg-ink-default/40 backdrop-blur-sm" onClick={onClose} />
 
       <div
         className={cn(
-          'z-10 bg-surface flex flex-col',
+          'z-10 bg-surface-overlay flex flex-col shadow-e4',
           isSide
-            ? 'fixed inset-y-0 right-0 w-full max-w-3xl border-l border-line'
+            ? 'fixed inset-y-0 right-0 w-full max-w-3xl border-l border-surface-border shadow-e4'
             : cn(
-                'relative w-full my-8 rounded overflow-hidden border border-line max-h-[calc(100vh-4rem)]',
+                'relative w-full my-8 rounded-lg overflow-hidden border border-surface-border max-h-[calc(100vh-4rem)]',
                 centerSize[size]
               )
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-3 px-5 py-3 border-b border-line shrink-0">
+        <div className="flex items-start justify-between gap-3 px-6 py-4 border-b border-surface-border shrink-0">
           <div className="min-w-0">
-            {typeof title === 'string' ? <h2 className="truncate">{title}</h2> : title}
+            {typeof title === 'string' ? <h2 className="text-h2 font-bold text-ink-default truncate">{title}</h2> : title}
             {header}
           </div>
           <button
             onClick={onClose}
             aria-label="Tutup"
-            className="shrink-0 p-1 rounded text-ink-subtle hover:text-ink hover:bg-canvas transition-colors"
+            className="shrink-0 p-1.5 rounded-md text-ink-subtle hover:text-ink-default hover:bg-surface-sunken transition-colors focus-ring"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {subheader && <div className="shrink-0">{subheader}</div>}
+        {subheader && <div className="shrink-0 border-b border-surface-border bg-surface-sunken/50">{subheader}</div>}
 
-        <div className={cn('flex-1 overflow-y-auto bg-surface px-5 py-4', bodyClassName)}>
+        <div className={cn('flex-1 overflow-y-auto bg-surface-overlay px-6 py-5 text-body text-ink-muted', bodyClassName)}>
           {children}
         </div>
 
         {footer && (
-          <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-line shrink-0">
+          <div className="flex items-center justify-end gap-2.5 px-6 py-4 border-t border-surface-border bg-surface-sunken/40 shrink-0">
             {footer}
           </div>
         )}

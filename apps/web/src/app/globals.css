@@ -4,30 +4,29 @@
 
 @layer base {
   body {
-    @apply bg-canvas text-ink;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    font-size: 0.75rem;
-    line-height: 1.5;
+    @apply bg-surface-canvas text-ink-default font-sans antialiased selection:bg-brand-accent_soft selection:text-brand-accent;
+    font-size: 14px;
+    line-height: 21px;
   }
 
   h1 {
-    @apply text-[0.9375rem] font-bold tracking-tight text-ink;
+    @apply text-h1 text-ink-default tracking-tight font-bold;
   }
 
   h2 {
-    @apply text-[0.875rem] font-bold tracking-tight text-ink;
+    @apply text-h2 text-ink-default tracking-tight font-semibold;
   }
 
   h3,
   h4 {
-    @apply text-xs font-bold text-ink;
+    @apply text-h3 text-ink-default font-semibold;
   }
 
   input,
   select,
   textarea,
   button {
-    font: inherit;
+    font-family: inherit;
   }
 
   input:focus,
@@ -35,9 +34,11 @@
   textarea:focus {
     outline: none;
   }
+}
 
-  ::selection {
-    background-color: theme('colors.accent.soft');
-    color: theme('colors.accent.DEFAULT');
+@layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/30 focus-visible:ring-offset-1;
   }
 }
+

@@ -14,8 +14,8 @@ export const JobSelector: React.FC<JobSelectorProps> = ({ jobs, selectedJobId, o
   const selectedJob = jobs.find((j) => j.id === selectedJobId) || jobs[0];
 
   return (
-    <div className="bg-surface border border-line rounded p-2 space-y-2">
-      <div className="flex items-center gap-1.5 overflow-x-auto">
+    <div className="bg-surface-sunken border border-surface-border rounded-md p-3 space-y-2.5 shadow-e1">
+      <div className="flex items-center gap-2 overflow-x-auto">
         {jobs.map((job) => {
           const isSelected = job.id === selectedJobId;
           return (
@@ -23,17 +23,17 @@ export const JobSelector: React.FC<JobSelectorProps> = ({ jobs, selectedJobId, o
               key={job.id}
               onClick={() => onSelectJob(job.id)}
               className={cn(
-                'px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1.5 shrink-0 transition-colors',
+                'px-3.5 py-2 rounded-md text-caption flex items-center gap-2 shrink-0 focus-ring',
                 isSelected
-                  ? 'bg-accent text-accent-fg'
-                  : 'bg-canvas text-ink-muted hover:text-ink'
+                  ? 'bg-brand-accent text-white font-bold shadow-e1'
+                  : 'bg-surface-base text-ink-subtle font-semibold border border-surface-border hover:bg-surface-border hover:text-ink-default'
               )}
             >
               {job.title}
               <span
                 className={cn(
-                  'px-1.5 rounded font-mono text-[10px]',
-                  isSelected ? 'bg-white/20' : 'bg-line text-ink-muted'
+                  'px-2 py-0.5 rounded-pill text-[11px] font-semibold',
+                  isSelected ? 'bg-white/20 text-white' : 'bg-surface-sunken text-ink-subtle border border-surface-border'
                 )}
               >
                 {job.applications_count}
@@ -44,15 +44,15 @@ export const JobSelector: React.FC<JobSelectorProps> = ({ jobs, selectedJobId, o
       </div>
 
       {selectedJob && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted px-1">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-caption text-ink-subtle px-1">
           <span>
             Min. pengalaman{' '}
-            <strong className="text-ink">{selectedJob.minimum_experience_months} bln</strong>
+            <strong className="text-ink-default font-semibold">{selectedJob.minimum_experience_months} bln</strong>
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1.5 flex-wrap">
             Skill wajib:
             {selectedJob.mandatory_skills.map((skill) => (
-              <span key={skill} className="px-1.5 py-0.5 bg-canvas rounded text-[11px] font-semibold text-ink">
+              <span key={skill} className="px-2 py-0.5 bg-surface-base border border-surface-border rounded-sm text-[11px] font-semibold text-ink-default shadow-2xs">
                 {skill}
               </span>
             ))}

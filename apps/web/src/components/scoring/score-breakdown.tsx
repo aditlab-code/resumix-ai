@@ -14,7 +14,11 @@ export interface ScoreBreakdownCardProps {
 const matchLabel = (s: number) =>
   s >= 80 ? 'Strong Match' : s >= 60 ? 'Potential Match' : 'Needs Review';
 const matchTone = (s: number) =>
-  s >= 80 ? 'bg-ok-soft text-ok' : s >= 60 ? 'bg-accent-soft text-accent' : 'bg-warn-soft text-warn';
+  s >= 80
+    ? 'bg-semantic-success_soft text-semantic-success border-semantic-success/20'
+    : s >= 60
+      ? 'bg-semantic-warning_soft text-semantic-warning border-semantic-warning/20'
+      : 'bg-semantic-danger_soft text-semantic-danger border-semantic-danger/20';
 
 export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, className = '' }) => {
   const meters = [
@@ -25,17 +29,17 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
   ];
 
   return (
-    <Card className={cn('space-y-4', className)}>
-      <div className="flex items-center justify-between border-b border-line pb-3">
+    <Card className={cn('space-y-4 shadow-e1', className)}>
+      <div className="flex items-center justify-between border-b border-surface-border pb-3.5">
         <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-extrabold text-accent tracking-tight">
+          <span className="text-metric font-bold text-ink-default tracking-tight tabular-nums">
             {score.final_score}
           </span>
-          <span className="text-xs font-semibold text-ink-subtle">/ 100</span>
+          <span className="text-caption font-semibold text-ink-subtle">/ 100</span>
         </div>
         <span
           className={cn(
-            'inline-flex items-center px-2.5 py-1 text-xs font-bold rounded',
+            'inline-flex items-center px-3 py-1 text-caption font-bold rounded-pill border',
             matchTone(score.final_score)
           )}
         >
@@ -49,10 +53,10 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
         ))}
       </div>
 
-      <div className="pt-3 border-t border-line space-y-3">
+      <div className="pt-3.5 border-t border-surface-border space-y-3.5">
         <div>
-          <SectionLabel className="mb-2 flex items-center gap-1.5 normal-case tracking-normal text-ink">
-            <Check className="w-3.5 h-3.5 text-ok" />
+          <SectionLabel className="mb-2 flex items-center gap-1.5 normal-case tracking-normal text-ink-default font-semibold">
+            <Check className="w-4 h-4 text-semantic-success" />
             Skill cocok ({score.matched_skills.length})
           </SectionLabel>
           <div className="flex flex-wrap gap-1.5">
@@ -60,28 +64,28 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
               score.matched_skills.map((skill) => (
                 <span
                   key={skill}
-                  className="px-2 py-0.5 bg-ok-soft text-ok text-[11px] font-semibold rounded"
+                  className="px-2.5 py-0.5 bg-semantic-success_soft text-semantic-success border border-semantic-success/20 text-caption font-semibold rounded-pill"
                 >
                   {skill}
                 </span>
               ))
             ) : (
-              <span className="text-ink-subtle text-xs italic">Tidak ada skill yang cocok</span>
+              <span className="text-ink-subtle text-caption italic">Tidak ada skill yang cocok</span>
             )}
           </div>
         </div>
 
         {score.missing_mandatory_skills.length > 0 && (
           <div>
-            <SectionLabel className="mb-2 flex items-center gap-1.5 normal-case tracking-normal text-danger">
-              <AlertCircle className="w-3.5 h-3.5" />
+            <SectionLabel className="mb-2 flex items-center gap-1.5 normal-case tracking-normal text-semantic-danger font-semibold">
+              <AlertCircle className="w-4 h-4 text-semantic-danger" />
               Skill wajib belum ditemukan ({score.missing_mandatory_skills.length})
             </SectionLabel>
             <div className="flex flex-wrap gap-1.5">
               {score.missing_mandatory_skills.map((skill) => (
                 <span
                   key={skill}
-                  className="px-2 py-0.5 bg-danger-soft text-danger text-[11px] font-semibold rounded"
+                  className="px-2.5 py-0.5 bg-semantic-danger_soft text-semantic-danger border border-semantic-danger/20 text-caption font-semibold rounded-pill"
                 >
                   {skill}
                 </span>
@@ -91,10 +95,10 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
         )}
       </div>
 
-      <div className="p-3 bg-canvas rounded text-[11px] text-ink-muted flex items-start gap-2">
-        <Info className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-        <p>
-          Skor AI adalah <strong>alat bantu keputusan HR</strong>, tidak menolak kandidat secara
+      <div className="p-3.5 bg-surface-sunken border border-surface-border rounded-md text-caption text-ink-subtle flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-brand-accent shrink-0 mt-0.5" />
+        <p className="leading-relaxed">
+          Skor AI adalah <strong className="text-ink-default font-semibold">alat bantu keputusan HR</strong>, tidak menolak kandidat secara
           otomatis. HR berwenang meninjau ulang CV secara manual.
         </p>
       </div>

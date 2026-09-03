@@ -5,19 +5,20 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const button = cva(
-  'inline-flex items-center justify-center gap-1.5 rounded font-bold whitespace-nowrap transition-colors disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+  'inline-flex items-center justify-center gap-1.5 rounded-md font-semibold whitespace-nowrap disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/30 focus-visible:ring-offset-1',
   {
     variants: {
       variant: {
-        primary: 'bg-accent text-accent-fg hover:bg-accent/90',
-        secondary: 'bg-canvas text-ink hover:bg-line',
-        ghost: 'bg-transparent text-ink-muted hover:bg-canvas hover:text-ink',
-        danger: 'bg-danger text-danger-fg hover:bg-danger/90',
-        'danger-soft': 'bg-danger-soft text-danger hover:bg-danger/15',
+        primary: 'bg-brand-accent text-white font-bold hover:bg-brand-accent_hover shadow-e1',
+        secondary: 'bg-surface-sunken text-ink-default font-semibold border border-surface-border hover:bg-surface-border hover:text-ink-default shadow-2xs',
+        ghost: 'bg-transparent text-ink-subtle hover:bg-surface-sunken hover:text-ink-default',
+        danger: 'bg-semantic-danger text-white font-bold hover:bg-red-800 shadow-e1',
+        'danger-soft': 'bg-semantic-danger_soft text-semantic-danger font-semibold hover:bg-red-200',
       },
       size: {
-        sm: 'h-7 px-2.5 text-xs',
-        md: 'h-9 px-4 text-xs',
+        sm: 'h-8 px-3 text-caption',
+        md: 'h-9 px-4 text-body',
+        lg: 'h-11 px-5 text-body font-bold',
       },
     },
     defaultVariants: {

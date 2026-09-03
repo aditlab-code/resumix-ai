@@ -7,6 +7,7 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  outputFileTracing: false,
   transpilePackages: ['@cv-ats/contracts'],
   webpack: (config, { isServer }) => {
     config.resolve.alias.canvas = false;
