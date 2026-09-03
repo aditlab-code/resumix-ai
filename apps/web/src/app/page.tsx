@@ -6,6 +6,8 @@ import { Header, ActiveViewType } from '@/components/dashboard/header';
 import { StatsOverview } from '@/components/dashboard/stats-overview';
 import { JobSelector } from '@/components/dashboard/job-selector';
 import { CandidateTable } from '@/components/dashboard/candidate-table';
+import { KanbanBoard } from '@/components/candidates/kanban-board';
+import { CandidateComparator } from '@/components/candidates/candidate-comparator';
 import { ScoreBreakdownCard } from '@/components/scoring/score-breakdown';
 import { JobsManagerView } from '@/components/dashboard/jobs-manager-view';
 import { GlobalCandidatesView } from '@/components/dashboard/global-candidates-view';
@@ -18,52 +20,75 @@ import { SkillTaxonomyModal } from '@/components/dashboard/skill-taxonomy-modal'
 import { CandidateDetailDrawer } from '@/components/dashboard/candidate-detail-drawer';
 import { DeleteCandidateModal } from '@/components/dashboard/delete-candidate-modal';
 import { ToastContainer, ToastMessage } from '@/components/ui/toast';
-import { Card, ConfirmDialog } from '@/components/ui';
+import { Card, ConfirmDialog, Button, EmptyState } from '@/components/ui';
+import { Scale, Table, Kanban, Briefcase } from 'lucide-react';
 
 import { INITIAL_JOBS, INITIAL_APPLICATIONS, INITIAL_AUDIT_LOGS } from '@/lib/mock-data';
 import { JobPosting, CandidateApplication, AuditLogItem } from '@/lib/types';
 import { ApplicationStatus } from '@cv-ats/contracts';
+import { fetchJobs, fetchJobApplications, updateApplicationStatus as apiUpdateStatus } from '@/lib/api-client';
 
 import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
 
 export default function HRDashboardPage() {
   const [activeView, setActiveView] = useState<ActiveViewType>('dashboard');
+  const [candidateViewMode, setCandidateViewMode] = useState<'table' | 'kanban' | 'compare'>('table');
   const [isMounted, setIsMounted] = useState(false);
 
   const [jobs, setJobs] = useState<JobPosting[]>(INITIAL_JOBS);
   const [applications, setApplications] = useState<CandidateApplication[]>(INITIAL_APPLICATIONS);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>(INITIAL_AUDIT_LOGS);
 
+  // Restore state from localStorage or API
   useEffect(() => {
-    try {
-      const savedJobs = localStorage.getItem('cv_ats_jobs');
-      if (savedJobs) {
-        const parsed = JSON.parse(savedJobs);
-        if (Array.isArray(parsed) && parsed.length > 0) setJobs(parsed);
-      }
-
-      const savedApps = localStorage.getItem('cv_ats_applications');
-      if (savedApps) {
-        const parsed = JSON.parse(savedApps);
-        if (Array.isArray(parsed)) {
-          setApplications(
-            parsed.map((app: any) => ({
-              ...app,
-              pdf_url: app.pdf_url || SAMPLE_PDF_BASE64,
-            }))
-          );
+    async function loadLiveData() {
+      try {
+        const savedJobs = localStorage.getItem('cv_ats_jobs');
+        if (savedJobs !== null) {
+          const parsed = JSON.parse(savedJobs);
+          if (Array.isArray(parsed)) {
+            setJobs(parsed);
+          }
+        } else {
+          const liveJobsResponse = await fetchJobs().catch(() => null);
+          if (liveJobsResponse && Array.isArray(liveJobsResponse.data) && liveJobsResponse.data.length > 0) {
+            setJobs(liveJobsResponse.data);
+          } else {
+            setJobs(INITIAL_JOBS);
+          }
         }
-      }
 
-      const savedLogs = localStorage.getItem('cv_ats_audit_logs');
-      if (savedLogs) {
-        const parsed = JSON.parse(savedLogs);
-        if (Array.isArray(parsed)) setAuditLogs(parsed);
+        const savedApps = localStorage.getItem('cv_ats_applications');
+        if (savedApps) {
+          const parsed = JSON.parse(savedApps);
+          if (Array.isArray(parsed)) {
+            // Filter out old demo applications
+            const realApps = parsed.filter(
+              (app: any) => !['app-101', 'app-102', 'app-103', 'app-104'].includes(app.id)
+            );
+            setApplications(
+              realApps.map((app: any) => ({
+                ...app,
+                pdf_url: app.pdf_url || SAMPLE_PDF_BASE64,
+              }))
+            );
+          }
+        } else {
+          setApplications([]);
+        }
+
+        const savedLogs = localStorage.getItem('cv_ats_audit_logs');
+        if (savedLogs) {
+          const parsed = JSON.parse(savedLogs);
+          if (Array.isArray(parsed)) setAuditLogs(parsed);
+        }
+      } catch (e) {
+        console.error('Failed to load initial data:', e);
+      } finally {
+        setIsMounted(true);
       }
-    } catch (e) {
-      console.error('Failed to restore state from localStorage:', e);
     }
-    setIsMounted(true);
+    loadLiveData();
   }, []);
 
   useEffect(() => {
@@ -119,15 +144,15 @@ export default function HRDashboardPage() {
   };
 
   const confirmResetData = () => {
-    setJobs(INITIAL_JOBS);
-    setApplications(INITIAL_APPLICATIONS);
-    setAuditLogs(INITIAL_AUDIT_LOGS);
+    setJobs(INITIAL_JOBS.map((j) => ({ ...j, applications_count: 0 })));
+    setApplications([]);
+    setAuditLogs([]);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('cv_ats_jobs');
       localStorage.removeItem('cv_ats_applications');
       localStorage.removeItem('cv_ats_audit_logs');
     }
-    addToast('info', 'Data direset ke sample awal', 'Seluruh database dikembalikan ke data awal.');
+    addToast('info', 'Data pelamar dibersihkan', 'Sistem siap menerima unggahan berkas CV PDF asli.');
   };
 
   const handleSelectJob = (jobId: string) => setSelectedJobId(jobId);
@@ -175,9 +200,13 @@ export default function HRDashboardPage() {
     if (!jobToDelete) return;
 
     setJobs((prev) => prev.filter((j) => j.id !== jobToDelete.id));
-    if (selectedJobId === jobToDelete.id && jobs.length > 1) {
-      setSelectedJobId(jobs.find((j) => j.id !== jobToDelete.id)?.id || '');
+    if (selectedJobId === jobToDelete.id) {
+      const remaining = jobs.filter((j) => j.id !== jobToDelete.id);
+      setSelectedJobId(remaining[0]?.id || '');
     }
+    setApplications((prev) => prev.filter((a) => a.job_id !== jobToDelete.id));
+    setDeletingJob(null);
+
     addAuditLog(
       'job_deleted',
       'job_postings',
@@ -188,10 +217,13 @@ export default function HRDashboardPage() {
   };
 
   const handleUploadSuccess = (newApp: CandidateApplication) => {
-    setApplications((prev) => [newApp, ...prev]);
+    setSelectedJobId(newApp.job_id);
+    if (candidateViewMode === 'compare') setCandidateViewMode('table');
+
+    setApplications((prev) => [newApp, ...prev.filter((a) => a.id !== newApp.id)]);
     setJobs((prev) =>
       prev.map((j) =>
-        j.id === newApp.job_id ? { ...j, applications_count: j.applications_count + 1 } : j
+        j.id === newApp.job_id ? { ...j, applications_count: (j.applications_count || 0) + 1 } : j
       )
     );
     addAuditLog(
@@ -208,7 +240,12 @@ export default function HRDashboardPage() {
     setSelectedCandidate(newApp);
   };
 
-  const handleStatusChange = (appId: string, newStatus: ApplicationStatus) => {
+  const handleStatusChange = async (appId: string, newStatus: ApplicationStatus) => {
+    // Sync with backend API
+    apiUpdateStatus(appId, newStatus).catch((err) => {
+      console.warn('[HRDashboardPage] Status API sync note:', err.message);
+    });
+
     setApplications((prev) =>
       prev.map((app) => (app.id === appId ? { ...app, status: newStatus } : app))
     );
@@ -295,11 +332,12 @@ export default function HRDashboardPage() {
     setJobs((prev) =>
       prev.map((j) =>
         j.id === targetApp.job_id
-          ? { ...j, applications_count: Math.max(0, j.applications_count - 1) }
+          ? { ...j, applications_count: Math.max(0, (j.applications_count || 1) - 1) }
           : j
       )
     );
     if (selectedCandidate?.id === appId) setSelectedCandidate(null);
+    setDeletingApplication(null);
 
     addAuditLog(
       'candidate_data_deleted',
@@ -364,53 +402,125 @@ export default function HRDashboardPage() {
               onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
             />
 
-            {jobs.length > 0 && (
-              <JobSelector
-                jobs={jobs}
-                selectedJobId={selectedJobId}
-                onSelectJob={handleSelectJob}
+            {jobs.length === 0 ? (
+              <EmptyState
+                icon={<Briefcase className="w-8 h-8 text-accent" />}
+                title="Belum Ada Lowongan Kerja Diterbitkan"
+                description="Sistem siap menerima kriteria lowongan. Buat lowongan kerja baru atau impor deskripsi posisi dari LinkedIn/Glints untuk mulai menerima dan meng-analisis CV pelamar."
+                actionLabel="Buat Lowongan Kerja Baru"
+                onAction={() => setIsCreateJobModalOpen(true)}
               />
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 space-y-2">
-                <div className="flex items-center justify-between gap-3 px-1">
-                  <h2>Kandidat — {activeJob?.title || 'Posisi'}</h2>
-                  <span className="text-xs font-mono font-bold text-ink-muted">
-                    {jobApplications.length} pelamar
-                  </span>
-                </div>
-
-                <CandidateTable
-                  applications={jobApplications}
-                  onSelectCandidate={handleSelectCandidate}
-                  onReprocessCv={handleReprocessCv}
-                  onOpenUploadModal={() => setIsUploadModalOpen(true)}
-                  onDeleteCandidate={(app) => setDeletingApplication(app)}
+            ) : (
+              <>
+                <JobSelector
+                  jobs={jobs}
+                  selectedJobId={selectedJobId}
+                  onSelectJob={handleSelectJob}
                 />
-              </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3 px-1">
-                  <h2>Penjelasan Skor AI</h2>
-                  {featuredCandidate && (
-                    <span className="text-xs font-bold text-accent truncate max-w-[140px]">
-                      {featuredCandidate.candidate_name}
-                    </span>
+                {/* Unified Candidate Navigation Bar & View Content */}
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3 px-1 border-b border-line pb-2.5">
+                    <div>
+                      <h2>Kandidat — {activeJob?.title || 'Posisi'}</h2>
+                      <p className="text-xs text-ink-muted">
+                        {jobApplications.length} pelamar terdaftar
+                      </p>
+                    </div>
+
+                    {/* Unified Segmented Nav Tab Control */}
+                    <div className="flex items-center bg-surface border border-line p-1 rounded-lg shadow-2xs">
+                      <button
+                        onClick={() => setCandidateViewMode('table')}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all text-xs font-semibold ${
+                          candidateViewMode === 'table'
+                            ? 'bg-accent text-accent-fg shadow-2xs font-bold'
+                            : 'text-ink-muted hover:text-ink hover:bg-canvas'
+                        }`}
+                      >
+                        <Table className="w-3.5 h-3.5" />
+                        Table
+                      </button>
+                      
+                      <button
+                        onClick={() => setCandidateViewMode('kanban')}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all text-xs font-semibold ${
+                          candidateViewMode === 'kanban'
+                            ? 'bg-accent text-accent-fg shadow-2xs font-bold'
+                            : 'text-ink-muted hover:text-ink hover:bg-canvas'
+                        }`}
+                      >
+                        <Kanban className="w-3.5 h-3.5" />
+                        Kanban
+                      </button>
+
+                      <button
+                        onClick={() => setCandidateViewMode('compare')}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all text-xs font-semibold ${
+                          candidateViewMode === 'compare'
+                            ? 'bg-accent text-accent-fg shadow-2xs font-bold'
+                            : 'text-ink-muted hover:text-ink hover:bg-canvas'
+                        }`}
+                      >
+                        <Scale className="w-3.5 h-3.5" />
+                        Compare ({jobApplications.length})
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Active Tab Content */}
+                  {candidateViewMode === 'compare' ? (
+                    <CandidateComparator
+                      applications={jobApplications}
+                      onClose={() => setCandidateViewMode('table')}
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                      <div className="lg:col-span-2 space-y-2">
+                        {candidateViewMode === 'table' ? (
+                          <CandidateTable
+                            applications={jobApplications}
+                            onSelectCandidate={handleSelectCandidate}
+                            onReprocessCv={handleReprocessCv}
+                            onOpenUploadModal={() => setIsUploadModalOpen(true)}
+                            onDeleteCandidate={(app) => setDeletingApplication(app)}
+                          />
+                        ) : (
+                          <KanbanBoard
+                            applications={jobApplications}
+                            onSelectCandidate={handleSelectCandidate}
+                            onUpdateStatus={handleStatusChange}
+                            onDeleteCandidate={(app) => setDeletingApplication(app)}
+                          />
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-3 px-1">
+                          <h2>Penjelasan Skor AI</h2>
+                          {featuredCandidate && (
+                            <span className="text-xs font-bold text-accent truncate max-w-[140px]">
+                              {featuredCandidate.candidate_name}
+                            </span>
+                          )}
+                        </div>
+
+                        {featuredCandidate ? (
+                          <ScoreBreakdownCard score={featuredCandidate.score_breakdown} />
+                        ) : (
+                          <Card className="text-center text-ink-subtle text-xs py-6">
+                            Belum ada kandidat pada lowongan ini.
+                          </Card>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-
-                {featuredCandidate ? (
-                  <ScoreBreakdownCard score={featuredCandidate.score_breakdown} />
-                ) : (
-                  <Card className="text-center text-ink-subtle text-xs py-6">
-                    Belum ada kandidat pada lowongan ini.
-                  </Card>
-                )}
-              </div>
-            </div>
+              </>
+            )}
           </>
         )}
+
 
         {activeView === 'jobs' && (
           <JobsManagerView

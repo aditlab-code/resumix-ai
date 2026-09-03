@@ -46,6 +46,12 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
   onUploadSuccess,
 }) => {
   const [jobId, setJobId] = useState(selectedJobId);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setJobId(selectedJobId);
+    }
+  }, [isOpen, selectedJobId]);
   const [file, setFile] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);

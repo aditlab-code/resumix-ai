@@ -23,7 +23,8 @@ export const DeleteCandidateModal: React.FC<DeleteCandidateModalProps> = ({
   if (!application) return null;
 
   const isConfirmed =
-    confirmName.trim().toLowerCase() === application.candidate_name.trim().toLowerCase();
+    confirmName.trim().toLowerCase() === application.candidate_name.trim().toLowerCase() ||
+    confirmName.trim().toLowerCase() === 'hapus';
 
   const close = () => {
     setConfirmName('');

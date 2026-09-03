@@ -199,9 +199,68 @@ export class DBService {
     return result.rows;
   }
 
+  async updateApplicationStatus(applicationId: string, status: string): Promise<void> {
+    const query = `
+      UPDATE applications
+      SET status = $1
+      WHERE id = $2;
+    `;
+    await this.pool.query(query, [status, applicationId]);
+  }
+
+  async getApplicationsByJobId(jobId: string): Promise<any[]> {
+    const query = `
+      SELECT 
+        a.id as application_id,
+        a.status,
+        a.job_fit_score,
+        a.score_breakdown,
+        a.applied_at,
+        c.id as candidate_id,
+        c.full_name,
+        c.email,
+        c.phone_number,
+        c.total_experience_months,
+        c.parsed_cv_json
+      FROM applications a
+      JOIN candidates c ON a.candidate_id = c.id
+      WHERE a.job_id = $1
+      ORDER BY a.job_fit_score DESC;
+    `;
+    const result = await this.pool.query(query, [jobId]);
+    return result.rows;
+  }
+
+  async getProcessingJob(processingJobId: string): Promise<any | null> {
+    const query = `
+      SELECT id, document_id, job_type, status, attempt_count, error_code, error_message, started_at, completed_at
+      FROM processing_jobs
+      WHERE id = $1;
+    `;
+    const result = await this.pool.query(query, [processingJobId]);
+    return result.rows[0] || null;
+  }
+
+  async getJobs(): Promise<any[]> {
+    const query = `
+      SELECT id, title, description, minimum_experience_months, status, created_at
+      FROM job_postings
+      ORDER BY created_at DESC;
+    `;
+    const result = await this.pool.query(query);
+    return result.rows;
+  }
+
+  async deleteJob(jobId: string): Promise<void> {
+    await this.pool.query(`DELETE FROM applications WHERE job_id = $1;`, [jobId]);
+    await this.pool.query(`DELETE FROM job_required_skills WHERE job_id = $1;`, [jobId]);
+    await this.pool.query(`DELETE FROM job_postings WHERE id = $1;`, [jobId]);
+  }
+
   async close(): Promise<void> {
     await this.pool.end();
   }
 }
 
 export const dbService = new DBService();
+
