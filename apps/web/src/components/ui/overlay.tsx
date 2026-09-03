@@ -68,8 +68,11 @@ export const Overlay: React.FC<OverlayProps> = ({
         className={cn(
           'relative z-10 bg-surface flex flex-col',
           isSide
-            ? 'h-full w-screen max-w-3xl'
-            : cn('w-full my-8 rounded overflow-hidden max-h-[calc(100vh-4rem)]', centerSize[size])
+            ? 'h-full w-screen max-w-3xl border-l border-line'
+            : cn(
+                'w-full my-8 rounded overflow-hidden border border-line max-h-[calc(100vh-4rem)]',
+                centerSize[size]
+              )
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -87,7 +90,7 @@ export const Overlay: React.FC<OverlayProps> = ({
           </button>
         </div>
 
-        <div className={cn('flex-1 overflow-y-auto bg-canvas px-5 py-4', bodyClassName)}>
+        <div className={cn('flex-1 overflow-y-auto bg-surface px-5 py-4', bodyClassName)}>
           {children}
         </div>
 

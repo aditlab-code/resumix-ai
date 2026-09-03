@@ -23,7 +23,7 @@ export function DataTable<T>({ columns, rows, rowKey, onRowClick, empty }: DataT
   if (rows.length === 0 && empty) return <>{empty}</>;
 
   return (
-    <div className="bg-surface rounded overflow-hidden">
+    <div className="bg-surface border border-line rounded overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead className="text-ink-subtle uppercase text-[11px] font-bold border-b border-line">

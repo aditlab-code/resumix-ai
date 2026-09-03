@@ -16,7 +16,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   actionLabel,
   onAction,
 }) => (
-  <div className="flex flex-col items-center justify-center gap-3 bg-surface rounded py-12 px-4 text-center">
+  <div className="flex flex-col items-center justify-center gap-3 bg-surface border border-line rounded py-12 px-4 text-center">
     <h3>{title}</h3>
     {description && <p className="text-xs text-ink-muted max-w-sm">{description}</p>}
     {actionLabel && onAction && (

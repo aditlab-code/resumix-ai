@@ -14,11 +14,10 @@ import { PipelineSettingsView } from '@/components/dashboard/pipeline-settings-v
 import { CvUploadModal } from '@/components/dashboard/cv-upload-modal';
 import { JobFormModal } from '@/components/dashboard/job-form-modal';
 import { AuditLogModal } from '@/components/dashboard/audit-log-modal';
-import { ExtractionReviewModal } from '@/components/dashboard/extraction-review-modal';
 import { CandidateDetailDrawer } from '@/components/dashboard/candidate-detail-drawer';
 import { DeleteCandidateModal } from '@/components/dashboard/delete-candidate-modal';
 import { ToastContainer, ToastMessage } from '@/components/ui/toast';
-import { Card, CardHeader, ConfirmDialog } from '@/components/ui';
+import { Card, ConfirmDialog } from '@/components/ui';
 
 import { INITIAL_JOBS, INITIAL_APPLICATIONS, INITIAL_AUDIT_LOGS } from '@/lib/mock-data';
 import { JobPosting, CandidateApplication, AuditLogItem } from '@/lib/types';
@@ -80,7 +79,6 @@ export default function HRDashboardPage() {
 
   const [selectedJobId, setSelectedJobId] = useState<string>('job-1');
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateApplication | null>(null);
-  const [editingApplication, setEditingApplication] = useState<CandidateApplication | null>(null);
   const [deletingApplication, setDeletingApplication] = useState<CandidateApplication | null>(null);
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null);
   const [deletingJob, setDeletingJob] = useState<JobPosting | null>(null);
@@ -321,14 +319,14 @@ export default function HRDashboardPage() {
   if (!isMounted) {
     return (
       <div className="p-6 space-y-3 animate-pulse">
-        <div className="h-10 bg-surface rounded" />
+        <div className="h-10 bg-surface border border-line rounded" />
         <div className="grid grid-cols-4 gap-3 h-24">
-          <div className="bg-surface rounded" />
-          <div className="bg-surface rounded" />
-          <div className="bg-surface rounded" />
-          <div className="bg-surface rounded" />
+          <div className="bg-surface border border-line rounded" />
+          <div className="bg-surface border border-line rounded" />
+          <div className="bg-surface border border-line rounded" />
+          <div className="bg-surface border border-line rounded" />
         </div>
-        <div className="h-64 bg-surface rounded" />
+        <div className="h-64 bg-surface border border-line rounded" />
       </div>
     );
   }
@@ -367,16 +365,12 @@ export default function HRDashboardPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-2">
-                <Card className="py-2.5">
-                  <CardHeader
-                    title={<h2>Kandidat — {activeJob?.title || 'Posisi'}</h2>}
-                    action={
-                      <span className="text-xs font-mono font-bold px-2 py-0.5 bg-canvas text-accent rounded">
-                        {jobApplications.length} pelamar
-                      </span>
-                    }
-                  />
-                </Card>
+                <div className="flex items-center justify-between gap-3 px-1">
+                  <h2>Kandidat — {activeJob?.title || 'Posisi'}</h2>
+                  <span className="text-xs font-mono font-bold text-ink-muted">
+                    {jobApplications.length} pelamar
+                  </span>
+                </div>
 
                 <CandidateTable
                   applications={jobApplications}
@@ -388,18 +382,14 @@ export default function HRDashboardPage() {
               </div>
 
               <div className="space-y-2">
-                <Card className="py-2.5">
-                  <CardHeader
-                    title={<h2>Penjelasan Skor AI</h2>}
-                    action={
-                      featuredCandidate && (
-                        <span className="text-xs font-bold text-accent truncate max-w-[140px]">
-                          {featuredCandidate.candidate_name}
-                        </span>
-                      )
-                    }
-                  />
-                </Card>
+                <div className="flex items-center justify-between gap-3 px-1">
+                  <h2>Penjelasan Skor AI</h2>
+                  {featuredCandidate && (
+                    <span className="text-xs font-bold text-accent truncate max-w-[140px]">
+                      {featuredCandidate.candidate_name}
+                    </span>
+                  )}
+                </div>
 
                 {featuredCandidate ? (
                   <ScoreBreakdownCard score={featuredCandidate.score_breakdown} />
@@ -469,21 +459,13 @@ export default function HRDashboardPage() {
           logs={auditLogs}
         />
 
-        <ExtractionReviewModal
-          isOpen={!!editingApplication}
-          onClose={() => setEditingApplication(null)}
-          application={editingApplication}
-          job={activeJob}
-          onSaveSuccess={handleSaveEditSuccess}
-        />
-
         <CandidateDetailDrawer
           isOpen={!!selectedCandidate}
           onClose={() => setSelectedCandidate(null)}
           application={selectedCandidate}
           job={activeJob}
           onStatusChange={handleStatusChange}
-          onOpenEditModal={(app) => setEditingApplication(app)}
+          onSaveExtraction={handleSaveEditSuccess}
           onReprocessCv={handleReprocessCv}
           onDeleteCandidate={(app) => setDeletingApplication(app)}
         />

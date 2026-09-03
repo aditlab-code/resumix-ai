@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 bg-surface rounded my-8 p-8 text-center">
+    <div className="flex flex-col items-center justify-center gap-3 bg-surface border border-line rounded my-8 p-8 text-center">
       <h2>Kendala pada halaman</h2>
       <p className="text-xs text-ink-muted max-w-sm">
         {error.message || 'Terjadi kesalahan sistem saat memproses halaman ini.'}

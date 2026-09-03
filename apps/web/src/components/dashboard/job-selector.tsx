@@ -14,7 +14,7 @@ export const JobSelector: React.FC<JobSelectorProps> = ({ jobs, selectedJobId, o
   const selectedJob = jobs.find((j) => j.id === selectedJobId) || jobs[0];
 
   return (
-    <div className="bg-surface rounded p-2 space-y-2">
+    <div className="bg-surface border border-line rounded p-2 space-y-2">
       <div className="flex items-center gap-1.5 overflow-x-auto">
         {jobs.map((job) => {
           const isSelected = job.id === selectedJobId;

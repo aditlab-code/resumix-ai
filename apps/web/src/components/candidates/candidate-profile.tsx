@@ -68,7 +68,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     {extraction.summary && (
       <div className="space-y-1.5">
         <SectionLabel>Ringkasan (AI)</SectionLabel>
-        <p className="text-xs text-ink bg-surface p-3 rounded leading-relaxed">
+        <p className="text-xs text-ink bg-canvas p-3 rounded leading-relaxed">
           {extraction.summary}
         </p>
       </div>
@@ -84,11 +84,11 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
           extraction.skills.map((skill, idx) => (
             <span
               key={idx}
-              className="px-2 py-0.5 bg-surface rounded text-xs flex items-center gap-1.5"
+              className="px-2 py-0.5 bg-canvas rounded text-xs flex items-center gap-1.5"
             >
               <span className="font-semibold text-ink">{skill.name}</span>
               {skill.category && (
-                <span className="text-[10px] text-ink-subtle bg-canvas px-1 py-0.5 rounded">
+                <span className="text-[10px] text-ink-subtle bg-surface px-1 py-0.5 rounded">
                   {skill.category}
                 </span>
               )}
@@ -188,7 +188,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
           </SectionLabel>
           <ul className="space-y-1">
             {extraction.certifications.map((c, i) => (
-              <li key={i} className="text-xs text-ink bg-surface p-2 rounded font-medium">
+              <li key={i} className="text-xs text-ink bg-canvas p-2 rounded font-medium">
                 {c}
               </li>
             ))}
@@ -204,7 +204,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
           </SectionLabel>
           <ul className="space-y-1">
             {extraction.projects.map((p, i) => (
-              <li key={i} className="text-xs text-ink bg-surface p-2 rounded font-medium">
+              <li key={i} className="text-xs text-ink bg-canvas p-2 rounded font-medium">
                 {p}
               </li>
             ))}

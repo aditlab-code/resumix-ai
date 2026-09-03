@@ -8,31 +8,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#e9eaee',
+        canvas: '#eef0f3',
         surface: '#ffffff',
-        line: '#d9dce2',
+        line: '#e0e3e9',
         ink: {
-          DEFAULT: '#1a1c1e',
-          muted: '#5f6570',
-          subtle: '#8b909a',
+          DEFAULT: '#1f2328',
+          muted: '#656d76',
+          subtle: '#8c959f',
         },
         accent: {
-          DEFAULT: '#2563eb',
+          DEFAULT: '#1f6feb',
           fg: '#ffffff',
-          soft: '#eef3ff',
+          soft: '#ddeaff',
         },
         danger: {
-          DEFAULT: '#dc2626',
+          DEFAULT: '#cf222e',
           fg: '#ffffff',
-          soft: '#fdecec',
+          soft: '#ffebe9',
         },
         ok: {
-          DEFAULT: '#15803d',
-          soft: '#e9f6ec',
+          DEFAULT: '#1a7f37',
+          soft: '#dafbe1',
         },
         warn: {
-          DEFAULT: '#b45309',
-          soft: '#fbf1e3',
+          DEFAULT: '#9a6700',
+          soft: '#fff8c5',
         },
       },
       borderRadius: {

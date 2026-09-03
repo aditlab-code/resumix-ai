@@ -8,7 +8,7 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   children,
   ...props
 }) => (
-  <div className={cn('bg-surface rounded p-4', className)} {...props}>
+  <div className={cn('bg-surface border border-line rounded p-4', className)} {...props}>
     {children}
   </div>
 );
