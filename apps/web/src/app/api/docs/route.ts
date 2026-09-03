@@ -17,6 +17,8 @@ const DOC_PATHS: Record<string, string> = {
   readme: 'README.md',
   architecture: 'ARCHITECTURE.md',
   evaluation: 'docs/evaluation.md',
+  license: 'LICENSE',
+  licenseDocs: 'LICENSE-DOCS.md',
 };
 
 export async function GET(req: NextRequest) {

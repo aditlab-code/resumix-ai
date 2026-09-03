@@ -1,6 +1,6 @@
-# Resumix AI - Enterprise Candidate Intelligence & Dual-Vector ATS
+# Resumix AI — Enterprise Candidate Intelligence & Dual-Vector ATS
 
-> **Engineering Portfolio Case Study & Technical Architecture Specification**  
+> **Engineering Portfolio Case Study & Technical Architecture Showcase**  
 > *Sistem Applicant Tracking System (ATS) & Candidate Intelligence Modern Berbasis Decoupled Monorepo, Asynchronous Worker Engine, Groq LLM, Dual-Vector pgvector Similarity Search, dan Explainable Multi-Factor Scoring Engine v2.*
 
 ---
@@ -9,10 +9,10 @@
 
 ### Problem Statement
 Proses candidate screening pada departemen HR enterprise yang menerima ribuan CV per lowongan menghadapi empat tantangan utama:
-1. **Inefisiensi Waktu & Latensi Tinggi**: Pembacaan CV manual membutuhkan rata-rata 5-10 menit per CV, menyebabkan hiring bottleneck.
+1. **Inefisiensi Waktu & Latensi Tinggi**: Pembacaan CV manual membutuhkan rata-rata 5–10 menit per CV, menyebabkan hiring bottleneck.
 2. **Pemborosan Resource & Biaya Inference LLM**: Memproses dokumen PDF scanned/tanpa layer teks secara mentah ke OCR atau LLM meningkatkan biaya infrastruktur hingga 400%.
 3. **Risiko Hiring Bias**: Adanya atribut PII sensitif (foto, jenis kelamin, usia, agama, lokasi detail) secara tidak sadar memengaruhi keputusan reviewer.
-4. **Risiko ATS Black Box**: Sistem ATS konvensional yang secara otomatis menolak kandidat tanpa rincian skor yang transparan (explainable score breakdown).
+4. **Risiko ATS Black Box**: Sistem ATS konvensional yang secara otomatis menolak kandidat tanpa rincian skor yang transparan (*explainable score breakdown*).
 
 ### Solution: Resumix AI
 Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** yang menggabungkan keandalan arsitektur Decoupled Monorepo, pemrosesan asinkron Redis BullMQ Queue, ekstraksi terstruktur Groq LLM (`llama-3.1-8b-instant`), pencarian kemiripan dual-vektor `pgvector`, dan engine kalkulasi kecocokan multi-faktor yang transparan.
@@ -33,8 +33,6 @@ Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** 
 
 Resumix AI mengadopsi tema **Enterprise Dark Blue Navy** yang terkesan tepercaya, bersih, presisi, dan profesional tanpa nuansa ungu.
 
-### Color Palette Tokens
-
 | Token Name | Hex Code | Visual Preview | Application & Component Usage |
 | :--- | :---: | :---: | :--- |
 | **Enterprise Obsidian (ink.DEFAULT)** | `#0F172A` | ![#0F172A](https://via.placeholder.com/15/0F172A/000000?text=+) | Primary Bold Text, Header Titles, Card Headers |
@@ -45,11 +43,9 @@ Resumix AI mengadopsi tema **Enterprise Dark Blue Navy** yang terkesan tepercaya
 
 ---
 
-## 3. System Architecture & Tech Stack Flow
+## 3. System Architecture High-Level Overview
 
-Resumix AI memisahkan tanggung jawab antara *Web Dashboard*, *Core API / BFF*, *Job Worker*, dan *AI Microservice*.
-
-### Tech Stack Architecture Flow Diagram
+Resumix AI memisahkan tanggung jawab antara Web Dashboard, Core API Gateway, Async Worker Engine, dan AI Microservice.
 
 ```mermaid
 graph LR
@@ -69,15 +65,13 @@ graph LR
     subgraph AI Microservice Pipeline
         AIService["AI Microservice (FastAPI / Python 3.11)"]
         PyMuPDF["PyMuPDF Parser\n(Zero-Text Rejection)"]
-        Pruner["Hybrid Text Pruner"]
-        LLM["Groq LLM (llama-3.1-8b-instant)\n+ Pydantic Schema"]
-        Normalizer["Deterministic Skill Normalizer"]
+        LLM["Groq LLM (llama-3.1-8b-instant)"]
         Embedder["Sentence Transformers\n(384-dim Dual Embeddings)"]
         Scoring["Multi-Factor Scoring Engine v2"]
     end
 
     subgraph Persistence Layer
-        DB[("PostgreSQL 15 + pgvector\n(13 Tables & HNSW Index)")]
+        DB[("PostgreSQL 15 + pgvector\n(12 Tables & HNSW Index)")]
         Storage[("Supabase Storage\n(Encrypted Private PDF Buckets)")]
     end
 
@@ -88,197 +82,35 @@ graph LR
     Worker -->|POST /evaluate| AIService
     
     AIService --> PyMuPDF
-    PyMuPDF --> Pruner
-    Pruner --> LLM
-    LLM --> Normalizer
-    Normalizer --> Embedder
+    PyMuPDF --> LLM
+    LLM --> Embedder
     Embedder --> Scoring
     
     Scoring -->|Return JSON + Dual Vectors + Score| Worker
     Worker -->|Update Results & Embeddings| DB
 ```
 
-### Service Boundaries & Responsibilities
-
-| Microservice / Component | Core Tech Stack | Primary Responsibilities | Strict Anti-Patterns (DILARANG) |
-| :--- | :--- | :--- | :--- |
-| **Frontend (`apps/web`)** | Next.js 14, TypeScript, Tailwind CSS | UI/UX HR, Candidate Matrix view, Job posting forms, Upload dropzone, BullMQ status polling, Documentation Viewer. | Direct DB queries, storage secret exposure, or local authoritative scoring calculation. |
-| **Core API (`apps/api`)** | Node.js, Express, TypeScript | Auth/RBAC, Domain CRUD, Supabase Temporary Signed URL generator, Enqueue jobs to BullMQ. | Heavy PDF parsing / OCR or synchronous LLM inference inside HTTP request handlers. |
-| **Async Worker (`apps/api/src/worker`)** | Redis, BullMQ Worker | Job ingestion processing, retry backoff management, forwarding payload to AI Service, updating DB status. | Auto-changing application hiring decisions (hired / rejected) without HR approval. |
-| **AI Microservice (`apps/ai-service`)**| FastAPI, Python 3.11, Pydantic | PDF text extraction, zero-text rejection, Groq LLM JSON parsing, skill normalization, dual-vector scoring v2. | Direct DB read/write operations (must communicate strictly via REST JSON contract). |
-| **Database (`database`)** | PostgreSQL 15 + `pgvector` | Relational domain models, HNSW vector similarity indexes (`vector(384)`), audit logs. | Storing raw binary PDF CV blobs inside SQL table columns. |
-| **Storage (`Supabase Storage`)** | Private Object Storage | Encrypted CV PDF storage. Access via Temporary Signed URLs (TTL 300s). | Making CV buckets public without short-lived signed URLs. |
+> [!TIP]
+> Untuk spesifikasi detail teknis mengenai *Service Boundaries*, *API REST Endpoint Contracts*, *Sequence Diagram*, dan *Skema Database (12 Tabel SQL)*, silakan merujuk ke **[Spesifikasi Arsitektur Sistem (ARCHITECTURE.md)](ARCHITECTURE.md)**.
 
 ---
 
-## 4. End-to-End AI Ingestion & Evaluation Pipeline
+## 4. Keunggulan Fitur Utama & Algoritma
 
-Pipeline pemrosesan CV di Resumix AI dirancang melalui 7 tahap eksekusi yang independen dan terukur:
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant HR as HR Recruiter (Web UI)
-    participant API as Core API (Express)
-    participant Queue as Redis Queue
-    participant Worker as BullMQ Worker
-    participant AI as AI Microservice (FastAPI)
-    participant LLM as Groq LLM (Llama-3.1)
-    participant DB as PostgreSQL (pgvector)
-
-    HR->>API: Upload CV PDF (Job ID)
-    API->>API: Generate Signed Storage Path & Save Blob
-    API-->>HR: HTTP 202 Accepted (processing_status: queued, < 200ms)
-    API->>Queue: Push Job (document_id, job_id)
-    Queue->>Worker: Consume Ingestion Job
-    Worker->>AI: POST /evaluate (CV File + Job Rules)
-    
-    alt Stage 1: Zero-Text Layer Check
-        AI->>AI: PyMuPDF extract_text()
-        opt Text length == 0
-            AI-->>Worker: HTTP 400 NO_TEXT_LAYER
-            Worker->>DB: Update parse_status = 'needs_review'
-        end
-    end
-
-    AI->>AI: Hybrid Text Pruner (Strip Noise & Boilerplate)
-    AI->>LLM: Structured Extraction Request (Pydantic Schema)
-    LLM-->>AI: Raw Structured JSON (Skills, Exp, Education)
-    AI->>AI: Deterministic Skill Normalizer (SYNONYM_DICTIONARY)
-    AI->>AI: Generate Dual Embeddings (Skill Vector & Role Vector)
-    AI->>AI: Calculate Multi-Factor Score v2
-    AI-->>Worker: Evaluation Results JSON + Score Breakdown + Embeddings
-    Worker->>DB: Persist Candidate Data & Embeddings vector(384)
-    Worker->>DB: Update parse_status = 'processed'
-```
-
-### Key Algorithmic Pillars
-
-#### 1. Zero-Text Rejection Rule (Resource Efficiency)
-- **Rule**: Jika `len(raw_text.strip()) == 0`, sistem menghentikan pipeline secara short-circuit, mengembalikan HTTP 400 `NO_TEXT_LAYER`, dan menandai dokumen dengan status `needs_review` untuk ditindaklanjuti HR tanpa menyerap token LLM.
-
-#### 2. Groq LLM (`llama-3.1-8b-instant`) + Pydantic Guard
-- Ekstraksi informasi menggunakan LLM berskema ketat (Strict JSON Output). LLM hanya diperbolehkan mengidentifikasi fakta eksplisit di dalam CV. Atribut sensitif PII (foto, gender, usia, agama, status pernikahan) secara ketat dikeluarkan dari skema extraction.
-
-#### 3. Deterministic Skill Normalization
-- Mencegah fragmentasi nama skill (misal: `"NodeJS"`, `"Node.js"`, `"Node JS"`, `"node"`). Sistem mencocokkan setiap skill hasil ekstraksi dengan kamus sinonim deterministik (`SYNONYM_DICTIONARY`) dan tabel `skill_taxonomies` untuk menjamin konsistensi query database.
-
-#### 4. Dual-Vector Embeddings (`pgvector`)
-- Resumix AI menghasilkan dua vektor embedding terpisah berdimensi `384` menggunakan Sentence-Transformers (`all-MiniLM-L6-v2`):
-  - `candidate_skill_embedding`: Merepresentasikan profil teknis & taksonomi skill kandidat.
-  - `candidate_role_embedding`: Merepresentasikan ringkasan pengalaman kerja dan tanggung jawab peran kandidat.
-
-#### 5. Multi-Factor Scoring Engine v2
-Formula kalkulasi kecocokan kandidat ($S$) berada pada skala 0.0 - 100.0 berdasarkan gabungan faktor:
-
-$$\text{Score} = 100 \times \Big( 0.45 \cdot S_{\text{sem}} + 0.30 \cdot S_{\text{man}} + 0.20 \cdot S_{\text{exp}} + 0.05 \cdot S_{\text{pref}} \Big)$$
-
-- $S_{\text{sem}}$: Cosine similarity gabungan dari Dual-Vector Matching (`pgvector`).
-- $S_{\text{man}}$: Rasio pemenuhan kualifikasi skill wajib (Mandatory Skills Match).
-- $S_{\text{exp}}$: Rasio kesesuaian total durasi pengalaman kerja dibanding persyaratan lowongan.
-- $S_{\text{pref}}$: Pemenuhan nilai tambah (Preferred / Nice-to-have Skills).
+1. **Zero-Text Short-Circuit Rule**:
+   - Jika berkas PDF tidak memiliki layer teks (`len(raw_text.strip()) == 0`), sistem langsung mengembalikan HTTP 400 `NO_TEXT_LAYER` dan menandai dokumen sebagai `needs_review` untuk tindakan HR tanpa membuang kuota LLM.
+2. **Groq LLM Structured Extraction (`llama-3.1-8b-instant`)**:
+   - Ekstraksi fakta CV secara ketat menggunakan Pydantic Schema. Atribut PII sensitif (foto, gender, usia, agama) secara otomatis dikeluarkan dari skema ekstraksi.
+3. **Deterministic Skill Normalizer**:
+   - Menyamakan variasi penulisan skill (misal: `"NodeJS"`, `"Node.js"`, `"Node JS"`) ke kamus sinonim deterministik (`SYNONYM_DICTIONARY`).
+4. **Dual-Vector Similarity Search (`pgvector`)**:
+   - Menghasilkan dua vektor `vector(384)` (*candidate_skill_embedding* & *candidate_role_embedding*) untuk pencarian kemiripan kosinus HNSW presisi tinggi di PostgreSQL.
+5. **Explainable Multi-Factor Scoring Engine v2**:
+   - Menghitung skor akhir (0.0 – 100.0) secara transparan berbasis kombinasi: 45% Semantic Cosine Match, 30% Mandatory Skills Match, 20% Experience Duration Match, dan 5% Preferred Skills Bonus.
 
 ---
 
-## 5. Struktur Monorepo Repository
-
-```text
-Architecture-RAG-pipeline/
-├── apps/
-│   ├── web/                         # Next.js 14 HR Dashboard (TypeScript + Tailwind CSS)
-│   │   └── src/
-│   │       ├── app/
-│   │       │   ├── api/docs/        # Dynamic Documentation Server API Route
-│   │       │   └── page.tsx         # HR Dashboard Main Application View
-│   │       └── components/
-│   │           └── dashboard/
-│   │               ├── documentation-view.tsx # Built-in Documentation Viewer
-│   │               └── sidebar.tsx            # Navigation Sidebar with Resumix AI Brand
-│   ├── api/                         # Node.js / Express Core API & BullMQ Worker Engine
-│   │   └── src/
-│   │       ├── index.ts             # Express REST Routes & API Entry Point
-│   │       ├── services/            # DB, Job, AI Client, & Job Import services
-│   │       └── worker/              # BullMQ Async CV Processing Worker
-│   └── ai-service/                  # FastAPI Python AI Microservice
-│       ├── app/
-│       │   ├── main.py              # FastAPI Endpoints & Health Check
-│       │   ├── schemas/             # Pydantic Schemas & DTO Definitions
-│       │   └── services/            # PDF Parser, LLM, Normalizer, Dual-Embedding, Scoring
-│       └── tests/                   # Benchmark Suite (200 Synthetic PDF Dataset)
-├── packages/
-│   ├── contracts/                   # Shared DTOs, OpenAPI Specs, & JSON Schemas
-│   └── config/                      # Shared TSConfig, ESLint, & Prettier rules
-├── database/
-│   ├── migrations/                  # PostgreSQL SQL Migrations (13 Tables, pgvector, taxonomies)
-│   ├── seeds/                       # Seed data untuk pengujian lokal
-│   └── functions/                   # Custom SQL stored procedures (match_candidates_for_job)
-├── docs/                            # Spesifikasi Dokumentasi Moduler
-│   ├── architecture.md              # Spesifikasi Arsitektur Utama & System Boundaries
-│   ├── api.md                       # Dokumentasi Kontrak REST API v1
-│   ├── scoring.md                   # Formulasi Matrik & Spesifikasi Scoring Hybrid
-│   ├── security.md                  # Keamanan, PII, RBAC, & Retensi Data
-│   └── evaluation.md                # Evaluasi Kualitas AI, Corpus Test, & Target Metrik
-├── docker-compose.yml               # Kontainerisasi Produksi
-├── docker-compose.dev.yml           # Kontainerisasi Pengembangan Lokal (Hot-Reload)
-├── AGENTS.md                        # Panduan Operasional & Aturan AI Agent
-├── ARCHITECTURE.md                  # Master Architecture Specification
-└── README.md                        # Master Case Study & Dokumentasi Portofolio
-```
-
----
-
-## 6. Model Data PostgreSQL & Dual-Vector Search (pgvector)
-
-Resumix AI mengelola 13 tabel ternormalisasi. Pencarian kandidat yang cocok dijalankan via stored procedure `match_candidates_for_job` menggunakan Cosine Distance (`<=>`) pada indeks HNSW:
-
-```sql
-CREATE OR REPLACE FUNCTION match_candidates_for_job(
-    p_job_id UUID,
-    p_skill_weight FLOAT DEFAULT 0.6,
-    p_role_weight FLOAT DEFAULT 0.4,
-    p_match_threshold FLOAT DEFAULT 0.5,
-    p_match_count INT DEFAULT 20
-)
-RETURNS TABLE (
-    candidate_id UUID,
-    candidate_name VARCHAR,
-    skill_similarity FLOAT,
-    role_similarity FLOAT,
-    combined_similarity FLOAT
-) AS $$
-BEGIN
-    RETURN QUERY
-    WITH job_vecs AS (
-        SELECT job_skill_embedding, job_role_embedding
-        FROM job_postings WHERE id = p_job_id
-    )
-    SELECT 
-        c.id AS candidate_id,
-        c.full_name AS candidate_name,
-        1 - (c.candidate_skill_embedding <=> j.job_skill_embedding) AS skill_similarity,
-        1 - (c.candidate_role_embedding <=> j.job_role_embedding) AS role_similarity,
-        (p_skill_weight * (1 - (c.candidate_skill_embedding <=> j.job_skill_embedding))) +
-        (p_role_weight * (1 - (c.candidate_role_embedding <=> j.job_role_embedding))) AS combined_similarity
-    FROM candidates c, job_vecs j
-    WHERE c.candidate_skill_embedding IS NOT NULL
-    ORDER BY combined_similarity DESC
-    LIMIT p_match_count;
-END;
-$$ LANGUAGE plpgsql;
-```
-
----
-
-## 7. Keamanan Data, Privasi PII, dan Governance
-
-- **Private Object Storage & Temporary Signed URLs**: Berkas PDF CV disimpan di bucket privat Supabase Storage. Akses baca oleh HR UI hanya menggunakan Temporary Signed URL (TTL 300 detik).
-- **Redaksi PII pada Logs**: Dilarang keras mencetak teks CV mentah, email, nomor HP, atau signed URL di console log / production logs.
-- **Scoring Fairness**: Proses penilaian murni berfokus pada kualifikasi teknis dan pengalaman kerja. Foto, gender, usia, dan agama dilarang dijadikan variabel scoring.
-- **Audit Logs**: Setiap pembacaan CV, perubahan status aplikasi (`applied` -> `screening` -> `interview`), atau koreksi manual dicatat di tabel `audit_logs`.
-
----
-
-## 8. Panduan Instalasi dan Pengoperasian (Quick Start)
+## 5. Panduan Instalasi dan Pengoperasian (Quick Start)
 
 ### Prasyarat Sistem
 - Docker Engine >= 24.0 & Docker Compose >= 2.20
@@ -310,12 +142,29 @@ npm run stop   # Menghentikan port 3000, 3001, 8000 & proses Node/Python
 
 ---
 
-## 9. Indeks Dokumentasi Terkait
+## 6. Indeks Dokumentasi Terkait
 
 Seluruh dokumentasi teknis tambahan dapat diakses melalui tab **Dokumentasi** di Web Dashboard atau via file repositori berikut:
-- [Spesifikasi Arsitektur Sistem](ARCHITECTURE.md)
+- [Spesifikasi Arsitektur Sistem Detail](ARCHITECTURE.md)
 - [Pedoman Operasional Agent](AGENTS.md)
 - [Evaluasi Metrik & Benchmark 200 Synthetic CVs](docs/evaluation.md)
+- [Lisensi Kode AGPL-3.0](LICENSE)
+- [Lisensi Dokumentasi CC BY-NC-SA 4.0](LICENSE-DOCS.md)
+
+---
+
+## 7. Lisensi & Perlindungan Hukum (Legal Notice for HR & Companies)
+
+Proyek ini dipublikasikan sebagai **Portofolio Teknis & Bukti Kapabilitas Kompetensi (Individual Portfolio Showcase)**.
+
+### Lisensi Penggunaan:
+* **Source Code (`apps/`, `packages/`, `database/`)**: Dilindungi di bawah [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). Segala bentuk derivasi atau penggunaan source code pada server/jaringan wajib dibuka kembali di bawah lisensi AGPL-3.0.
+* **Dokumentasi & Arsitektur (`README.md`, `ARCHITECTURE.md`, `DESIGN.md`, `docs/`)**: Dilindungi di bawah [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE-DOCS.md).
+
+> [!IMPORTANT]
+> **PEMBERITAHUAN UNTUK HR & PERUSAHAAN**:
+> 1. Tim HR / Evaluator Perusahaan diperbolehkan penuh untuk mengulas (*code review*), menguji, dan mengevaluasi kode ini untuk keperluan penilaian rekrutmen kandidat.
+> 2. **DILARANG KERAS**: Menyalin, mengambil, menjual, atau mengintegrasikan kode/arsitektur dalam sistem ini ke dalam produk internal/komersial perusahaan tanpa lisensi komersial tertulis dari pembuat (*copyright owner*).
 
 ---
 *Resumix AI Team — Enterprise Candidate Intelligence & Dual-Vector ATS.*

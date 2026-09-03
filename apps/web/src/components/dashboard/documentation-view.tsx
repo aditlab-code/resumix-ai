@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Card } from '@/components/ui';
-import { RefreshCw, FileText, Check, Copy, Search, BookOpen, Layers, BarChart3 } from 'lucide-react';
+import { RefreshCw, FileText, Check, Copy, Search, BookOpen, Layers, BarChart3, ShieldCheck, Scale } from 'lucide-react';
 import { MermaidDiagram } from './mermaid-diagram';
 import { MathFormula } from './math-formula';
 import { cn } from '@/lib/utils';
 
-type DocKey = 'readme' | 'architecture' | 'evaluation';
+type DocKey = 'readme' | 'architecture' | 'evaluation' | 'license' | 'licenseDocs';
 
 interface DocItem {
   key: DocKey;
@@ -34,6 +34,18 @@ const DOCS: DocItem[] = [
     label: 'Laporan Evaluasi & Metrik',
     icon: BarChart3,
     description: 'Hasil pengujian 200 PDF CV sintetis, latensi ingestion, dan akurasi AI.',
+  },
+  {
+    key: 'license',
+    label: 'Lisensi Kode (AGPL-3.0)',
+    icon: ShieldCheck,
+    description: 'Ketentuan lisensi GNU AGPLv3 untuk perlindungan source code dan larangan komersial tertutup.',
+  },
+  {
+    key: 'licenseDocs',
+    label: 'Lisensi Dokumen (CC BY-NC-SA)',
+    icon: Scale,
+    description: 'Ketentuan lisensi Creative Commons Attribution-NonCommercial-ShareAlike 4.0 untuk dokumentasi & arsitektur.',
   },
 ];
 
