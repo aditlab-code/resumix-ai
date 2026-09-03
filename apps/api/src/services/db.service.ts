@@ -13,13 +13,13 @@ export class DBService {
   /**
    * Helper to format a float array into pgvector literal syntax string: '[0.1, 0.2, ...]'
    */
-  public formatVector(vec: number[]): string {
-    if (!vec || !Array.isArray(vec)) return '[]';
+  public formatVector(vec?: number[]): string | null {
+    if (!vec || !Array.isArray(vec) || vec.length === 0) return null;
     return `[${vec.join(',')}]`;
   }
 
   /**
-   * Save extracted candidate profile & pgvector embedding into PostgreSQL
+   * Save extracted candidate profile & dual-vector embeddings into PostgreSQL
    */
   async saveCandidate(data: {
     full_name?: string;
@@ -29,14 +29,19 @@ export class DBService {
     total_experience_months?: number;
     parsed_cv_json: Record<string, any>;
     profile_embedding: number[];
+    candidate_skill_embedding?: number[];
+    candidate_role_embedding?: number[];
   }): Promise<string> {
     const vectorString = this.formatVector(data.profile_embedding);
+    const skillVectorString = this.formatVector(data.candidate_skill_embedding);
+    const roleVectorString = this.formatVector(data.candidate_role_embedding);
 
     const query = `
       INSERT INTO candidates (
         full_name, email, phone_number, location,
-        total_experience_months, parsed_cv_json, profile_embedding
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7::vector)
+        total_experience_months, parsed_cv_json, profile_embedding,
+        candidate_skill_embedding, candidate_role_embedding
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7::vector, $8::vector, $9::vector)
       RETURNING id;
     `;
 
@@ -48,10 +53,124 @@ export class DBService {
       data.total_experience_months || 0,
       JSON.stringify(data.parsed_cv_json),
       vectorString,
+      skillVectorString,
+      roleVectorString,
     ];
 
     const result = await this.pool.query(query, values);
     return result.rows[0].id;
+  }
+
+  /**
+   * Save Candidate Normalized Skills
+   */
+  async saveCandidateSkills(candidateId: string, documentId: string, skills: string[]): Promise<void> {
+    for (const skill of skills) {
+      await this.pool.query(
+        `INSERT INTO candidate_skills (candidate_id, document_id, skill_name, normalized_skill)
+         VALUES ($1, $2, $3, $4)`,
+        [candidateId, documentId, skill, skill]
+      );
+    }
+  }
+
+  /**
+   * Save Application Record & Score Breakdown
+   */
+  async saveApplication(data: {
+    candidate_id: string;
+    job_id: string;
+    document_id: string;
+    job_fit_score: number;
+    score_breakdown: Record<string, any>;
+  }): Promise<string> {
+    const query = `
+      INSERT INTO applications (candidate_id, job_id, document_id, job_fit_score, score_breakdown)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id;
+    `;
+    const result = await this.pool.query(query, [
+      data.candidate_id,
+      data.job_id,
+      data.document_id,
+      data.job_fit_score,
+      JSON.stringify(data.score_breakdown),
+    ]);
+    return result.rows[0].id;
+  }
+
+  /**
+   * Create Job Posting with automatic dual-vector pgvector embeddings
+   */
+  async createJobPosting(data: {
+    title: string;
+    description: string;
+    minimum_experience_months?: number;
+    mandatory_skills: string[];
+    preferred_skills?: string[];
+    job_embedding?: number[];
+    job_skill_embedding?: number[];
+    job_role_embedding?: number[];
+  }): Promise<string> {
+    const vectorString = this.formatVector(data.job_embedding);
+    const skillVectorString = this.formatVector(data.job_skill_embedding);
+    const roleVectorString = this.formatVector(data.job_role_embedding);
+
+    const query = `
+      INSERT INTO job_postings (
+        title, description, minimum_experience_months, job_embedding,
+        job_skill_embedding, job_role_embedding
+      ) VALUES ($1, $2, $3, $4::vector, $5::vector, $6::vector)
+      RETURNING id;
+    `;
+
+    const result = await this.pool.query(query, [
+      data.title,
+      data.description,
+      data.minimum_experience_months || 0,
+      vectorString,
+      skillVectorString,
+      roleVectorString,
+    ]);
+
+    const jobId = result.rows[0].id;
+
+    // Insert required skills
+    for (const skill of data.mandatory_skills) {
+      await this.pool.query(
+        `INSERT INTO job_required_skills (job_id, skill_name, normalized_skill, is_mandatory) VALUES ($1, $2, $3, true)`,
+        [jobId, skill, skill.toLowerCase().trim()]
+      );
+    }
+
+    if (data.preferred_skills) {
+      for (const skill of data.preferred_skills) {
+        await this.pool.query(
+          `INSERT INTO job_required_skills (job_id, skill_name, normalized_skill, is_mandatory) VALUES ($1, $2, $3, false)`,
+          [jobId, skill, skill.toLowerCase().trim()]
+        );
+      }
+    }
+
+    return jobId;
+  }
+
+  /**
+   * Update Processing Job Status in PostgreSQL
+   */
+  async updateProcessingJobStatus(
+    processingJobId: string,
+    status: 'uploaded' | 'queued' | 'processing' | 'processed' | 'needs_review' | 'failed',
+    errorCode?: string,
+    errorMessage?: string
+  ): Promise<void> {
+    const query = `
+      UPDATE processing_jobs
+      SET status = $1, error_code = $2, error_message = $3,
+          completed_at = CASE WHEN $1 IN ('processed', 'needs_review', 'failed') THEN CURRENT_TIMESTAMP ELSE completed_at END
+      WHERE id = $4;
+    `;
+    await this.pool.query(query, [status, errorCode || null, errorMessage || null, processingJobId]);
   }
 
   /**
@@ -67,6 +186,8 @@ export class DBService {
       full_name: string;
       email: string;
       total_experience_months: number;
+      skill_similarity: number;
+      role_similarity: number;
       semantic_similarity: number;
     }>
   > {

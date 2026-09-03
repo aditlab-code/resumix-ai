@@ -12,12 +12,18 @@ export interface EmbeddingResponse {
   model: string;
   dimensions: number;
   embedding: number[];
+  skill_embedding?: number[];
+  role_embedding?: number[];
 }
 
 export interface JobFitScoreBreakdown {
   score_version: string;
   semantic_similarity: number;
   semantic_weight: number;
+  skill_semantic_similarity?: number;
+  skill_semantic_weight?: number;
+  role_semantic_similarity?: number;
+  role_semantic_weight?: number;
   mandatory_skill_score: number;
   mandatory_skill_weight: number;
   experience_score: number;
@@ -35,6 +41,8 @@ export interface ProcessFullCVResult {
   extraction: Record<string, any>;
   normalized_skills: string[];
   profile_embedding: number[];
+  skill_embedding?: number[];
+  role_embedding?: number[];
   score_breakdown?: JobFitScoreBreakdown;
 }
 
@@ -125,6 +133,10 @@ export class AIClientService {
     semantic_similarity?: number;
     candidate_embedding?: number[];
     job_embedding?: number[];
+    candidate_skill_embedding?: number[];
+    job_skill_embedding?: number[];
+    candidate_role_embedding?: number[];
+    job_role_embedding?: number[];
   }): Promise<JobFitScoreBreakdown> {
     const res = await fetch(`${this.baseUrl}/v1/cv/calculate-score`, {
       method: 'POST',
@@ -140,6 +152,51 @@ export class AIClientService {
     return (await res.json()) as JobFitScoreBreakdown;
   }
 
+  async extractJobQualifications(rawJobText: string): Promise<{
+    qualifications: {
+      title: string;
+      company_name?: string;
+      department?: string;
+      location?: string;
+      minimum_experience_months: number;
+      mandatory_skills: string[];
+      preferred_skills: string[];
+      summary: string;
+    };
+    job_embedding: number[];
+    job_skill_embedding?: number[];
+    job_role_embedding?: number[];
+    dimensions: number;
+  }> {
+    const res = await fetch(`${this.baseUrl}/v1/job/extract-qualifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ raw_text: rawJobText }),
+    });
+
+    if (!res.ok) {
+      const errJson = (await res.json().catch(() => ({ detail: res.statusText }))) as { detail?: any };
+      throw new Error(`AI Service extract-qualifications error (${res.status}): ${JSON.stringify(errJson.detail)}`);
+    }
+
+    return (await res.json()) as {
+      qualifications: {
+        title: string;
+        company_name?: string;
+        department?: string;
+        location?: string;
+        minimum_experience_months: number;
+        mandatory_skills: string[];
+        preferred_skills: string[];
+        summary: string;
+      };
+      job_embedding: number[];
+      job_skill_embedding?: number[];
+      job_role_embedding?: number[];
+      dimensions: number;
+    };
+  }
+
   /**
    * Complete End-to-End Orchestrated Pipeline Integration
    * Runs Extraction -> LLM Parsing -> Skill Normalization -> Multilingual Embedding -> Scoring
@@ -152,6 +209,8 @@ export class AIClientService {
       preferred_skills?: string[];
       required_experience_months?: number;
       job_embedding?: number[];
+      job_skill_embedding?: number[];
+      job_role_embedding?: number[];
     }
   ): Promise<ProcessFullCVResult> {
     // 1. Text Extraction (PyMuPDF with Zero-Text Rejection Rule)
@@ -168,7 +227,7 @@ export class AIClientService {
     const normRes = await this.normalizeSkills(rawSkills);
     const normalizedSkills = normRes.normalized_skills;
 
-    // 4. Generate 384-dim Multilingual Profile Embedding (Indonesian & English)
+    // 4. Generate 384-dim Dual Vector Embeddings (Skill & Role Vectors)
     const embeddingRes = await this.generateEmbedding({ cv_extraction: extraction });
 
     // 5. Calculate Job-Fit Score if Job Criteria Provided
@@ -182,6 +241,10 @@ export class AIClientService {
         required_experience_months: jobCriteria.required_experience_months || 24,
         candidate_embedding: embeddingRes.embedding,
         job_embedding: jobCriteria.job_embedding,
+        candidate_skill_embedding: embeddingRes.skill_embedding,
+        job_skill_embedding: jobCriteria.job_skill_embedding,
+        candidate_role_embedding: embeddingRes.role_embedding,
+        job_role_embedding: jobCriteria.job_role_embedding,
       });
     }
 
@@ -191,6 +254,8 @@ export class AIClientService {
       extraction,
       normalized_skills: normalizedSkills,
       profile_embedding: embeddingRes.embedding,
+      skill_embedding: embeddingRes.skill_embedding,
+      role_embedding: embeddingRes.role_embedding,
       score_breakdown: scoreBreakdown,
     };
   }

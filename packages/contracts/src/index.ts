@@ -18,12 +18,18 @@ export interface ScoreBreakdown {
   score_version: string;
   semantic_similarity: number;
   semantic_weight: number;
+  skill_semantic_similarity?: number;
+  skill_semantic_weight?: number;
+  role_semantic_similarity?: number;
+  role_semantic_weight?: number;
   mandatory_skill_score: number;
   mandatory_skill_weight: number;
   experience_score: number;
   experience_weight: number;
+  relevant_experience_months?: number;
   preferred_skill_score: number;
   preferred_skill_weight: number;
+  mandatory_penalty_factor?: number;
   final_score: number;
   matched_skills: string[];
   missing_mandatory_skills: string[];

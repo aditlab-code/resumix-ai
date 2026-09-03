@@ -98,15 +98,21 @@ class ProcessCVRequest(BaseModel):
 
 
 class JobFitScoreBreakdown(BaseModel):
-    score_version: str = "v1"
+    score_version: str = "v2"
     semantic_similarity: float
     semantic_weight: float = 0.45
+    skill_semantic_similarity: float = 0.80
+    skill_semantic_weight: float = 0.25
+    role_semantic_similarity: float = 0.80
+    role_semantic_weight: float = 0.20
     mandatory_skill_score: float
     mandatory_skill_weight: float = 0.30
     experience_score: float
     experience_weight: float = 0.20
+    relevant_experience_months: int = 0
     preferred_skill_score: float
     preferred_skill_weight: float = 0.05
+    mandatory_penalty_factor: float = 1.0
     final_score: float
     matched_skills: list[str]
     missing_mandatory_skills: list[str]

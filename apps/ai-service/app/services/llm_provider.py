@@ -70,11 +70,14 @@ RULES:
 8. Do not hallucinate non-existent details. Output ONLY JSON without markdown wrappers.
 """
 
-async function_extract_via_groq(
+async def function_extract_via_groq(
   raw_text: str,
   api_key: Optional[str] = None,
   model: Optional[str] = None
 ) -> Dict[str, Any]:
+  from app.services.text_pruner import prune_raw_text
+  pruned_text = prune_raw_text(raw_text)
+
   key = api_key or DEFAULT_GROQ_API_KEY
   selected_model = model or DEFAULT_GROQ_MODEL
 
@@ -87,7 +90,7 @@ async function_extract_via_groq(
     "model": selected_model,
     "messages": [
       {"role": "system", "content": SYSTEM_PROMPT},
-      {"role": "user", "content": f"Extract candidate profile from this CV text:\n\n{raw_text[:6000]}"}
+      {"role": "user", "content": f"Extract candidate profile from this CV text:\n\n{pruned_text[:6000]}"}
     ],
     "temperature": 0.1,
     "response_format": {"type": "json_object"}

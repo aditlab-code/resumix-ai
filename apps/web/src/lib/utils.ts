@@ -856,18 +856,23 @@ export function calculateJobFitScore(
   const reqMonths = job.minimum_experience_months || 1;
   const experienceScore = reqMonths <= 0 ? 1.0 : Math.min(1.0, candidateMonths / reqMonths);
 
-  // Semantic similarity estimation (simulated based on overlap + keyword ratio)
-  const semanticSimilarity = Math.min(
-    0.95,
-    Math.max(
-      0.45,
-      0.4 + (mandatorySkillScore * 0.35) + (preferredSkillScore * 0.15) + (experienceScore * 0.1)
-    )
+  // Skill Semantic & Role Semantic Similarity estimations
+  const skillSemanticSimilarity = Math.min(
+    0.98,
+    Math.max(0.45, 0.4 + (mandatorySkillScore * 0.45) + (preferredSkillScore * 0.15))
   );
 
-  // Final score formula: 45% semantic + 30% mandatory + 20% experience + 5% preferred
+  const roleSemanticSimilarity = Math.min(
+    0.95,
+    Math.max(0.40, 0.35 + (experienceScore * 0.35) + (mandatorySkillScore * 0.25))
+  );
+
+  const combinedSemanticSim = Math.round((0.55 * skillSemanticSimilarity + 0.45 * roleSemanticSimilarity) * 100) / 100;
+
+  // Final score formula: 25% skill_sem + 20% role_sem + 30% mandatory + 20% exp + 5% preferred
   const finalScoreRaw = 100 * (
-    0.45 * semanticSimilarity +
+    0.25 * skillSemanticSimilarity +
+    0.20 * roleSemanticSimilarity +
     0.30 * mandatorySkillScore +
     0.20 * experienceScore +
     0.05 * preferredSkillScore
@@ -876,9 +881,13 @@ export function calculateJobFitScore(
   const final_score = Math.round(finalScoreRaw * 10) / 10;
 
   const breakdown: ScoreBreakdown = {
-    score_version: 'v1',
-    semantic_similarity: Math.round(semanticSimilarity * 100) / 100,
+    score_version: 'v2',
+    semantic_similarity: combinedSemanticSim,
     semantic_weight: 0.45,
+    skill_semantic_similarity: Math.round(skillSemanticSimilarity * 100) / 100,
+    skill_semantic_weight: 0.25,
+    role_semantic_similarity: Math.round(roleSemanticSimilarity * 100) / 100,
+    role_semantic_weight: 0.20,
     mandatory_skill_score: Math.round(mandatorySkillScore * 100) / 100,
     mandatory_skill_weight: 0.30,
     experience_score: Math.round(experienceScore * 100) / 100,

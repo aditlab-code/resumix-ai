@@ -101,6 +101,84 @@ def prepare_candidate_profile_text(cv_input: Union[Dict[str, Any], str]) -> str:
     return "\n".join(parts)
 
 
+def prepare_skills_text(cv_or_job_input: Union[Dict[str, Any], List[str], str]) -> str:
+    """Prepare a focused text string containing technical skills and competencies for skill embedding generation."""
+    if isinstance(cv_or_job_input, str):
+        return f"Technical Skills: {cv_or_job_input.strip()}"
+
+    if isinstance(cv_or_job_input, list):
+        return "Technical Skills: " + ", ".join([str(s) for s in cv_or_job_input if s])
+
+    if isinstance(cv_or_job_input, dict):
+        # Candidate CV case
+        skills = cv_or_job_input.get("skills") or cv_or_job_input.get("mandatory_skills") or []
+        skill_names = []
+        for s in skills:
+            if isinstance(s, dict):
+                name = s.get("normalized_name") or s.get("name")
+            elif isinstance(s, str):
+                name = s
+            else:
+                name = None
+            if name:
+                skill_names.append(name)
+        
+        pref_skills = cv_or_job_input.get("preferred_skills") or []
+        for s in pref_skills:
+            if isinstance(s, str) and s not in skill_names:
+                skill_names.append(s)
+
+        if skill_names:
+            return "Technical Skills: " + ", ".join(skill_names)
+
+    return "Technical Skills: General Engineering"
+
+
+def prepare_role_text(cv_or_job_input: Union[Dict[str, Any], str]) -> str:
+    """Prepare a focused text string containing role responsibilities and executive summaries for role embedding generation."""
+    if isinstance(cv_or_job_input, str):
+        return f"Role Description: {cv_or_job_input.strip()}"
+
+    if isinstance(cv_or_job_input, dict):
+        parts = []
+        title = cv_or_job_input.get("title") or cv_or_job_input.get("full_name") or ""
+        summary = cv_or_job_input.get("summary") or ""
+        if title or summary:
+            parts.append(f"Role Summary ({title}): {summary}".strip())
+
+        experiences = cv_or_job_input.get("work_experience") or []
+        exp_strings = []
+        for exp in experiences:
+            if isinstance(exp, dict):
+                role = exp.get("role") or ""
+                company = exp.get("company") or ""
+                desc = exp.get("description") or ""
+                exp_str = f"{role} at {company}. {desc}".strip()
+                if exp_str:
+                    exp_strings.append(exp_str)
+        if exp_strings:
+            parts.append("Key Responsibilities: " + " | ".join(exp_strings))
+
+        if parts:
+            return "\n".join(parts)
+
+    return "Role Description: General Professional Role"
+
+
+def generate_dual_embeddings(cv_or_job_input: Union[Dict[str, Any], str]) -> Dict[str, List[float]]:
+    """Generate both skill_embedding and role_embedding (384-dimensional vectors)."""
+    skills_text = prepare_skills_text(cv_or_job_input)
+    role_text = prepare_role_text(cv_or_job_input)
+
+    skill_vec = generate_embedding(skills_text)
+    role_vec = generate_embedding(role_text)
+
+    return {
+        "skill_embedding": skill_vec,
+        "role_embedding": role_vec,
+    }
+
+
 def compute_cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
     """Calculate cosine similarity between two float vectors.
     Returns similarity score clamped in range [0.0, 1.0].
@@ -117,3 +195,4 @@ def compute_cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
 
     similarity = dot_product / (norm_a * norm_b)
     return max(0.0, min(1.0, float(similarity)))
+

@@ -98,20 +98,26 @@ def generate_embedding_endpoint(
     text: Optional[str] = Body(default=None),
     cv_extraction: Optional[Dict[str, Any]] = Body(default=None),
 ):
-    """Generate 384-dimensional vector embedding using sentence-transformers (multilingual: id/en)."""
+    """Generate 384-dimensional vector embeddings (overall, skill_embedding, role_embedding) using sentence-transformers."""
     if text and text.strip():
-        target_text = text.strip()
+        input_data = text.strip()
     elif cv_extraction:
-        target_text = prepare_candidate_profile_text(cv_extraction)
+        input_data = cv_extraction
     else:
         raise HTTPException(status_code=400, detail="Harap sediakan 'text' atau 'cv_extraction'.")
 
     try:
+        target_text = prepare_candidate_profile_text(input_data) if isinstance(input_data, dict) else input_data
         embedding = generate_embedding(target_text)
+        from app.services.embedding_service import generate_dual_embeddings
+        dual = generate_dual_embeddings(input_data)
+
         return {
             "model": DEFAULT_EMBEDDING_MODEL_NAME,
             "dimensions": len(embedding),
             "embedding": embedding,
+            "skill_embedding": dual["skill_embedding"],
+            "role_embedding": dual["role_embedding"],
         }
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Gagal membuat embedding: {str(exc)}")
@@ -127,10 +133,25 @@ def calculate_score_endpoint(
     semantic_similarity: float = Body(default=0.80),
     candidate_embedding: Optional[List[float]] = Body(default=None),
     job_embedding: Optional[List[float]] = Body(default=None),
+    candidate_skill_embedding: Optional[List[float]] = Body(default=None),
+    job_skill_embedding: Optional[List[float]] = Body(default=None),
+    candidate_role_embedding: Optional[List[float]] = Body(default=None),
+    job_role_embedding: Optional[List[float]] = Body(default=None),
+    skill_equivalents: Optional[Dict[str, List[str]]] = Body(default=None),
+    work_experiences: Optional[List[Dict[str, Any]]] = Body(default=None),
+    job_title: Optional[str] = Body(default=None),
 ):
     computed_similarity = semantic_similarity
     if candidate_embedding and job_embedding and len(candidate_embedding) == len(job_embedding):
         computed_similarity = compute_cosine_similarity(candidate_embedding, job_embedding)
+
+    skill_sim: float | None = None
+    if candidate_skill_embedding and job_skill_embedding and len(candidate_skill_embedding) == len(job_skill_embedding):
+        skill_sim = compute_cosine_similarity(candidate_skill_embedding, job_skill_embedding)
+
+    role_sim: float | None = None
+    if candidate_role_embedding and job_role_embedding and len(candidate_role_embedding) == len(job_role_embedding):
+        role_sim = compute_cosine_similarity(candidate_role_embedding, job_role_embedding)
 
     return compute_job_fit_score(
         candidate_skills=candidate_skills,
@@ -139,5 +160,40 @@ def calculate_score_endpoint(
         preferred_skills=preferred_skills,
         required_experience_months=required_experience_months,
         semantic_similarity=computed_similarity,
+        skill_semantic_similarity=skill_sim,
+        role_semantic_similarity=role_sim,
+        skill_equivalents=skill_equivalents,
+        work_experiences=work_experiences,
+        job_title=job_title,
     )
+
+
+@app.post("/v1/job/extract-qualifications")
+async def extract_job_qualifications_endpoint(raw_text: str = Body(..., embed=True)):
+    """Parse raw LinkedIn/Glints job text into structured qualifications and generate dual-vector embeddings."""
+    if not raw_text or not raw_text.strip():
+        raise HTTPException(status_code=400, detail="Teks deskripsi lowongan tidak boleh kosong.")
+
+    try:
+        from app.services.job_extractor import extract_job_qualifications_via_groq
+        qualifications = await extract_job_qualifications_via_groq(raw_text)
+
+        # Generate 384-dim job_embedding & dual vectors automatically
+        job_text_for_embedding = f"Job Title: {qualifications.get('title')}. Experience Required: {qualifications.get('minimum_experience_months')} months. Mandatory Skills: {', '.join(qualifications.get('mandatory_skills', []))}. Summary: {qualifications.get('summary')}"
+        job_embedding = generate_embedding(job_text_for_embedding)
+
+        from app.services.embedding_service import generate_dual_embeddings
+        dual = generate_dual_embeddings(qualifications)
+
+        return {
+            "qualifications": qualifications,
+            "job_embedding": job_embedding,
+            "job_skill_embedding": dual["skill_embedding"],
+            "job_role_embedding": dual["role_embedding"],
+            "dimensions": len(job_embedding),
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Gagal memproses deskripsi lowongan: {str(exc)}")
+
+
 
