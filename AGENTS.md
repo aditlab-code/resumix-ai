@@ -115,3 +115,36 @@ Saat menyelesaikan tugas, AI Agent harus memberikan respon ringkas dan terstrukt
 2. **Daftar File yang Diubah**: Path lengkap ke file yang ditambahkan/dimodifikasi.
 3. **Hasil Verifikasi**: Linter/type-check/test yang dijalankan beserta hasilnya.
 4. **Risiko / Catatan**: Asumsi atau tindak lanjut yang perlu diperhatikan pengguna.
+
+---
+
+## 9. Perintah Operasional Server (Start & Terminate)
+
+### Menghentikan Semua Service (*Clean Termination*)
+```bash
+# Menghentikan port 3000 (Web), 3001 (API), 8000 (AI) & proses node/python/uvicorn
+npm run stop
+
+# Atau via bash script otomatis
+./scripts/stop-services.sh
+```
+
+### Menjalankan Service (Dev Local)
+```bash
+# 1. Pastikan PostgreSQL & Redis aktif di Docker
+docker compose -f docker-compose.dev.yml up -d postgres redis
+
+# 2. Jalankan AI Service, Core API, BullMQ Worker, dan Frontend Web bersamaan
+npm run dev:local
+
+# 3. Atau jalankan service individual
+npm run dev:ai       # AI Service (Python FastAPI - Port 8000)
+npm run dev:api      # Core API (Node.js Express - Port 3001)
+npm run dev:worker   # Standalone BullMQ Worker
+npm run dev:web      # Frontend Web (Next.js - Port 3000)
+```
+
+### Menjalankan via Docker Compose Fullstack
+```bash
+npm run dev:fullstack   # Atau: docker compose -f docker-compose.dev.yml up
+```

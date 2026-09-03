@@ -1,6 +1,6 @@
 # CV ATS Pipeline - Enterprise Candidate Screening System
 
-Sistem Applicant Tracking System (ATS) modern berbasis arsitektur mikroservis terpisah (decoupled monorepo) yang dirancang untuk pengolahan CV kandidat secara otomatis. Sistem ini menggabungkan ekstraksi teks PDF berbasis PyMuPDF, penolakan ketat PDF tanpa layer teks (*zero-text rejection rule*), ekstraksi terstruktur berbantuan LLM dengan skema Pydantic, normalisasi skill deterministik, pencarian vektor via `pgvector`, serta engine perhitungan *job-fit score* yang transparan dan dapat diaudit.
+Sistem Applicant Tracking System (ATS) modern berbasis arsitektur mikroservis terpisah (*decoupled monorepo*) yang dirancang untuk pengolahan CV kandidat secara otomatis. Sistem ini menggabungkan ekstraksi teks PDF berbasis PyMuPDF, penolakan ketat PDF tanpa layer teks (*zero-text rejection rule*), pemangkasan teks noise/boilerplate berbasis *Hybrid Text Pruner*, ekstraksi terstruktur berbantuan LLM (Groq `llama-3.1-8b-instant`) dengan skema Pydantic, normalisasi skill deterministik & taksonomi dinamis, pencarian dual-vektor via `pgvector`, serta engine perhitungan *job-fit score* v2 (Dual-Vector & Multi-Factor Scoring) yang transparan dan dapat diaudit.
 
 ---
 
@@ -9,10 +9,10 @@ Sistem Applicant Tracking System (ATS) modern berbasis arsitektur mikroservis te
 CV ATS Pipeline dirancang khusus sebagai **decision-support tool** bagi tim HR / Recruiter, bukan sebagai mesin penentu keputusan rekrutmen otomatis. 
 
 ### Prinsip Utama Sistem
-- **Human-in-the-Loop**: AI tidak pernah membuat keputusan penolakan atau penerimaan kandidat secara independen. Sistem menyediakan skor kecocokan beserta rincian alasannya (*score breakdown*) agar HR dapat membuat keputusan yang terukur.
-- **Asynchronous Processing**: Pemrosesan dokumen CV (LLM, embedding, scoring) dilakukan secara asinkron menggunakan antrean (*job queue*) untuk mencegah *request timeout* dan memastikan respons API tetap di bawah 200 md.
-- **Keamanan Data dan Privasi (PII)**: Berkas CV disimpan dalam penyimpanan objek privat (*private object storage*). Akses berkas oleh pengguna dilakukan melalui *Signed URL* berjangka waktu singkat.
-- **Scoring Fairness**: Proses penilaian kecocokan (*job-fit scoring*) murni didasarkan pada kompetensi teknis, kualifikasi skill wajib, dan durasi pengalaman kerja. Atribut sensitif seperti foto, usia, jenis kelamin, agama, lokasi detail, atau status pernikahan dilarang digunakan dalam scoring.
+- **Human-in-the-Loop**: AI tidak pernah membuat keputusan penolakan (`rejected`) atau penerimaan (`hired`) kandidat secara independen. Sistem menyediakan skor kecocokan beserta rincian alasannya (*score breakdown*) agar HR dapat membuat keputusan yang terukur.
+- **Asynchronous & Real-Time Processing**: Pemrosesan dokumen CV dalam jumlah besar dilakukan secara asinkron menggunakan antrean (*job queue* BullMQ & Redis) untuk memberikan respons API di bawah 200 ms. Sistem juga menyediakan endpoint *Instant Synchronous Evaluation* untuk pengujian real-time.
+- **Keamanan Data dan Privasi (PII)**: Berkas CV disimpan dalam penyimpanan objek privat (*private object storage* Supabase). Akses berkas oleh pengguna dilakukan melalui *Temporary Signed URL* berjangka waktu singkat (TTL 300 detik).
+- **Scoring Fairness**: Proses penilaian kecocokan (*job-fit scoring*) murni didasarkan pada kompetensi teknis, kualifikasi skill wajib, dan durasi pengalaman kerja yang relevan. Atribut sensitif seperti foto, usia, jenis kelamin, agama, lokasi detail, atau status pernikahan dilarang digunakan dalam scoring.
 
 ---
 
@@ -27,18 +27,19 @@ graph TD
     API -->|Persist Data & App Records| DB[(PostgreSQL + pgvector)]
     API -->|Enqueue Parse Job| Queue[(Redis / BullMQ Queue)]
     Queue -->|Worker Task| Worker[Async Job Worker Engine]
-    Worker -->|HTTP POST /v1/cv/process| AIService[FastAPI AI Microservice]
+    Worker -->|HTTP REST API| AIService[FastAPI AI Microservice]
     
     subgraph AI Processing Pipeline
         AIService -->|1. Text Extraction| PyMuPDF[PyMuPDF Parser]
         PyMuPDF -->|Reject if len==0| Reject[HTTP 400 NO_TEXT_LAYER -> needs_review]
-        AIService -->|2. Structured Extraction| LLM[LLM Engine - Pydantic Schema]
-        LLM -->|3. Skill Normalization| Normalizer[Skill Normalizer Dictionary]
-        LLM -->|4. Embedding Generation| Embedder[Sentence Transformers]
-        LLM -->|5. Job-Fit Scoring| Scoring[Hybrid Scoring Engine]
+        AIService -->|2. Text Pruning| Pruner[Hybrid Text Pruner - Boilerplate Stripper]
+        Pruner -->|3. Structured Extraction| LLM[Groq LLM - llama-3.1-8b-instant]
+        LLM -->|4. Skill Normalization| Normalizer[Skill Normalizer & Dynamic Taxonomies]
+        LLM -->|5. Dual-Vector Embeddings| Embedder[Sentence Transformers - Skill & Role Vectors]
+        LLM -->|6. Job-Fit Scoring v2| Scoring[Multi-Factor & Penalty Scoring Engine]
     end
 
-    AIService -->|Return Structured JSON + Score + Embedding| Worker
+    AIService -->|Return Structured JSON + Score v2 + Dual Embeddings| Worker
     Worker -->|Update Status & Extraction Results| DB
 ```
 
@@ -46,40 +47,42 @@ graph TD
 
 | Layanan / Komponen | Tanggung Jawab Utama | Hal yang Dilarang |
 | :--- | :--- | :--- |
-| **Frontend (`apps/web`)** | UI/UX HR, form lowongan kerja, upload dropzone CV, visualisasi status proses, preview PDF, dan form review/edit hasil AI. | Memegang API key/secret internal, menghitung skor otoritatif, atau melakukan query langsung ke database. |
-| **Core API (`apps/api`)** | Auth/RBAC, manajemen domain (Jobs, Candidates, Applications), enkapsulasi signed URL storage, dan orkestrasi queue. | Melakukan parsing PDF atau pemanggilan LLM langsung di dalam request handler HTTP sinkron. |
-| **Job Worker (`apps/api/src/worker`)** | Mengambil job dari Redis Queue, mengelola mekanisme retry, memanggil AI Microservice, dan mengonfirmasi pembaruan status DB. | Menentukan keputusan rekrutmen kandidat secara otomatis tanpa pengawasan HR. |
-| **AI Service (`apps/ai-service`)** | Parsing PDF (PyMuPDF), zero-text rejection, ekstraksi terstruktur LLM, validasi Pydantic, normalisasi skill, pembuatan embedding, dan perhitungan scoring. | Menulis atau mengubah data langsung ke PostgreSQL tanpa melalui kontrak API/Worker. |
-| **PostgreSQL + `pgvector`** | Menyimpan data relasional ternormalisasi, indeks pencarian vektor kemiripan, audit log, dan tracking status pekerjaan. | Menyimpan berkas biner PDF CV secara langsung di dalam kolom tabel. |
+| **Frontend (`apps/web`)** | UI/UX HR, form lowongan kerja, import lowongan LinkedIn/Glints, upload dropzone CV, visualisasi status proses BullMQ, dual-layout pipeline (**Table** & **Kanban Board**), **Candidate Comparator Matrix** *side-by-side*, preview PDF, dan form review/edit hasil AI. | Memegang API key/secret internal, menghitung skor otoritatif, atau melakukan query langsung ke database. |
+| **Core API (`apps/api`)** | Auth/RBAC, manajemen domain (Jobs CRUD, Import LinkedIn, Candidates, Applications), enkapsulasi signed URL storage, real-time instant evaluation, pencarian vektor pgvector, dan orkestrasi BullMQ queue. | Melakukan parsing PDF atau pemanggilan LLM langsung di dalam request handler HTTP sinkron standar. |
+| **Job Worker (`apps/api/src/worker`)** | Mengambil job dari Redis Queue, mengelola mekanisme retry, memanggil FastAPI AI Microservice, dan mengonfirmasi pembaruan status DB. | Menentukan keputusan rekrutmen kandidat secara otomatis tanpa pengawasan HR. |
+| **AI Service (`apps/ai-service`)** | Parsing PDF (PyMuPDF), zero-text rejection, text pruner, ekstraksi terstruktur Groq LLM (`llama-3.1-8b-instant`), validasi Pydantic, normalisasi skill & taksonomi dinamis, pembuatan dual-embedding (Skill & Role vector), dan kalkulasi scoring v2. | Menulis atau mengubah data langsung ke PostgreSQL tanpa melalui kontrak API/Worker. |
+| **PostgreSQL + `pgvector`** | Menyimpan data relasional ternormalisasi (13 tabel, 3 migrasi SQL), indeks pencarian dual-vektor kemiripan (`candidate_skill_embedding` & `candidate_role_embedding`), audit log, dan tracking status pekerjaan. | Menyimpan berkas biner PDF CV secara langsung di dalam kolom tabel. |
 | **Storage (`Supabase Storage`)** | Menyimpan berkas CV asli secara privat dalam struktur terisolasi. | Menjadikan bucket berstatus publik tanpa proteksi signed URL. |
 
 ---
 
-## 3. Alur Kerja Ingestion dan Pemrosesan Asinkron
+## 3. Alur Kerja Ingestion dan Pemrosesan
 
-Untuk menangani unggahan berkas CV dalam jumlah besar dan mengantisipasi latensi pemrosesan LLM & embedding, sistem menggunakan alur ingestion asinkron sebagai berikut:
-
+### A. Pemrosesan Asinkron (High-Volume Queue)
 ```text
 1. HR / Kandidat Mengunggah CV PDF via Web UI
-   └─> Core API memvalidasi MIME type, ukuran berkas (maksimal 10 MB), proteksi PDF enkripsi/bomb.
-   └─> Berkas disimpan ke Supabase Storage private bucket (jalur: cv-files/raw/{document_id}.pdf).
-   └─> Record 'applications' dibuat dengan status 'applied'.
-   └─> Record 'candidate_documents' dibuat dengan parse_status 'uploaded'.
+   └─> Core API memvalidasi MIME type (application/pdf), ukuran berkas (maksimal 10 MB).
+   └─> Berkas disimpan ke Supabase Storage private bucket (cv-files/raw/{document_id}.pdf).
+   └─> Record 'applications' dibuat (status: 'applied').
+   └─> Record 'candidate_documents' dibuat (parse_status: 'uploaded').
    └─> Job pemrosesan dimasukkan ke Redis Queue (processing_jobs status 'queued').
-   └─> Core API langsung mengembalikan respon HTTP 202 Accepted (< 200 ms) berisi application_id & processing_job_id.
+   └─> Core API mengembalikan respon HTTP 202 Accepted (< 200 ms) berisi application_id, document_id, & processing_job_id.
 
 2. Pemrosesan Asinkron oleh Worker Engine
    └─> Worker mengambil job dari queue dan memperbarui parse_status menjadi 'processing'.
-   └─> Worker memanggil FastAPI AI Service pada endpoint /v1/cv/process.
-   └─> FastAPI mengeksekusi ekstraksi teks PyMuPDF.
-   └─> Jika PDF tidak memiliki layer teks (len == 0), sistem menolak pemrosesan dengan error HTTP 400 NO_TEXT_LAYER dan menandai parse_status dokumen sebagai 'needs_review'.
-   └─> Teks mentah dikirim ke LLM untuk ekstraksi terstruktur sesuai skema Pydantic.
-   └─> Skill yang diekstrak melewati kamus normalisasi deterministik.
-   └─> Model Sentence Transformers menghasilkan profile_embedding untuk kandidat.
-   └─> Engine Scoring menghitung nilai kecocokan (0-100) dan rincian score_breakdown.
-   └─> Worker menyimpan parsed_cv_json, candidate_skills, profile_embedding, dan score_breakdown ke PostgreSQL.
-   └─> Worker mengubah parse_status menjadi 'processed' (atau 'needs_review' jika ada warning, atau 'failed' jika fatal error).
+   └─> Worker memanggil FastAPI AI Service (/v1/cv/extract-text, /v1/cv/llm-extract, dll).
+   └─> PyMuPDF mengeksekusi ekstraksi teks PDF. Jika len == 0, melempar HTTP 400 NO_TEXT_LAYER -> status 'needs_review'.
+   └─> Hybrid Text Pruner membersihkan boilerplate noise & menyaring seksi kualifikasi utama.
+   └─> Teks pruner dikirim ke Groq LLM (llama-3.1-8b-instant) sesuai skema Pydantic.
+   └─> Skill diekstrak dan dicocokkan via kamus sinonim deterministik & tabel skill_taxonomies.
+   └─> Model Sentence Transformers menghasilkan dual 384-dim embeddings (Skill Vector & Role Vector).
+   └─> Scoring Engine v2 menghitung nilai kecocokan (0-100) dan Mandatory Skill Penalty Factor.
+   └─> Worker menyimpan parsed_cv_json, candidate_skills, dual embeddings, dan score_breakdown ke PostgreSQL.
+   └─> Worker mengubah parse_status menjadi 'processed' (atau 'needs_review' / 'failed').
 ```
+
+### B. Evaluasi Real-Time Instant (Synchronous Pipeline)
+Untuk pengujian atau preview instan, API menyediakan endpoint `POST /api/v1/jobs/:jobId/evaluate-instant` yang menjalankan eksekusi pipeline lengkap secara sinkron dan mengembalikan hasil parsing, skill ter-normalisasi, serta breakdown skor v2 dalam satu respons HTTP.
 
 ---
 
@@ -90,14 +93,35 @@ cv-ats-pipeline/
 ├── apps/
 │   ├── web/                         # Next.js 14 HR Dashboard (TypeScript + Tailwind CSS)
 │   ├── api/                         # Node.js / Express Core API & BullMQ Worker Engine
+│   │   └── src/
+│   │       ├── index.ts             # Express REST Routes & API Entry Point
+│   │       ├── services/            # DB, Job, AI Client, & Job Import services
+│   │       └── worker/              # BullMQ Async CV Processing Worker
 │   └── ai-service/                  # FastAPI Python AI Microservice
+│       ├── app/
+│       │   ├── main.py              # FastAPI Endpoints & Health Check
+│       │   ├── schemas/
+│       │   │   └── cv_schema.py     # Pydantic Schemas & DTO Definitions
+│       │   └── services/
+│       │       ├── pdf_extractor.py        # PyMuPDF Parser & Zero-Text Rejection Rule
+│       │       ├── text_pruner.py          # Hybrid Noise & Boilerplate Text Pruner
+│       │       ├── llm_provider.py         # Groq LLM Structured Extraction (llama-3.1-8b-instant)
+│       │       ├── job_extractor.py        # Job Posting Qualification Extractor
+│       │       ├── skill_normalizer.py     # Skill Synonym Dictionary & Dynamic Taxonomies
+│       │       ├── embedding_service.py    # Dual-Vector (Skill & Role) 384-dim Embeddings
+│       │       ├── experience_calculator.py# Relevant Domain Experience Month Calculator
+│       │       └── scoring_service.py      # Multi-Factor & Penalty Scoring Engine (v2)
+│       └── models/                  # Local Cache Directory for SentenceTransformer models
 ├── packages/
 │   ├── contracts/                   # Shared DTOs, OpenAPI Specs, & JSON Schemas
 │   └── config/                      # Shared TSConfig, ESLint, & Prettier rules
 ├── database/
-│   ├── migrations/                  # PostgreSQL SQL Migrations (12 Core Tables & pgvector)
+│   ├── migrations/                  # PostgreSQL SQL Migrations
+│   │   ├── 001_initial_schema.sql           # Core 12 Relational Tables & Enums
+│   │   ├── 002_dual_vector_embeddings.sql   # Dual-Vector Embedding Columns & Match Procedure
+│   │   └── 003_skill_taxonomies.sql         # Dynamic Custom Skill Synonym Table
 │   ├── seeds/                       # Seed data untuk pengujian & pengembangan lokal
-│   └── functions/                   # Custom SQL functions & kueri pencarian vektor
+│   └── functions/                   # Custom SQL functions & match_candidates_for_job procedure
 ├── docs/                            # Dokumentasi Spesifikasi & Arsitektur Moduler
 │   ├── architecture.md              # Spesifikasi Arsitektur Utama & System Boundaries
 │   ├── brainstorming-rag-pipeline.md# Dokumen Analisis & Rencana Pengembangan Pipeline
@@ -113,6 +137,7 @@ cv-ats-pipeline/
 ├── docker-compose.dev.yml           # Kontainerisasi Pengembangan Lokal (Hot-Reload)
 ├── .env.example                     # Template Variabel Lingkungan
 ├── AGENTS.md                        # Panduan Operasional & Aturan AI Agent
+├── ARCHITECTURE.md                  # Master Architecture Specification
 └── README.md                        # Master Dokumen Portofolio Utama
 ```
 
@@ -131,32 +156,31 @@ if len(raw_text.strip()) == 0:
     raise ValueError("NO_TEXT_LAYER: Berkas PDF tidak memiliki layer teks yang dapat dibaca. Harap unggah PDF asli berbasis teks.")
 ```
 
-Setiap proses ekstraksi menghasilkan metadata kualitas:
+---
 
-```json
-{
-  "parser": "pymupdf",
-  "ocr_used": false,
-  "page_count": 2,
-  "extracted_characters": 4218,
-  "processing_time_ms": 875,
-  "quality_score": 0.92
-}
-```
+### B. Pemangkasan Teks Hybrid (Hybrid Text Pruner)
+
+Sebelum teks mentah dikirim ke LLM atau embedder, modul `text_pruner.py` melakukan pembersihan boilerplate noise seperti EEO disclaimers, bagian *How to Apply*, daftar fasilitas/perks kantor umum, dan *navigation crumbs*. Setelah itu, modul secara cerdas mengekstrak seksi kualifikasi utama (*Technical Skills*, *Key Responsibilities*, *Requirements*, *Qualifications*, *About The Role*).
+
+Proses ini menghemat penggunaan token LLM sebesar **30% hingga 50%** tanpa mengurangi sinyal pencocokan teknis kandidat.
 
 ---
 
-### B. Structured Extraction dengan Pydantic Schema
+### C. Structured Extraction dengan Pydantic Schema
 
-Data hasil ekstraksi dibentuk ke dalam struktur Pydantic ter-tipe kuat untuk menjamin keabsahan tipe data sebelum disimpan ke database:
+Data hasil ekstraksi dibentuk ke dalam struktur Pydantic ter-tipe kuat (`cv_schema.py`) untuk menjamin keabsahan tipe data sebelum disimpan ke database:
 
 ```python
 from datetime import date
 from typing import Literal
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
+
+class ExtractionEvidence(BaseModel):
+    source_text: str | None = None
+    confidence: float | None = Field(default=None, ge=0, le=1)
 
 class Contact(BaseModel):
-    email: EmailStr | None = None
+    email: str | None = Field(default=None, description="Candidate email address")
     phone_number: str | None = None
     linkedin_url: str | None = None
     portfolio_url: str | None = None
@@ -174,6 +198,8 @@ class Skill(BaseModel):
         "soft_skill",
         "other"
     ] = "other"
+    confidence: float | None = Field(default=1.0, ge=0, le=1)
+    evidence: ExtractionEvidence | None = None
 
 class WorkExperience(BaseModel):
     company: str | None = None
@@ -192,6 +218,17 @@ class Education(BaseModel):
     start_year: int | None = None
     end_year: int | None = None
 
+class Portfolio(BaseModel):
+    title: str
+    url: str | None = None
+    description: str | None = None
+
+class Reference(BaseModel):
+    name: str
+    role: str | None = None
+    company: str | None = None
+    contact_info: str | None = None
+
 class CVExtraction(BaseModel):
     full_name: str | None = None
     contact: Contact = Field(default_factory=Contact)
@@ -201,13 +238,15 @@ class CVExtraction(BaseModel):
     education: list[Education] = Field(default_factory=list)
     certifications: list[str] = Field(default_factory=list)
     projects: list[str] = Field(default_factory=list)
+    portfolios: list[Portfolio] = Field(default_factory=list)
+    references: list[Reference] = Field(default_factory=list)
     total_experience_months: int | None = Field(default=None, ge=0)
     extraction_warnings: list[str] = Field(default_factory=list)
 ```
 
 ---
 
-### C. Aturan Prompt Engineering dan Anti-Halusinasi
+### D. Aturan Prompt Engineering dan Anti-Halusinasi
 
 Instruksi sistem (*System Prompt*) dirancang secara eksplisit untuk mencegah halusinasi data:
 
@@ -225,77 +264,92 @@ Aturan Wajib:
 
 ---
 
-### D. Normalisasi Skill Deterministik
+### E. Normalisasi Skill Deterministik dan Taksonomi Dinamis
 
-Sebelum dilakukan pencocokan skill atau pembuatan embedding, skill yang diekstrak melewati kamus sinonim deterministik untuk menyatukan variasi penulisan tanpa mengubah data mentah asli:
-
-```json
-{
-  "reactjs": "React",
-  "react.js": "React",
-  "node": "Node.js",
-  "nodejs": "Node.js",
-  "postgres": "PostgreSQL",
-  "postgre": "PostgreSQL",
-  "postgresql": "PostgreSQL",
-  "py": "Python",
-  "golang": "Go",
-  "ts": "TypeScript"
-}
-```
+Skill yang diekstrak diaudit melalui dua lapisan normalisasi:
+1. **Static Synonym Dictionary (`SYNONYM_DICTIONARY`)**: Kamus sinonim bawaan untuk domain Backend, Frontend, Database, DevOps, dan AI.
+2. **Dynamic Skill Taxonomies (`skill_taxonomies` table & API)**: Tabel database dan endpoint API (`POST /v1/skills/taxonomies`) yang memungkinkan admin HR menambah atau memperbarui sinonim skill domain khusus saat runtime.
 
 ---
 
-### E. Engine Perhitungan Job-Fit Score (Hybrid Scoring Formula)
+### F. Dual-Vector Embedding Architecture (Skill & Role Vectors)
 
-Skor kecocokan kandidat ($S$) dihitung menggunakan gabungan kemiripan semantik dan aturan bisnis deterministik pada rentang **0 hingga 100**:
+Sistem menggunakan dua vektor terpisah berdimensi 384 berbasis model `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`:
+- **`candidate_skill_embedding` / `job_skill_embedding`**: Vektor yang berfokus pada daftar kompetensi teknis dan keahlian kandidat/lowongan.
+- **`candidate_role_embedding` / `job_role_embedding`**: Vektor yang berfokus pada tanggung jawab posisi, riwayat pengalaman kerja, dan ringkasan eksekutif kandidat/lowongan.
 
-$$S = 100 \times \left( 0.45 S_{\text{semantic}} + 0.30 S_{\text{mandatory}} + 0.20 S_{\text{experience}} + 0.05 S_{\text{preferred}} \right)$$
+---
 
-Komponen Penilaian:
-- $S_{\text{semantic}}$: *Cosine similarity* antara embedding profil kandidat dan embedding deskripsi lowongan (skala 0.0–1.0).
-- $S_{\text{mandatory}}$: Rasio pemenuhan skill wajib yang dimiliki kandidat terhadap total skill wajib lowongan.
-- $S_{\text{experience}}$: Rasio total pengalaman kerja kandidat ($M_{\text{candidate}}$) terhadap batas pengalaman minimum lowongan ($M_{\text{minimum}}$), dibatasi nilai maksimum 1.0:
+### G. Engine Perhitungan Job-Fit Score (Version v2 Formula)
 
-$$S_{\text{experience}} = \min\left(1.0, \frac{M_{\text{candidate}}}{M_{\text{minimum}}}\right)$$
+Engine scoring versi `v2` menggunakan pendekatan **Multi-Factor Weighted Scoring** dikombinasikan dengan **Strict Mandatory Skill Penalty Factor**:
 
-- $S_{\text{preferred}}$: Rasio pemenuhan skill tambahan/opsional.
+#### 1. Skor Mentah Terbobot (Raw Score)
+$$\text{Raw Score} = 100 \times \left( 0.25 S_{\text{skill\_sem}} + 0.20 S_{\text{role\_sem}} + 0.30 S_{\text{mandatory}} + 0.20 S_{\text{experience}} + 0.05 S_{\text{preferred}} \right)$$
 
-Setiap penilaian menghasilkan rincian transparan (*score breakdown*) yang disimpan pada tabel `applications`:
+Dimana:
+- $S_{\text{skill\_sem}}$: Kemiripan kosinus antara `candidate_skill_embedding` dan `job_skill_embedding` (0.0–1.0).
+- $S_{\text{role\_sem}}$: Kemiripan kosinus antara `candidate_role_embedding` dan `job_role_embedding` (0.0–1.0).
+- $S_{\text{mandatory}}$: Rasio pemenuhan skill wajib kandidat terhadap total skill wajib lowongan.
+- $S_{\text{experience}}$: Rasio durasi pengalaman domain relevan kandidat ($M_{\text{relevant}}$) terhadap batas minimum lowongan ($M_{\text{minimum}}$):
+  $$S_{\text{experience}} = \min\left(1.0, \frac{M_{\text{relevant}}}{M_{\text{minimum}}}\right)$$
+- $S_{\text{preferred}}$: Rasio pemenuhan skill opsional/tambahan.
 
+#### 2. Mandatory Skill Strict Penalty Factor ($P_{\text{mandatory}}$)
+Jika kandidat kehilangan skill wajib (*mandatory skills*), skor mentah dikalikan dengan faktor penalti:
+- **0 skill wajib hilang**: $P_{\text{mandatory}} = 1.00$ (Tidak ada diskon / 100%)
+- **1 skill wajib hilang**: $P_{\text{mandatory}} = 0.75$ (Diskon 25%)
+- **2 skill wajib hilang**: $P_{\text{mandatory}} = 0.50$ (Diskon 50%)
+- **3+ skill wajib hilang**: $P_{\text{mandatory}} = 0.25$ (Diskon 75%)
+
+#### 3. Skor Akhir Terkalkulasi (Final Score)
+$$\text{Final Score} = \text{round}\left( \max\left(0.0, \min\left(100.0, \text{Raw Score} \times P_{\text{mandatory}}\right)\right), 1 \right)$$
+
+#### Output Breakdown JSON (Version v2)
 ```json
 {
-  "score_version": "v1",
+  "score_version": "v2",
   "semantic_similarity": 0.82,
+  "semantic_weight": 0.45,
+  "skill_semantic_similarity": 0.85,
+  "skill_semantic_weight": 0.25,
+  "role_semantic_similarity": 0.78,
+  "role_semantic_weight": 0.20,
   "mandatory_skill_score": 0.75,
+  "mandatory_skill_weight": 0.30,
   "experience_score": 1.00,
+  "experience_weight": 0.20,
+  "relevant_experience_months": 36,
   "preferred_skill_score": 0.60,
-  "final_score": 84.4,
+  "preferred_skill_weight": 0.05,
+  "mandatory_penalty_factor": 0.75,
+  "final_score": 62.4,
   "matched_skills": ["Python", "PostgreSQL", "Docker"],
-  "missing_mandatory_skills": ["Kubernetes"],
-  "experience_summary": {
-    "candidate_months": 36,
-    "required_months": 24,
-    "status": "met"
-  }
+  "missing_mandatory_skills": ["Kubernetes"]
 }
 ```
 
 ---
 
-### F. Vector Search dan Discovery dengan `pgvector`
+### H. Dual-Vector Search dan Discovery dengan `pgvector`
 
-Untuk pencarian kandidat skala besar (*candidate discovery*), sistem memanfaatkan indeks vektor PostgreSQL via `pgvector`:
+Pencarian kemiripan kandidat dilakukan melalui *Stored Procedure* PostgreSQL `match_candidates_for_job`:
 
 ```sql
 SELECT
-  c.id,
+  c.id AS candidate_id,
   c.full_name,
-  1 - (c.profile_embedding <=> j.job_embedding) AS semantic_similarity
+  c.email,
+  c.total_experience_months,
+  (1 - (c.candidate_skill_embedding <=> j.job_skill_embedding)) AS skill_similarity,
+  (1 - (c.candidate_role_embedding <=> j.job_role_embedding)) AS role_similarity,
+  (
+    0.55 * (1 - (c.candidate_skill_embedding <=> j.job_skill_embedding)) +
+    0.45 * (1 - (c.candidate_role_embedding <=> j.job_role_embedding))
+  ) AS semantic_similarity
 FROM candidates c
-JOIN job_postings j ON j.id = :job_id
-WHERE j.status = 'open'
-ORDER BY c.profile_embedding <=> j.job_embedding
+INNER JOIN job_postings j ON j.id = :job_id
+ORDER BY semantic_similarity DESC
 LIMIT 20;
 ```
 
@@ -303,13 +357,17 @@ LIMIT 20;
 
 ## 6. Rancangan Model Data (Database Schema)
 
-Sistem menggunakan database PostgreSQL dengan 12 tabel utama yang ter-normalisasi:
+Sistem menggunakan database PostgreSQL dengan **13 tabel utama** yang terbagi ke dalam 3 berkas migrasi SQL:
+
+- `001_initial_schema.sql`: Memuat tabel `users`, `candidates`, `candidate_documents`, `candidate_skills`, `candidate_experiences`, `candidate_educations`, `job_postings`, `job_required_skills`, `applications`, `processing_jobs`, `score_versions`, dan `audit_logs`.
+- `002_dual_vector_embeddings.sql`: Menambahkan kolom dual-vector (`candidate_skill_embedding`, `candidate_role_embedding`, `job_skill_embedding`, `job_role_embedding`) dan stored procedure `match_candidates_for_job`.
+- `003_skill_taxonomies.sql`: Menambahkan tabel `skill_taxonomies` untuk penyimpanan sinonim skill dinamis.
 
 ```text
 users (HR / Admin)
-  └── job_postings
+  └── job_postings (termasuk job_skill_embedding & job_role_embedding)
          ├── job_required_skills
-         └── applications ─────── candidates
+         └── applications ─────── candidates (termasuk candidate_skill_embedding & candidate_role_embedding)
                                     ├── candidate_documents
                                     ├── candidate_skills
                                     ├── candidate_experiences
@@ -317,15 +375,8 @@ users (HR / Admin)
 processing_jobs (Queue Audit)
 score_versions (Scoring Config)
 audit_logs (Security Audit)
+skill_taxonomies (Dynamic Skill Synonyms)
 ```
-
-### Kolom Kritis Tabel Utama
-
-- **`candidates`**: `id` (UUID), `full_name`, `email`, `phone_number`, `total_experience_months`, `parsed_cv_json` (JSONB), `profile_embedding` (`vector(384)`), `created_at`, `updated_at`.
-- **`candidate_documents`**: `id`, `candidate_id`, `storage_path`, `original_filename`, `mime_type`, `size_bytes`, `file_hash` (SHA-256 deduplikasi), `parse_status` (`uploaded` | `queued` | `processing` | `processed` | `needs_review` | `failed`), `raw_text`, `parser_metadata` (JSONB), `uploaded_at`.
-- **`job_postings`**: `id`, `title`, `description`, `minimum_experience_months`, `status` (`draft` | `open` | `closed`), `job_embedding` (`vector(384)`), `created_by`, `created_at`.
-- **`applications`**: `id`, `candidate_id`, `job_id`, `document_id`, `status` (`applied` | `screening` | `interview` | `rejected` | `hired` | `withdrawn`), `job_fit_score` (Numeric 0-100), `score_breakdown` (JSONB), `applied_at`.
-- **`processing_jobs`**: `id`, `document_id`, `job_type`, `status`, `attempt_count`, `error_code`, `error_message`, `started_at`, `completed_at`.
 
 ---
 
@@ -337,30 +388,31 @@ Seluruh endpoint REST API diakses melalui prefix `/api/v1`.
 
 | Method | Endpoint Path | Deskripsi |
 | :--- | :--- | :--- |
-| **POST** | `/api/v1/jobs` | Membuat lowongan kerja baru beserta kriteria skill wajib/tambahan. |
-| **GET** | `/api/v1/jobs` | Mengambil daftar lowongan kerja dengan filter status & pencarian. |
-| **GET** | `/api/v1/jobs/:jobId` | Mengambil detail lowongan kerja beserta statistik kandidat. |
-| **POST** | `/api/v1/jobs/:jobId/applications` | Mengunggah CV kandidat untuk lowongan spesifik (Multipart Form Data). |
+| **POST** | `/api/v1/jobs` | Membuat lowongan kerja baru beserta kriteria skill wajib/opsional & membuat vector embedding otomatis. |
+| **POST** | `/api/v1/jobs/import-linkedin` | Melakukan parsing teks deskripsi lowongan LinkedIn/Glints via Groq LLM & membuat lowongan otomatis. |
+| **GET** | `/api/v1/jobs` | Mengambil daftar lowongan kerja. |
+| **DELETE** | `/api/v1/jobs/:jobId` | Menghapus lowongan kerja beserta seluruh data kandidat terkait. |
+| **POST** | `/api/v1/jobs/:jobId/applications` | Mengunggah CV kandidat secara asinkron (mengembalikan HTTP 202 Accepted dalam `< 200 ms`). |
+| **POST** | `/api/v1/jobs/:jobId/evaluate-instant` | Melakukan evaluasi pencocokan CV secara real-time sinkron (untuk preview instan). |
+| **GET** | `/api/v1/jobs/:jobId/candidates/match` | Menjalankan pencarian kemiripan kandidat berbasis dual-vector `pgvector`. |
 | **GET** | `/api/v1/jobs/:jobId/applications` | Mengambil daftar aplikasi kandidat pada lowongan kerja spesifik. |
-| **GET** | `/api/v1/applications/:applicationId` | Mengambil detail aplikasi, profil parsing, score breakdown, & Signed URL CV. |
-| **PATCH** | `/api/v1/applications/:applicationId/status` | Memperbarui tahap rekrutmen kandidat (`screening`, `interview`, dll). |
-| **POST** | `/api/v1/applications/:applicationId/reprocess` | Memicu pemrosesan ulang dokumen CV oleh worker AI. |
-| **GET** | `/api/v1/jobs/:jobId/rankings` | Mengambil pemeringkatan kandidat berdasarkan gabungan skor hybrid & vektor. |
-| **GET** | `/api/v1/processing-jobs/:processingJobId` | Melakukan polling status pemrosesan dokumen CV. |
+| **PATCH** | `/api/v1/applications/:applicationId/status` | Memperbarui tahap rekrutmen kandidat (`screening`, `interview`, `hired`, `rejected`, dll). |
+| **GET** | `/api/v1/processing-jobs/:processingJobId` | Melakukan polling status pemrosesan dokumen CV dalam antrean. |
+| **POST** | `/api/v1/cv/embedding` | Meminta pembuatan vector embedding 384 dimensi dari teks atau JSON CV. |
 
-### Respon Asinkron Endpoint Upload
+### Endpoint AI Microservice Direct (`apps/ai-service`)
 
-Saat CV diunggah via `POST /api/v1/jobs/:jobId/applications`, API mengembalikan respons cepat tanpa menunggu proses LLM selesai:
-
-```json
-{
-  "application_id": "4b7099bb-1e75-4ca1-a243-d2ff1e215c7a",
-  "document_id": "6f2b98f0-4f4f-43f6-9432-488942782e7b",
-  "processing_job_id": "9c1a33ee-8811-42ab-b411-11aa22bb33cc",
-  "processing_status": "queued",
-  "message": "CV berhasil diunggah dan sedang diproses dalam antrean."
-}
-```
+| Method | Endpoint Path | Deskripsi |
+| :--- | :--- | :--- |
+| **GET** | `/health` | Status kesehatan AI microservice & koneksi Groq API. |
+| **POST** | `/v1/cv/extract-text` | Ekstraksi teks PDF PyMuPDF & pemeliharaan zero-text rejection rule. |
+| **POST** | `/v1/cv/llm-extract` | Ekstraksi terstruktur Groq LLM (`llama-3.1-8b-instant`) sesuai skema Pydantic. |
+| **POST** | `/v1/cv/normalize-skills` | Normalisasi skill deterministik via kamus sinonim. |
+| **POST** | `/v1/cv/generate-embedding` | Pembuatan dual 384-dim embeddings (Skill Vector & Role Vector). |
+| **POST** | `/v1/cv/calculate-score` | Perhitungan *job-fit score* v2 dan pembentukan breakdown JSON. |
+| **POST** | `/v1/job/extract-qualifications` | Parsing kualifikasi teks deskripsi lowongan kerja via LLM. |
+| **GET** | `/v1/skills/taxonomies` | Mengambil seluruh peta sinonim taksonomi skill statis & dinamis. |
+| **POST** | `/v1/skills/taxonomies` | Mendaftarkan sinonim taksonomi skill dinamis baru saat runtime. |
 
 ---
 
