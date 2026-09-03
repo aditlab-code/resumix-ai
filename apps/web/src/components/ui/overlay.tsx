@@ -24,6 +24,7 @@ interface OverlayProps {
   variant?: OverlayVariant;
   size?: OverlaySize;
   header?: React.ReactNode;
+  subheader?: React.ReactNode;
   footer?: React.ReactNode;
   children: React.ReactNode;
   bodyClassName?: string;
@@ -36,6 +37,7 @@ export const Overlay: React.FC<OverlayProps> = ({
   variant = 'center',
   size = 'xl',
   header,
+  subheader,
   footer,
   children,
   bodyClassName,
@@ -89,6 +91,8 @@ export const Overlay: React.FC<OverlayProps> = ({
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {subheader && <div className="shrink-0">{subheader}</div>}
 
         <div className={cn('flex-1 overflow-y-auto bg-surface px-5 py-4', bodyClassName)}>
           {children}

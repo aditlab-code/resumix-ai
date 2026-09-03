@@ -80,7 +80,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
       isOpen={isOpen}
       onClose={handleClose}
       variant="side"
-      bodyClassName="px-5 py-4 space-y-4"
+      bodyClassName="px-5 py-3 space-y-3"
       title={
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded bg-accent text-accent-fg flex items-center justify-center font-extrabold">
@@ -99,7 +99,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
       }
       header={
         !isEditing && (
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-2.5 flex flex-wrap items-center gap-2">
             <Select
               value={application.status}
               onChange={(e) => onStatusChange(application.id, e.target.value as ApplicationStatus)}
@@ -141,6 +141,11 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
           </div>
         )
       }
+      subheader={
+        !isEditing && (
+          <Tabs items={TABS} active={activeTab} onChange={setActiveTab} className="px-5" />
+        )
+      }
     >
       {isEditing ? (
         <ExtractionForm
@@ -166,13 +171,6 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
             </div>
             <p className="text-xs text-ink font-medium leading-relaxed">{decisionSummary}</p>
           </div>
-
-          <Tabs
-            items={TABS}
-            active={activeTab}
-            onChange={setActiveTab}
-            className="sticky top-0 bg-surface z-10"
-          />
 
           {activeTab === 'profile' && <CandidateProfile extraction={application.cv_extraction} />}
           {activeTab === 'scoring' && <ScoreBreakdownCard score={application.score_breakdown} />}
