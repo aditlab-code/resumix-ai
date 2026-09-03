@@ -7,6 +7,7 @@ from app.services.pdf_extractor import extract_pdf_text
 from app.services.text_pruner import prune_raw_text
 from app.services.embedding_service import generate_dual_embeddings
 from app.services.scoring_service import compute_job_fit_score
+from app.services.skill_normalizer import SYNONYM_DICTIONARY
 from app.main import compute_cosine_similarity
 
 DATASET_DIR_V2 = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset_v2"))
@@ -83,11 +84,18 @@ def evaluate_single_cv(filepath: str, filename: str, ground_truth: Dict[str, str
     is_outlier = gt_domain == "nontech" or "outlier" in filename or "chef" in filename.lower() or "teacher" in filename.lower() or "nurse" in filename.lower()
     layout_type = gt_layout if gt_layout else ("scanned" if "scanned" in filename else ("1col" if "1col" in filename or "ats" in filename else ("2col" if "twocol" in filename else "3col")))
 
-    # Skill extractor from text
+    # Skill extractor from text utilizing taxonomy dictionary
     extracted_skills: List[str] = []
-    possible_skills = ["Python", "FastAPI", "Django", "PostgreSQL", "Postgres", "Docker", "Docker Compose", "Kubernetes", "Redis", "React", "Go", "Java", "Flutter", "SQL", "Linux"]
+    possible_skills = ["Python", "FastAPI", "Django", "Flask", "PostgreSQL", "Postgres", "Docker", "Docker Compose", "Kubernetes", "Redis", "React", "Go", "Java", "Flutter", "SQL", "Linux", "Node.js", "Express", "TypeScript", "Tailwind"]
+    for key, aliases in SYNONYM_DICTIONARY.items():
+        if key not in possible_skills:
+            possible_skills.append(key)
+        for alias in aliases:
+            if alias not in possible_skills:
+                possible_skills.append(alias)
+
     for sk in possible_skills:
-        if sk.lower() in raw_text.lower():
+        if len(sk) >= 2 and sk.lower() in raw_text.lower() and sk not in extracted_skills:
             extracted_skills.append(sk)
 
     # If ground truth skills available, merge

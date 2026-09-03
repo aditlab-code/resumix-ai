@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Shield, FileText } from 'lucide-react';
+import { Plus, Shield, FileText, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui';
 
 export type ActiveViewType = 'dashboard' | 'jobs' | 'candidates' | 'settings';
@@ -11,6 +11,7 @@ interface HeaderProps {
   onOpenUploadModal: () => void;
   onOpenCreateJobModal: () => void;
   onOpenAuditLogs: () => void;
+  onOpenSkillTaxonomyModal?: () => void;
 }
 
 const TITLES: Record<ActiveViewType, string> = {
@@ -25,11 +26,22 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenUploadModal,
   onOpenCreateJobModal,
   onOpenAuditLogs,
+  onOpenSkillTaxonomyModal,
 }) => (
   <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
     <h1>{TITLES[activeView]}</h1>
 
     <div className="flex flex-wrap items-center gap-2">
+      {onOpenSkillTaxonomyModal && (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={onOpenSkillTaxonomyModal}
+          iconLeft={<BookOpen className="w-3.5 h-3.5" />}
+        >
+          Taksonomi Skill
+        </Button>
+      )}
       <Button
         variant="secondary"
         size="sm"
@@ -56,3 +68,4 @@ export const Header: React.FC<HeaderProps> = ({
     </div>
   </header>
 );
+

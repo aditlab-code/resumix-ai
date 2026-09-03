@@ -59,3 +59,17 @@ def test_mandatory_skill_strict_penalty_factor():
     assert len(res_1.missing_mandatory_skills) > 0
     # Final score should be reduced by the penalty factor
     assert res_1.final_score < res_0.final_score
+
+
+def test_taxonomy_synonym_dictionary_matching():
+    candidate_skills = {"fastapi", "postgres", "containerization"}
+
+    # Python should match via FastAPI dictionary synonym (without explicit skill_equivalents)
+    assert match_single_skill(candidate_skills, "Python") is True
+    # PostgreSQL should match via Postgres dictionary synonym
+    assert match_single_skill(candidate_skills, "PostgreSQL") is True
+    # Docker should match via containerization dictionary synonym
+    assert match_single_skill(candidate_skills, "Docker") is True
+    # Kubernetes should not match
+    assert match_single_skill(candidate_skills, "Kubernetes") is False
+

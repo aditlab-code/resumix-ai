@@ -196,4 +196,33 @@ async def extract_job_qualifications_endpoint(raw_text: str = Body(..., embed=Tr
         raise HTTPException(status_code=500, detail=f"Gagal memproses deskripsi lowongan: {str(exc)}")
 
 
+@app.get("/v1/skills/taxonomies")
+def get_skill_taxonomies_endpoint():
+    """Retrieve all static and dynamic skill synonym taxonomy mappings."""
+    from app.services.skill_normalizer import get_all_taxonomies
+    return {"taxonomies": get_all_taxonomies()}
+
+
+@app.post("/v1/skills/taxonomies")
+def register_skill_taxonomy_endpoint(
+    canonical_name: str = Body(...),
+    synonyms: list[str] = Body(...),
+):
+    """Register or update custom domain dynamic skill synonyms."""
+    if not canonical_name or not canonical_name.strip():
+        raise HTTPException(status_code=400, detail="canonical_name tidak boleh kosong.")
+    if not isinstance(synonyms, list):
+        raise HTTPException(status_code=400, detail="synonyms harus berupa list string.")
+
+    from app.services.skill_normalizer import register_custom_taxonomy, get_all_taxonomies
+    register_custom_taxonomy(canonical_name, synonyms)
+    return {
+        "message": f"Berhasil mendaftarkan sinonim taksonomi untuk '{canonical_name}'",
+        "canonical_name": canonical_name,
+        "synonyms": synonyms,
+        "taxonomies": get_all_taxonomies(),
+    }
+
+
+
 

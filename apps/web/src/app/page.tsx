@@ -14,6 +14,7 @@ import { PipelineSettingsView } from '@/components/dashboard/pipeline-settings-v
 import { CvUploadModal } from '@/components/dashboard/cv-upload-modal';
 import { JobFormModal } from '@/components/dashboard/job-form-modal';
 import { AuditLogModal } from '@/components/dashboard/audit-log-modal';
+import { SkillTaxonomyModal } from '@/components/dashboard/skill-taxonomy-modal';
 import { CandidateDetailDrawer } from '@/components/dashboard/candidate-detail-drawer';
 import { DeleteCandidateModal } from '@/components/dashboard/delete-candidate-modal';
 import { ToastContainer, ToastMessage } from '@/components/ui/toast';
@@ -87,6 +88,7 @@ export default function HRDashboardPage() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isCreateJobModalOpen, setIsCreateJobModalOpen] = useState(false);
   const [isAuditLogModalOpen, setIsAuditLogModalOpen] = useState(false);
+  const [isSkillTaxonomyModalOpen, setIsSkillTaxonomyModalOpen] = useState(false);
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
@@ -351,6 +353,7 @@ export default function HRDashboardPage() {
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
           onOpenCreateJobModal={() => setIsCreateJobModalOpen(true)}
           onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
+          onOpenSkillTaxonomyModal={() => setIsSkillTaxonomyModalOpen(true)}
         />
 
         {activeView === 'dashboard' && (
@@ -464,6 +467,13 @@ export default function HRDashboardPage() {
           onClose={() => setIsAuditLogModalOpen(false)}
           logs={auditLogs}
           onClearLogs={handleClearAuditLogs}
+        />
+
+        <SkillTaxonomyModal
+          isOpen={isSkillTaxonomyModalOpen}
+          onClose={() => setIsSkillTaxonomyModalOpen(false)}
+          onAddToast={addToast}
+          onAddAuditLog={addAuditLog}
         />
 
         <CandidateDetailDrawer
