@@ -111,17 +111,49 @@ export const DocumentationView: React.FC = () => {
     return str.replace(/\*\*/g, '').replace(/\*/g, '').trim();
   };
 
-  // Helper to parse inline math $...$ inside text
+  // Helper to parse inline math $...$ and markdown images ![alt](url) / color swatches inside text
   const renderInlineContent = (text: string): React.ReactNode => {
     if (!text) return null;
 
-    const parts = text.split(/(\$[^\$]+\$)/g);
+    const tokenRegex = /(!\[[^\]]*\]\([^\)]+\)|\$[^\$]+\$)/g;
+    const parts = text.split(tokenRegex);
 
     return parts.map((part, i) => {
+      if (!part) return null;
+
+      // Handle Markdown Image: ![alt](url)
+      if (part.startsWith('![') && part.includes('](') && part.endsWith(')')) {
+        const match = part.match(/^!\[([^\]]*)\]\(([^\)]+)\)$/);
+        if (match) {
+          const alt = match[1];
+          const url = match[2];
+          // Check for hex color code in alt or url
+          const hexMatch = (alt + ' ' + url).match(/#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b/);
+          if (hexMatch) {
+            const hexColor = hexMatch[0];
+            return (
+              <span key={i} className="inline-flex items-center gap-1.5 align-middle my-0.5">
+                <span
+                  className="inline-block w-4 h-4 rounded border border-surface-border shadow-2xs shrink-0"
+                  style={{ backgroundColor: hexColor }}
+                  title={hexColor}
+                />
+                <span className="font-mono text-[11px] font-semibold text-ink-default">{hexColor}</span>
+              </span>
+            );
+          }
+          return (
+            <img key={i} src={url} alt={alt} className="inline-block max-h-6 rounded align-middle" />
+          );
+        }
+      }
+
+      // Handle Math: $math$
       if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
         const rawMath = part.slice(1, -1);
         return <MathFormula key={i} math={rawMath} block={false} />;
       }
+
       return part;
     });
   };
@@ -343,12 +375,8 @@ export const DocumentationView: React.FC = () => {
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* Wiki Sidebar (Left - 280px) */}
         <Card className="w-full lg:w-72 shrink-0 p-4 space-y-5 sticky top-24">
-          <div className="flex items-center gap-2 px-1 border-b border-surface-border pb-3">
-            <BookOpen className="w-5 h-5 text-brand-accent" />
-            <div>
-              <h3 className="text-h3 font-bold text-ink-default tracking-tight">Daftar Dokumen</h3>
-              <p className="text-[11px] font-medium text-ink-subtle">Katalog Wiki Resumix AI</p>
-            </div>
+          <div className="px-1 border-b border-surface-border pb-3">
+            <h3 className="text-h3 font-bold text-ink-default tracking-tight">Dokumentasi</h3>
           </div>
 
           <nav className="space-y-5">
@@ -360,7 +388,6 @@ export const DocumentationView: React.FC = () => {
                 <div className="space-y-1">
                   {cat.items.map((doc) => {
                     const isActive = activeDoc === doc.key;
-                    const Icon = doc.icon;
                     return (
                       <button
                         key={doc.key}
@@ -372,20 +399,7 @@ export const DocumentationView: React.FC = () => {
                             : 'text-ink-muted hover:bg-surface-sunken hover:text-ink-default font-medium'
                         )}
                       >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <Icon className={cn('w-4 h-4 shrink-0', isActive ? 'text-white' : 'text-ink-subtle group-hover:text-brand-accent')} />
-                          <span className="text-caption truncate">{doc.label}</span>
-                        </div>
-                        {doc.badge && (
-                          <span
-                            className={cn(
-                              'px-1.5 py-0.5 rounded-pill text-[10px] font-bold shrink-0',
-                              isActive ? 'bg-white/20 text-white' : 'bg-surface-border text-ink-subtle'
-                            )}
-                          >
-                            {doc.badge}
-                          </span>
-                        )}
+                        <span className="text-caption truncate">{doc.label}</span>
                       </button>
                     );
                   })}

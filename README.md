@@ -33,13 +33,13 @@ Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** 
 
 Resumix AI mengadopsi tema **Enterprise Dark Blue Navy** yang terkesan tepercaya, bersih, presisi, dan profesional tanpa nuansa ungu.
 
-| Token Name | Hex Code | Visual Preview | Application & Component Usage |
-| :--- | :---: | :---: | :--- |
-| **Enterprise Obsidian (ink.DEFAULT)** | `#0F172A` | ![#0F172A](https://via.placeholder.com/15/0F172A/000000?text=+) | Primary Bold Text, Header Titles, Card Headers |
-| **Deep Navy Text (ink.muted)** | `#1E293B` | ![#1E293B](https://via.placeholder.com/15/1E293B/000000?text=+) | Body Paragraphs, High-Contrast Descriptions, List Items |
-| **Slate Metadata (ink.subtle)** | `#334155` | ![#334155](https://via.placeholder.com/15/334155/000000?text=+) | Captions, Subtitles, Form Field Hints |
-| **Enterprise Navy Blue (Brand Accent)** | `#1D4ED8` | ![#1D4ED8](https://via.placeholder.com/15/1D4ED8/000000?text=+) | Primary Buttons, Active Tabs, Interactive Highlights |
-| **Light Canvas (Background)** | `#F8FAFC` | ![#F8FAFC](https://via.placeholder.com/15/F8FAFC/000000?text=+) | Dashboard App Background, Input Fills |
+| Token Name | Visual Preview | Application & Component Usage |
+| :--- | :---: | :--- |
+| **Enterprise Obsidian (ink.DEFAULT)** | ![#0F172A](https://via.placeholder.com/15/0F172A/000000?text=+) | Primary Bold Text, Header Titles, Card Headers |
+| **Deep Navy Text (ink.muted)** | ![#1E293B](https://via.placeholder.com/15/1E293B/000000?text=+) | Body Paragraphs, High-Contrast Descriptions, List Items |
+| **Slate Metadata (ink.subtle)** | ![#334155](https://via.placeholder.com/15/334155/000000?text=+) | Captions, Subtitles, Form Field Hints |
+| **Enterprise Navy Blue (Brand Accent)** | ![#1D4ED8](https://via.placeholder.com/15/1D4ED8/000000?text=+) | Primary Buttons, Active Tabs, Interactive Highlights |
+| **Light Canvas (Background)** | ![#F8FAFC](https://via.placeholder.com/15/F8FAFC/000000?text=+) | Dashboard App Background, Input Fills |
 
 ---
 

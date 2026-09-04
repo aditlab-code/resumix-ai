@@ -66,14 +66,16 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5">
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={onOpenAuditLogs}
-          iconLeft={<Shield className="w-4 h-4 text-ink-subtle" />}
-        >
-          Audit Log
-        </Button>
+        {activeView !== 'docs' && (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={onOpenAuditLogs}
+            iconLeft={<Shield className="w-4 h-4 text-ink-subtle" />}
+          >
+            Audit Log
+          </Button>
+        )}
 
         {activeView === 'jobs' && (
           <Button
@@ -105,17 +107,6 @@ export const Header: React.FC<HeaderProps> = ({
             iconLeft={<Save className="w-4 h-4 text-white" />}
           >
             Simpan Pengaturan
-          </Button>
-        )}
-
-        {activeView === 'docs' && (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleCopySpec}
-            iconLeft={copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-ink-subtle" />}
-          >
-            {copied ? 'Tercopy!' : 'Salin Spec API'}
           </Button>
         )}
       </div>
