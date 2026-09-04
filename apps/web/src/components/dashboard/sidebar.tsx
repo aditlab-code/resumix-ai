@@ -55,5 +55,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange }) =>
         })}
       </nav>
     </div>
+
+    {/* Footer Credentials & Copyright */}
+    <div className="p-4 border-t border-slate-800 text-xs text-slate-400 space-y-1">
+      <div>© 2026 Resumix AI</div>
+      <div>
+        Created by{' '}
+        <a
+          href="https://pradityawicaksono.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 hover:text-blue-300 font-medium transition-colors hover:underline"
+        >
+          Adit
+        </a>
+      </div>
+    </div>
   </aside>
 );
