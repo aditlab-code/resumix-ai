@@ -11,16 +11,21 @@ colors:
   ink:
     default: "#0F172A"
     muted: "#1E293B"
-    subtle: "#334155"
-    faint: "#64748B"
+    subtle: "#475569"
+    faint: "#94A3B8"
+    inverse: "#FFFFFF"
+    brand: "#1D4ED8"
   surface:
-    canvas: "#F8FAFC"
+    canvas: "#F1F5F9"
+    sunken: "#E2E8F0"
     base: "#FFFFFF"
     raised: "#FFFFFF"
+    hover: "#F8FAFC"
+    active: "#EFF6FF"
     overlay: "#FFFFFF"
-    sunken: "#EEF2F7"
     border: "#E2E8F0"
     border_strong: "#CBD5E1"
+    border_subtle: "#F1F5F9"
   semantic:
     success: "#15803D"
     success_soft: "#DCFCE7"
@@ -69,28 +74,33 @@ motion:
 
 ## 1. Overview
 
-Resumix AI adalah dashboard HR **Enterprise Dark Blue Navy** yang harus terasa tepercaya, presisi, dan padat data (data-dense), tanpa terlihat "kosong" atau kaku seperti tabel spreadsheet. Masalah utama versi saat ini: seluruh permukaan (card, sidebar, tabel, header) memakai warna latar yang identik dan tanpa bayangan, sehingga mata tidak bisa membedakan mana elemen yang mengambang (interaktif) dan mana yang menjadi lantai statis — inilah sebab tampilan disebut **"terlalu flat"**.
+Resumix AI adalah dashboard HR **Enterprise Light Slate-Navy** yang harus terasa tepercaya, presisi, dan padat data (data-dense), tanpa terlihat "kosong" atau kaku seperti tabel spreadsheet. Masalah utama versi sebelumnya: seluruh permukaan (card, sidebar, tabel, header) memakai warna latar yang identik dan tanpa bayangan, sehingga mata tidak bisa membedakan mana elemen yang mengambang (interaktif) dan mana yang menjadi lantai statis — inilah sebab tampilan disebut **"terlalu flat"**.
 
-Prinsip perbaikan: setiap permukaan harus punya *elevation level* yang jelas (0–4), transisi warna latar antar level harus terlihat (bukan cuma putih-di-atas-putih), dan komponen interaktif wajib memberi respons visual (shadow lift, border highlight, warna accent) saat *hover*/*focus*/*active*. Jangan menambah dekorasi berlebihan — cukup 4 level elevasi agar hierarki tetap terbaca, sesuai gaya *enterprise*, bukan *playful*.
+Prinsip perbaikan: setiap permukaan memiliki *elevation level* yang jelas (0–4), transisi warna latar antar level terlihat jelas (Kanvas Slate-100 `#F1F5F9` memisahkan Card `#FFFFFF` dan Inset Header `#E2E8F0`), dan komponen interaktif wajib memberi respons visual (shadow lift, border highlight, warna accent tint `#EFF6FF` saat active/selected) saat *hover*/*focus*/*active*.
 
 ## 2. Colors
 
-Palet dasar (Enterprise Obsidian, Navy Blue Accent) dipertahankan dari brand asli, namun ditambah token permukaan (`surface.*`) dan semantik status (`success`/`warning`/`danger`/`info`) agar kartu, badge status lamaran, dan skor kecocokan punya kontras yang jelas, bukan cuma teks biru di atas putih.
+Palet dasar (Enterprise Obsidian, Slate-Navy Accent) diperkaya dengan 7 token permukaan (`surface.*`) dan 6 token teks (`ink.*`) serta semantik status (`success`/`warning`/`danger`/`info`) agar kartu, badge status lamaran, dan skor kecocokan punya kontras yang tajam dan dinamis.
 
 | Peran            | Token              |    Hex    | Penggunaan                           |
 |:-----------------|:-------------------|:---------:|:-------------------------------------|
-| Teks utama       | `ink.default`      | `#0F172A` | Judul, nama kandidat, skor utama     |
+| Teks utama       | `ink.default`      | `#0F172A` | Judul utama, nama kandidat, metrik   |
 | Teks isi         | `ink.muted`        | `#1E293B` | Paragraf, deskripsi pekerjaan        |
-| Teks sekunder    | `ink.subtle`       | `#334155` | Caption, metadata, label field       |
-| Aksen brand      | `brand.accent`     | `#1D4ED8` | Tombol primer, tab aktif, link       |
-| Kanvas app       | `surface.canvas`   | `#F8FAFC` | Latar belakang dashboard             |
-| Permukaan sunken | `surface.sunken`   | `#EEF2F7` | Table header, filter bar, input fill |
-| Kartu terangkat  | `surface.raised`   | `#FFFFFF` | Card kandidat, modal, dropdown       |
-| Border           | `surface.border`   | `#E2E8F0` | Pembatas antar section/table row     |
-| Sukses           | `semantic.success` | `#15803D` | Status *hired*, skor tinggi (>80)    |
-| Bahaya           | `semantic.danger`  | `#B91C1C` | Status *rejected*, `needs_review`    |
+| Teks sekunder    | `ink.subtle`       | `#475569` | Caption, metadata, label field       |
+| Teks faint       | `ink.faint`        | `#94A3B8` | Text disabled, icon subtle           |
+| Teks inverse     | `ink.inverse`      | `#FFFFFF` | Teks di atas surface gelap/tombol    |
+| Teks aksen       | `ink.brand`        | `#1D4ED8` | Link, tab terpilih, skor aksen       |
+| Kanvas app       | `surface.canvas`   | `#F1F5F9` | Latar belakang utama dashboard       |
+| Permukaan sunken | `surface.sunken`   | `#E2E8F0` | Table header, filter bar, input fill |
+| Kartu dasar      | `surface.base`     | `#FFFFFF` | Latar belakang card dasar            |
+| Kartu terangkat  | `surface.raised`   | `#FFFFFF` | Card kandidat, floating panel        |
+| State hover      | `surface.hover`    | `#F8FAFC` | Hover state pada card/tabel          |
+| State terpilih   | `surface.active`   | `#EFF6FF` | Card/row aktif, tab terpilih         |
+| Permukaan modal  | `surface.overlay`  | `#FFFFFF` | Modal dialog, drawer upload          |
+| Border standar   | `surface.border`   | `#E2E8F0` | Pembatas section / table row         |
+| Border tegas     | `surface.border_strong` | `#CBD5E1` | Pembatas card terpilih / input focus |
 
-Aturan kunci: **jangan pernah** memakai warna latar yang sama untuk kanvas (`canvas`) dan kartu (`raised`) tanpa border atau shadow pembeda — kombinasi putih-di-atas-putih tanpa pemisah visual inilah penyebab kesan flat.
+Aturan kunci: **jangan pernah** memakai warna latar yang sama untuk kanvas (`canvas`) dan kartu (`raised`) tanpa border atau shadow pembeda — kombinasi kanvas Slate-100 `#F1F5F9` dengan kartu putih `#FFFFFF` berbayangan `e1_card` memberi pemisah visual yang kokoh dan tidak flat.
 
 ## 3. Typography
 

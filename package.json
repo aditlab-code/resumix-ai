@@ -15,8 +15,8 @@
     "dev:api": "npm --prefix apps/api run dev",
     "dev:worker": "npm --prefix apps/api run dev:worker",
     "dev:ai": "cd apps/ai-service && .venv/bin/uvicorn app.main:app --reload --port 8000",
-    "dev:local": "concurrently --kill-others -n \"AI,API,WORKER,WEB\" -c \"magenta,blue,yellow,cyan\" \"npm run dev:ai\" \"npm run dev:api\" \"npm run dev:worker\" \"npm run dev:web\"",
-    "stop": "fuser -k 3000/tcp 3001/tcp 8000/tcp 2>/dev/null || true; pkill -f 'next dev|tsc-watch|uvicorn|node dist/index.js' 2>/dev/null || true",
+    "dev:local": "concurrently --restart-tries 10 --restart-delay 1000 -n \"AI,API,WORKER,WEB\" -c \"magenta,blue,yellow,cyan\" \"npm run dev:ai\" \"npm run dev:api\" \"npm run dev:worker\" \"npm run dev:web\"",
+    "stop": "fuser -k 3000/tcp 3001/tcp 8000/tcp 2>/dev/null || true; pkill -f 'next dev|tsc-watch|uvicorn|node dist/index.js|standalone.js' 2>/dev/null || true",
     "build": "npm run build -ws --if-present",
     "lint": "npm run lint -ws --if-present",
     "test": "npm run test -ws --if-present"

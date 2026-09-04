@@ -29,6 +29,7 @@ import {
   Textarea,
   RangeField,
 } from '@/components/ui';
+import { SubNavTab, TabItem } from './sub-nav-tab';
 
 interface SkillTaxonomyItem {
   id: string;
@@ -193,52 +194,22 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     onSaveSettings(`Pengaturan sistem berhasil diperbarui.`);
   };
 
+  type TabKey = 'dictionary' | 'scoring' | 'llm';
+
+  const settingsTabs: TabItem<TabKey>[] = [
+    { id: 'dictionary', label: 'Dictionary Skil', icon: BookOpen, count: taxonomies.length },
+    { id: 'scoring', label: 'Formula Scoring', icon: Sliders },
+    { id: 'llm', label: 'Aturan LLM & Integrasi', icon: Cpu },
+  ];
+
   return (
-    <div className="space-y-6 max-w-4xl">
-      {/* Settings Tab Navigation */}
-      <div className="flex items-center gap-2 bg-surface-sunken border border-surface-border p-1.5 rounded-md shadow-e1">
-        <button
-          type="button"
-          onClick={() => setActiveTab('dictionary')}
-          className={cn(
-            'flex items-center gap-2 px-4 py-2 rounded-md text-body font-bold focus-ring',
-            activeTab === 'dictionary'
-              ? 'bg-blue-600 text-white shadow-e1'
-              : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-          )}
-        >
-          <BookOpen className="w-4 h-4" />
-          Dictionary Skil
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('scoring')}
-          className={cn(
-            'flex items-center gap-2 px-4 py-2 rounded-md text-body font-bold focus-ring',
-            activeTab === 'scoring'
-              ? 'bg-blue-600 text-white shadow-e1'
-              : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-          )}
-        >
-          <Sliders className="w-4 h-4" />
-          Formula Scoring
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('llm')}
-          className={cn(
-            'flex items-center gap-2 px-4 py-2 rounded-md text-body font-bold focus-ring',
-            activeTab === 'llm'
-              ? 'bg-blue-600 text-white shadow-e1'
-              : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
-          )}
-        >
-          <Cpu className="w-4 h-4" />
-          Aturan LLM & Integration
-        </button>
-      </div>
+    <div className="space-y-4 w-full min-w-0 max-w-[1440px] mx-auto">
+      {/* Unified SubNavTab Bar */}
+      <SubNavTab
+        tabs={settingsTabs}
+        activeTab={activeTab}
+        onTabChange={(tabId) => setActiveTab(tabId as TabKey)}
+      />
 
       {/* Tab 1: Dictionary Skil */}
       {activeTab === 'dictionary' && (

@@ -30,22 +30,14 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
   );
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <Toolbar>
         <SearchInput
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Cari posisi, divisi, skill"
+          placeholder="Cari posisi, divisi, atau kriteria skill..."
+          className="w-full sm:max-w-md"
         />
-        <div className="sm:ml-auto">
-          <Button
-            size="sm"
-            onClick={onOpenCreateJobModal}
-            iconLeft={<Plus className="w-3.5 h-3.5" />}
-          >
-            Lowongan Baru
-          </Button>
-        </div>
       </Toolbar>
 
       {filtered.length === 0 ? (

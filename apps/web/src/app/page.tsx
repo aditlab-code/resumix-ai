@@ -13,6 +13,7 @@ import { JobsManagerView } from '@/components/dashboard/jobs-manager-view';
 import { GlobalCandidatesView } from '@/components/dashboard/global-candidates-view';
 import { PipelineSettingsView } from '@/components/dashboard/pipeline-settings-view';
 import { DocumentationView } from '@/components/dashboard/documentation-view';
+import { SubNavTab, TabItem } from '@/components/dashboard/sub-nav-tab';
 
 import { CvUploadModal } from '@/components/dashboard/cv-upload-modal';
 import { JobFormModal } from '@/components/dashboard/job-form-modal';
@@ -378,6 +379,9 @@ export default function HRDashboardPage() {
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
           onOpenCreateJobModal={() => setIsCreateJobModalOpen(true)}
           onOpenAuditLogs={() => setIsAuditLogModalOpen(true)}
+          onSaveSettings={() =>
+            addToast('success', 'Pengaturan disimpan', 'Seluruh parameter ATS pipeline berhasil diperbarui.')
+          }
         />
 
         {activeView === 'dashboard' && (
@@ -406,53 +410,24 @@ export default function HRDashboardPage() {
 
                 {/* Unified Candidate Navigation Bar & View Content */}
                 <div className="space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3 px-1 border-b border-surface-border pb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 border-b border-surface-border pb-3">
                     <div>
                       <h2 className="text-h2 font-bold text-ink-default">Kandidat — {activeJob?.title || 'Posisi'}</h2>
                       <p className="text-caption text-ink-subtle mt-0.5">
-                        {jobApplications.length} pelamar terdaftar
+                        {jobApplications.length} pelamar terdaftar pada posisi ini
                       </p>
                     </div>
-
-                    {/* Unified Segmented Nav Tab Control */}
-                    <div className="flex items-center bg-surface-sunken border border-surface-border p-1 rounded-md shadow-e1">
-                      <button
-                        onClick={() => setCandidateViewMode('table')}
-                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-caption font-semibold focus-ring ${
-                          candidateViewMode === 'table'
-                            ? 'bg-brand-accent text-white font-bold shadow-e1'
-                            : 'text-ink-subtle hover:text-ink-default hover:bg-surface-border'
-                        }`}
-                      >
-                        <Table className="w-4 h-4 text-current" />
-                        Table
-                      </button>
-                      
-                      <button
-                        onClick={() => setCandidateViewMode('kanban')}
-                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-caption font-semibold focus-ring ${
-                          candidateViewMode === 'kanban'
-                            ? 'bg-brand-accent text-white font-bold shadow-e1'
-                            : 'text-ink-subtle hover:text-ink-default hover:bg-surface-border'
-                        }`}
-                      >
-                        <Kanban className="w-4 h-4 text-current" />
-                        Kanban
-                      </button>
-
-                      <button
-                        onClick={() => setCandidateViewMode('compare')}
-                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-caption font-semibold focus-ring ${
-                          candidateViewMode === 'compare'
-                            ? 'bg-brand-accent text-white font-bold shadow-e1'
-                            : 'text-ink-subtle hover:text-ink-default hover:bg-surface-border'
-                        }`}
-                      >
-                        <Scale className="w-4 h-4 text-current" />
-                        Compare ({jobApplications.length})
-                      </button>
-                    </div>
                   </div>
+
+                  <SubNavTab
+                    tabs={[
+                      { id: 'table', label: 'Tabel Pelamar', icon: Table, count: jobApplications.length },
+                      { id: 'kanban', label: 'Kanban Board', icon: Kanban },
+                      { id: 'compare', label: 'Komparasi Matriks', icon: Scale },
+                    ]}
+                    activeTab={candidateViewMode}
+                    onTabChange={setCandidateViewMode}
+                  />
 
                   {/* Active Tab Content */}
                   {candidateViewMode === 'compare' ? (
@@ -526,6 +501,7 @@ export default function HRDashboardPage() {
             onOpenUploadModal={() => setIsUploadModalOpen(true)}
             onDeleteCandidate={(app) => setDeletingApplication(app)}
             onReprocessCv={handleReprocessCv}
+            onUpdateStatus={handleStatusChange}
           />
         )}
 
