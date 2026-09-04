@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5">
-        {activeView !== 'docs' && (
+        {activeView === 'settings' && (
           <Button
             variant="secondary"
             size="sm"

@@ -30,7 +30,7 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 w-full min-w-0">
       <Toolbar>
         <SearchInput
           value={query}

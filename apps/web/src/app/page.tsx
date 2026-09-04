@@ -373,7 +373,7 @@ export default function HRDashboardPage() {
         onViewChange={setActiveView}
       />
 
-      <main className="flex-1 p-6 space-y-6 overflow-y-auto w-full min-w-0 max-w-[1440px] mx-auto">
+      <main className="flex-1 p-6 space-y-6 w-full min-w-0 max-w-[1440px] mx-auto">
         <Header
           activeView={activeView}
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
@@ -409,7 +409,7 @@ export default function HRDashboardPage() {
                 />
 
                 {/* Unified Candidate Navigation Bar & View Content */}
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 border-b border-surface-border pb-3">
                     <div>
                       <h2 className="text-h2 font-bold text-ink-default">Kandidat — {activeJob?.title || 'Posisi'}</h2>

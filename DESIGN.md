@@ -1,7 +1,7 @@
 ---
 design_md_version: "1.0"
 project: "Resumix AI"
-description: "Enterprise Candidate Intelligence & Dual-Vector ATS — Dashboard Design System"
+description: "Enterprise Recruitment Intelligence & Next-Gen ATS — Dashboard Design System"
 style: "Enterprise Dark Navy / Data-Dense Dashboard"
 colors:
   brand:

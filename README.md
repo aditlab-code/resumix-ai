@@ -1,4 +1,4 @@
-# Resumix AI — Enterprise Candidate Intelligence & Dual-Vector ATS
+# Resumix AI — Enterprise Recruitment Intelligence & Next-Gen ATS
 
 > **Engineering Portfolio Case Study & Technical Architecture Showcase**  
 > *Sistem Applicant Tracking System (ATS) & Candidate Intelligence Modern Berbasis Decoupled Monorepo, Asynchronous Worker Engine, Groq LLM, Dual-Vector pgvector Similarity Search, dan Explainable Multi-Factor Scoring Engine v2.*
@@ -167,4 +167,4 @@ Proyek ini dipublikasikan sebagai **Portofolio Teknis & Bukti Kapabilitas Kompet
 > 2. **DILARANG KERAS**: Menyalin, mengambil, menjual, atau mengintegrasikan kode/arsitektur dalam sistem ini ke dalam produk internal/komersial perusahaan tanpa lisensi komersial tertulis dari pembuat (*copyright owner*).
 
 ---
-*Resumix AI Team — Enterprise Candidate Intelligence & Dual-Vector ATS.*
+*Resumix AI Team — Enterprise Recruitment Intelligence & Next-Gen ATS.*

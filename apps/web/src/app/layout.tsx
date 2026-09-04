@@ -15,8 +15,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: 'Resumix AI | Enterprise Candidate Intelligence',
-  description: 'AI-Assisted Candidate Screening & Dual-Vector ATS',
+  title: 'Resumix AI | Enterprise Recruitment Intelligence',
+  description: 'AI-Assisted Candidate Screening & Next-Gen ATS',
 };
 
 export default function RootLayout({

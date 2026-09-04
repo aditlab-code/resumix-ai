@@ -1,7 +1,7 @@
 # Architecture Specification: Resumix AI
 
 > **Master Technical Engineering Specification & System Blueprint**  
-> Dokumen ini menjelaskan spesifikasi arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database (12 tabel SQL), serta standar teknis untuk proyek **Resumix AI** (Enterprise Candidate Intelligence & Dual-Vector ATS).
+> Dokumen ini menjelaskan spesifikasi arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database (12 tabel SQL), serta standar teknis untuk proyek **Resumix AI** (Enterprise Recruitment Intelligence & Next-Gen ATS).
 
 ---
 

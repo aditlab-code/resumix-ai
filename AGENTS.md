@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Panduan operasional ringkas (*To The Point*) untuk AI coding agent dan kontributor pada proyek **Resumix AI** (Enterprise Candidate Intelligence & Dual-Vector ATS).
+Panduan operasional ringkas (*To The Point*) untuk AI coding agent dan kontributor pada proyek **Resumix AI** (Enterprise Recruitment Intelligence & Next-Gen ATS).
 
 > **PRINSIP UTAMA**: Sistem ini adalah **decision-support tool** untuk HR, bukan mesin penentu keputusan rekrutmen otomatis. **DILARANG** membuat fitur yang secara otomatis menerima (`hired`) atau menolak (`rejected`) kandidat berdasarkan skor AI.
 

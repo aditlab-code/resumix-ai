@@ -349,7 +349,7 @@ export const DocumentationView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 w-full min-w-0 max-w-[1440px] mx-auto">
+    <div className="space-y-6 w-full min-w-0">
       {/* Filter Toolbar */}
       <Toolbar>
         <SearchInput

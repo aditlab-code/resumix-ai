@@ -203,7 +203,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   ];
 
   return (
-    <div className="space-y-4 w-full min-w-0 max-w-[1440px] mx-auto">
+    <div className="space-y-6 w-full min-w-0">
       {/* Unified SubNavTab Bar */}
       <SubNavTab
         tabs={settingsTabs}

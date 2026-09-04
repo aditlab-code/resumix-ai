@@ -1,6 +1,6 @@
 # Architecture Specification: Resumix AI
 
-Dokumen ini menjelaskan arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database, serta standar teknis untuk proyek **Resumix AI** (Enterprise Candidate Intelligence & Dual-Vector ATS).
+Dokumen ini menjelaskan arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database, serta standar teknis untuk proyek **Resumix AI** (Enterprise Recruitment Intelligence & Next-Gen ATS).
 
 ---
 
