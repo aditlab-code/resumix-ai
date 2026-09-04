@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Shield, FileText, Copy, Check, Save } from 'lucide-react';
+import { Plus, Shield, FileText, Save, Menu } from 'lucide-react';
 import { Button } from '@/components/ui';
 
 export type ActiveViewType = 'dashboard' | 'jobs' | 'candidates' | 'settings' | 'docs';
@@ -13,6 +13,7 @@ interface HeaderProps {
   onOpenAuditLogs: () => void;
   onCopyApiSpec?: () => void;
   onSaveSettings?: () => void;
+  onToggleMobileMenu?: () => void;
 }
 
 const TITLES: Record<ActiveViewType, string> = {
@@ -38,34 +39,90 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAuditLogs,
   onCopyApiSpec,
   onSaveSettings,
+  onToggleMobileMenu,
 }) => {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopySpec = () => {
-    if (onCopyApiSpec) {
-      onCopyApiSpec();
-    } else {
-      navigator.clipboard.writeText(window.location.origin + '/api/docs');
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-raised border border-surface-border p-5 rounded-md shadow-e1 sticky top-0 z-20">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1 hidden sm:flex shrink-0">
-          <span className="w-2.5 h-2.5 rounded-full bg-brand-accent"></span>
-          <span className="w-2.5 h-2.5 rounded-full bg-brand-accent/60"></span>
-          <span className="w-2.5 h-2.5 rounded-full bg-brand-accent/30"></span>
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-raised border border-surface-border p-3.5 sm:p-5 rounded-md shadow-e1 sticky top-0 z-20">
+      <div className="flex items-center justify-between md:justify-start gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-2.5 min-w-0">
+          {onToggleMobileMenu && (
+            <button
+              type="button"
+              onClick={onToggleMobileMenu}
+              className="md:hidden p-2 rounded-md border border-surface-border text-ink-default hover:bg-surface-hover focus-ring shrink-0"
+              aria-label="Buka Menu Sidebar"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+
+          {/* Mobile Brand Badge */}
+          <div className="flex md:hidden items-center gap-2 shrink-0">
+            <div className="w-7 h-7 rounded bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-e1">
+              R
+            </div>
+          </div>
+
+          <div className="min-w-0">
+            <h1 className="text-body font-bold md:text-h1 text-ink-default tracking-tight truncate">
+              {TITLES[activeView]}
+            </h1>
+            <p className="hidden md:block text-caption font-medium text-ink-subtle mt-0.5">
+              {SUBTITLES[activeView]}
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-h1 font-bold text-ink-default tracking-tight">{TITLES[activeView]}</h1>
-          <p className="text-caption font-medium text-ink-subtle mt-0.5">{SUBTITLES[activeView]}</p>
+
+        {/* Mobile Action Button (Aligned in same row) */}
+        <div className="flex items-center gap-2 md:hidden shrink-0">
+          {activeView === 'settings' && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onOpenAuditLogs}
+              iconLeft={<Shield className="w-4 h-4 text-ink-subtle" />}
+            >
+              Audit
+            </Button>
+          )}
+
+          {activeView === 'jobs' && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onOpenCreateJobModal}
+              iconLeft={<Plus className="w-4 h-4 text-white" />}
+            >
+              Buat
+            </Button>
+          )}
+
+          {(activeView === 'dashboard' || activeView === 'candidates') && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onOpenUploadModal}
+              iconLeft={<FileText className="w-4 h-4 text-white" />}
+            >
+              Unggah CV
+            </Button>
+          )}
+
+          {activeView === 'settings' && onSaveSettings && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onSaveSettings}
+              iconLeft={<Save className="w-4 h-4 text-white" />}
+            >
+              Simpan
+            </Button>
+          )}
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2.5">
+      {/* Desktop Action Buttons */}
+      <div className="hidden md:flex flex-wrap items-center gap-2.5">
         {activeView === 'settings' && (
           <Button
             variant="secondary"

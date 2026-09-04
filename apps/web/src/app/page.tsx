@@ -35,6 +35,7 @@ import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
 export default function HRDashboardPage() {
   const [activeView, setActiveView] = useState<ActiveViewType>('dashboard');
   const [candidateViewMode, setCandidateViewMode] = useState<'table' | 'kanban' | 'compare'>('table');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   const [jobs, setJobs] = useState<JobPosting[]>(INITIAL_JOBS);
@@ -371,6 +372,8 @@ export default function HRDashboardPage() {
       <Sidebar
         activeView={activeView}
         onViewChange={setActiveView}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
       <main className="flex-1 p-6 space-y-6 w-full min-w-0 max-w-[1440px] mx-auto">
@@ -382,6 +385,7 @@ export default function HRDashboardPage() {
           onSaveSettings={() =>
             addToast('success', 'Pengaturan disimpan', 'Seluruh parameter ATS pipeline berhasil diperbarui.')
           }
+          onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
         />
 
         {activeView === 'dashboard' && (

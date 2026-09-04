@@ -73,7 +73,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
         <div className="space-y-2">
           {logs.map((log) => (
             <div key={log.id} className="bg-canvas rounded p-3 space-y-1 text-xs">
-              <div className="flex justify-between items-center text-[11px]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px]">
                 <span className="font-bold text-accent flex items-center gap-1.5">
                   <ShieldAlert className="w-3.5 h-3.5" />
                   {log.action}
@@ -83,7 +83,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
                 </span>
               </div>
               <p className="text-ink font-semibold leading-relaxed">{log.details}</p>
-              <div className="flex justify-between text-[10px] text-ink-subtle pt-1.5 border-t border-line">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] text-ink-subtle pt-1.5 border-t border-line">
                 <span>
                   Aktor: <strong>{log.actor}</strong>
                 </span>

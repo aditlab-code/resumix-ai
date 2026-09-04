@@ -410,7 +410,7 @@ export const DocumentationView: React.FC = () => {
         </Card>
 
         {/* Wiki Reading Canvas (Right - Flex 1) */}
-        <Card className="flex-1 min-w-0 p-8 min-h-[600px] bg-white border-surface-border shadow-e1">
+        <Card className="flex-1 min-w-0 p-4 sm:p-8 min-h-[600px] bg-white border-surface-border shadow-e1">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-28 text-center space-y-3">
               <RefreshCw className="w-8 h-8 text-brand-accent animate-spin" />
