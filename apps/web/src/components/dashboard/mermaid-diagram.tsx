@@ -7,7 +7,7 @@ interface MermaidDiagramProps {
   chart: string;
 }
 
-export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart }) => {
+export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svgContent, setSvgContent] = useState<string>('');
   const [hasError, setHasError] = useState<boolean>(false);
@@ -165,4 +165,5 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart }) => {
       </div>
     </div>
   );
-};
+});
+MermaidDiagram.displayName = 'MermaidDiagram';

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button, Card, Toolbar, SearchInput } from '@/components/ui';
-import { RefreshCw, FileText, Check, Copy, Layers, BarChart3, ShieldCheck, Scale, BookOpen, ChevronRight } from 'lucide-react';
+import { RefreshCw, FileText, Check, Copy, Layers, BarChart3, ShieldCheck, Scale } from 'lucide-react';
 import { MermaidDiagram } from './mermaid-diagram';
 import { MathFormula } from './math-formula';
 import { cn } from '@/lib/utils';
@@ -68,7 +70,52 @@ const DOC_CATEGORIES: DocCategory[] = [
   },
 ];
 
-const ALL_DOCS = DOC_CATEGORIES.flatMap((cat) => cat.items);
+const stripMarkdownAsterisks = (str: string) => {
+  return str.replace(/\*\*/g, '').replace(/\*/g, '').trim();
+};
+
+const renderInlineContent = (text: string): React.ReactNode => {
+  if (!text) return null;
+
+  const tokenRegex = /(!\[[^\]]*\]\([^\)]+\)|\$[^\$]+\$)/g;
+  const parts = text.split(tokenRegex);
+
+  return parts.map((part, i) => {
+    if (!part) return null;
+
+    if (part.startsWith('![') && part.includes('](') && part.endsWith(')')) {
+      const match = part.match(/^!\[([^\]]*)\]\(([^\)]+)\)$/);
+      if (match) {
+        const alt = match[1];
+        const url = match[2];
+        const hexMatch = (alt + ' ' + url).match(/#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b/);
+        if (hexMatch) {
+          const hexColor = hexMatch[0];
+          return (
+            <span key={i} className="inline-flex items-center gap-1.5 align-middle my-0.5">
+              <span
+                className="inline-block w-4 h-4 rounded border border-surface-border shadow-2xs shrink-0"
+                style={{ backgroundColor: hexColor }}
+                title={hexColor}
+              />
+              <span className="font-mono text-[11px] font-semibold text-ink-default">{hexColor}</span>
+            </span>
+          );
+        }
+        return (
+          <img key={i} src={url} alt={alt} className="inline-block max-h-6 rounded align-middle" />
+        );
+      }
+    }
+
+    if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
+      const rawMath = part.slice(1, -1);
+      return <MathFormula key={i} math={rawMath} block={false} />;
+    }
+
+    return part;
+  });
+};
 
 export const DocumentationView: React.FC = () => {
   const [activeDoc, setActiveDoc] = useState<DocKey>('readme');
@@ -78,7 +125,7 @@ export const DocumentationView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-  const fetchDocContent = async (docKey: DocKey) => {
+  const fetchDocContent = useCallback(async (docKey: DocKey) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -95,74 +142,22 @@ export const DocumentationView: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchDocContent(activeDoc);
-  }, [activeDoc]);
+  }, [activeDoc, fetchDocContent]);
 
-  const handleCopy = (code: string) => {
+  const handleCopy = useCallback((code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(null), 2000);
-  };
+  }, []);
 
-  const stripMarkdownAsterisks = (str: string) => {
-    return str.replace(/\*\*/g, '').replace(/\*/g, '').trim();
-  };
+  const parsedMarkdown = useMemo(() => {
+    if (!content) return null;
 
-  // Helper to parse inline math $...$ and markdown images ![alt](url) / color swatches inside text
-  const renderInlineContent = (text: string): React.ReactNode => {
-    if (!text) return null;
-
-    const tokenRegex = /(!\[[^\]]*\]\([^\)]+\)|\$[^\$]+\$)/g;
-    const parts = text.split(tokenRegex);
-
-    return parts.map((part, i) => {
-      if (!part) return null;
-
-      // Handle Markdown Image: ![alt](url)
-      if (part.startsWith('![') && part.includes('](') && part.endsWith(')')) {
-        const match = part.match(/^!\[([^\]]*)\]\(([^\)]+)\)$/);
-        if (match) {
-          const alt = match[1];
-          const url = match[2];
-          // Check for hex color code in alt or url
-          const hexMatch = (alt + ' ' + url).match(/#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b/);
-          if (hexMatch) {
-            const hexColor = hexMatch[0];
-            return (
-              <span key={i} className="inline-flex items-center gap-1.5 align-middle my-0.5">
-                <span
-                  className="inline-block w-4 h-4 rounded border border-surface-border shadow-2xs shrink-0"
-                  style={{ backgroundColor: hexColor }}
-                  title={hexColor}
-                />
-                <span className="font-mono text-[11px] font-semibold text-ink-default">{hexColor}</span>
-              </span>
-            );
-          }
-          return (
-            <img key={i} src={url} alt={alt} className="inline-block max-h-6 rounded align-middle" />
-          );
-        }
-      }
-
-      // Handle Math: $math$
-      if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
-        const rawMath = part.slice(1, -1);
-        return <MathFormula key={i} math={rawMath} block={false} />;
-      }
-
-      return part;
-    });
-  };
-
-  // Clean 1-Column Markdown Renderer
-  const renderFormattedMarkdown = (rawText: string) => {
-    if (!rawText) return null;
-
-    const lines = rawText.split('\n');
+    const lines = content.split('\n');
     const elements: React.ReactNode[] = [];
     let inCodeBlock = false;
     let codeBlockLang = '';
@@ -220,12 +215,13 @@ export const DocumentationView: React.FC = () => {
       inTable = false;
     };
 
+    const term = searchQuery.toLowerCase().trim();
+
     lines.forEach((line, idx) => {
-      if (searchQuery && !line.toLowerCase().includes(searchQuery.toLowerCase()) && !inCodeBlock && !inTable) {
+      if (term && !line.toLowerCase().includes(term) && !inCodeBlock && !inTable) {
         return;
       }
 
-      // Code block handler
       if (line.startsWith('```')) {
         if (inCodeBlock) {
           const codeString = codeBlockBuffer.join('\n');
@@ -240,6 +236,7 @@ export const DocumentationView: React.FC = () => {
                 <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
                   <span>{codeBlockLang || 'code'}</span>
                   <button
+                    type="button"
                     onClick={() => handleCopy(codeString)}
                     className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
                   >
@@ -268,7 +265,6 @@ export const DocumentationView: React.FC = () => {
         return;
       }
 
-      // Check Table
       if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
         inTable = true;
         tableBuffer.push(line.trim());
@@ -277,7 +273,6 @@ export const DocumentationView: React.FC = () => {
         flushTable(idx);
       }
 
-      // Check Math Block $$ ... $$
       const trimmedLine = line.trim();
       if (trimmedLine.startsWith('$$')) {
         const rawMath = trimmedLine.replace(/^\$\$/, '').replace(/\$\$$/, '').trim();
@@ -287,7 +282,6 @@ export const DocumentationView: React.FC = () => {
 
       const cleanLineText = stripMarkdownAsterisks(line);
 
-      // Clean Headings
       if (line.startsWith('#### ')) {
         const headerTitle = cleanLineText.replace('#### ', '');
         elements.push(
@@ -346,7 +340,7 @@ export const DocumentationView: React.FC = () => {
     }
 
     return elements;
-  };
+  }, [content, searchQuery, copiedCode, handleCopy]);
 
   return (
     <div className="space-y-6 w-full min-w-0">
@@ -373,7 +367,7 @@ export const DocumentationView: React.FC = () => {
 
       {/* Wiki 2-Column Layout */}
       <div className="flex flex-col lg:flex-row items-start gap-6">
-        {/* Wiki Sidebar (Left - 280px) */}
+        {/* Wiki Sidebar */}
         <Card className="w-full lg:w-72 shrink-0 p-4 space-y-5 sticky top-24">
           <div className="px-1 border-b border-surface-border pb-3">
             <h3 className="text-h3 font-bold text-ink-default tracking-tight">Dokumentasi</h3>
@@ -391,11 +385,12 @@ export const DocumentationView: React.FC = () => {
                     return (
                       <button
                         key={doc.key}
+                        type="button"
                         onClick={() => setActiveDoc(doc.key)}
                         className={cn(
                           'w-full text-left p-2.5 rounded-md flex items-center justify-between gap-2 transition-all duration-fast focus-ring group',
                           isActive
-                            ? 'bg-brand-accent text-white shadow-e1 font-bold'
+                            ? 'bg-blue-600 text-white shadow-e1 font-bold'
                             : 'text-ink-muted hover:bg-surface-sunken hover:text-ink-default font-medium'
                         )}
                       >
@@ -409,24 +404,24 @@ export const DocumentationView: React.FC = () => {
           </nav>
         </Card>
 
-        {/* Wiki Reading Canvas (Right - Flex 1) */}
+        {/* Wiki Reading Canvas */}
         <Card className="flex-1 min-w-0 p-4 sm:p-8 min-h-[600px] bg-white border-surface-border shadow-e1">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-28 text-center space-y-3">
-              <RefreshCw className="w-8 h-8 text-brand-accent animate-spin" />
+              <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
               <p className="text-caption font-bold text-ink-subtle font-mono">Memuat dokumen wiki...</p>
             </div>
           ) : error ? (
-            <div className="p-8 text-center bg-semantic-danger_soft border border-semantic-danger/30 rounded-md space-y-3">
-              <FileText className="w-10 h-10 text-semantic-danger mx-auto" />
-              <p className="text-body font-bold text-semantic-danger">{error}</p>
+            <div className="p-8 text-center bg-rose-50 border border-rose-200 rounded-md space-y-3">
+              <FileText className="w-10 h-10 text-rose-600 mx-auto" />
+              <p className="text-body font-bold text-rose-600">{error}</p>
               <Button variant="secondary" size="sm" onClick={() => fetchDocContent(activeDoc)}>
                 Coba Lagi
               </Button>
             </div>
           ) : (
             <article className="prose prose-slate max-w-none text-body leading-relaxed space-y-2">
-              {renderFormattedMarkdown(content)}
+              {parsedMarkdown}
             </article>
           )}
         </Card>
@@ -434,5 +429,3 @@ export const DocumentationView: React.FC = () => {
     </div>
   );
 };
-
-

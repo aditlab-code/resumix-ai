@@ -13,9 +13,9 @@ interface BuildColumnsArgs {
 }
 
 const getScoreBadgeClass = (s: number) => {
-  if (s >= 80) return 'bg-semantic-success_soft text-semantic-success border-semantic-success/20';
-  if (s >= 60) return 'bg-semantic-warning_soft text-semantic-warning border-semantic-warning/20';
-  return 'bg-semantic-danger_soft text-semantic-danger border-semantic-danger/20';
+  if (s >= 80) return 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold';
+  if (s >= 60) return 'bg-amber-100 text-amber-950 border-amber-300 font-extrabold';
+  return 'bg-rose-100 text-rose-900 border-rose-300 font-extrabold';
 };
 
 export function buildCandidateColumns({

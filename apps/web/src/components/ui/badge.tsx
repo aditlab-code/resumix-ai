@@ -8,11 +8,11 @@ export type StatusType = ApplicationStatus | ParseStatus;
 type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
 
 const toneClass: Record<Tone, string> = {
-  neutral: 'bg-surface-sunken text-ink-subtle border border-surface-border',
-  accent: 'bg-semantic-info_soft text-semantic-info border border-semantic-info/20 font-semibold',
-  ok: 'bg-semantic-success_soft text-semantic-success border border-semantic-success/20 font-semibold',
-  warn: 'bg-semantic-warning_soft text-semantic-warning border border-semantic-warning/20 font-semibold',
-  danger: 'bg-semantic-danger_soft text-semantic-danger border border-semantic-danger/20 font-semibold',
+  neutral: 'bg-slate-200 text-slate-900 border border-slate-300 font-bold',
+  accent: 'bg-blue-100 text-blue-900 border border-blue-300 font-bold',
+  ok: 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold',
+  warn: 'bg-amber-100 text-amber-950 border border-amber-300 font-bold',
+  danger: 'bg-rose-100 text-rose-900 border border-rose-300 font-bold',
 };
 
 const statusMap: Record<StatusType, { label: string; tone: Tone }> = {
@@ -45,13 +45,13 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-pill px-2.5 py-0.5 text-caption font-semibold tracking-wider uppercase',
+        'inline-flex items-center gap-1.5 rounded-pill px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase shadow-2xs',
         toneClass[config.tone],
         className
       )}
     >
       {PULSE.includes(status) && (
-        <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+        <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse shrink-0" />
       )}
       {config.label}
     </span>

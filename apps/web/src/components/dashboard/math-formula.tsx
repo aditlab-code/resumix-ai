@@ -8,7 +8,7 @@ interface MathFormulaProps {
   block?: boolean;
 }
 
-export const MathFormula: React.FC<MathFormulaProps> = ({ math, block = true }) => {
+export const MathFormula: React.FC<MathFormulaProps> = React.memo(({ math, block = true }) => {
   const [html, setHtml] = useState<string>('');
 
   useEffect(() => {
@@ -58,4 +58,5 @@ export const MathFormula: React.FC<MathFormulaProps> = ({ math, block = true }) 
       />
     </div>
   );
-};
+});
+MathFormula.displayName = 'MathFormula';
