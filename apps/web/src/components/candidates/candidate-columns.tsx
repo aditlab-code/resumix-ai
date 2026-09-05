@@ -46,7 +46,7 @@ export function buildCandidateColumns({
   if (jobs) {
     columns.push({
       key: 'job',
-      header: 'Job Opening',
+      header: 'Job Available',
       render: (app) => (
         <span className="text-caption font-semibold text-brand-accent">
           {jobs.find((j) => j.id === app.job_id)?.title || '—'}

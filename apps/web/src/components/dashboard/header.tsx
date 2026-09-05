@@ -15,10 +15,10 @@ interface HeaderProps {
 
 const TITLES: Record<ActiveViewType, string> = {
   dashboard: 'Dashboard Overview',
-  jobs: 'Manage Job Openings',
+  jobs: 'Manage Job',
   candidates: 'Candidate List & Evaluation',
-  settings: 'ATS Pipeline Settings',
-  docs: 'System & API Documentation',
+  settings: 'Settings & Configuration',
+  docs: 'Documentation & Guides',
 };
 
 export const Header: React.FC<HeaderProps> = ({

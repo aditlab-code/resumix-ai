@@ -98,7 +98,7 @@ export const GlobalCandidatesView: React.FC<GlobalCandidatesViewProps> = ({
             ))}
           </FilterSelect>
           <FilterSelect value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="all">All Recruitment Statuses</option>
+            <option value="all">All Recruitment Status</option>
             <option value="screening">Screening</option>
             <option value="applied">Applied</option>
             <option value="interview">Interview</option>
@@ -118,7 +118,7 @@ export const GlobalCandidatesView: React.FC<GlobalCandidatesViewProps> = ({
         <KanbanBoard
           applications={rows}
           onSelectCandidate={onSelectCandidate}
-          onUpdateStatus={onUpdateStatus || (() => {})}
+          onUpdateStatus={onUpdateStatus || (() => { })}
           onDeleteCandidate={onDeleteCandidate}
         />
       ) : (

@@ -43,13 +43,13 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
       {filtered.length === 0 ? (
         <EmptyState
           icon={<Briefcase className="w-8 h-8 text-brand-accent" />}
-          title={jobs.length === 0 ? 'No Job Openings Posted Yet' : 'No Jobs Found'}
+          title={jobs.length === 0 ? 'No Job Available Posted Yet' : 'No Jobs Found'}
           description={
             jobs.length === 0
-              ? 'Post a new job opening or import job descriptions from LinkedIn/Glints to start screening resumes.'
+              ? 'Post a new job Available or import job descriptions from LinkedIn/Glints to start screening resumes.'
               : 'No jobs matched your search criteria.'
           }
-          actionLabel="Create New Job Opening"
+          actionLabel="Create New Job Available"
           onAction={onOpenCreateJobModal}
         />
       ) : (

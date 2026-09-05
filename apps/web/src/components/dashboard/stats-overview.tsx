@@ -37,7 +37,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       <Stat
-        label="Active Jobs"
+        label="Available Jobs"
         value={activeJobs}
         hint="Open Positions"
         variant="blue"
@@ -57,10 +57,10 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
         hint={processing > 0 ? 'Processing' : 'Idle'}
       />
       <Stat
-        label="Zero-text Layer"
+        label="Attention Needed"
         value={warnings}
         variant="red"
-        hint="Needs Review"
+        hint="Review"
         onClick={handleNavigate}
       />
     </div>

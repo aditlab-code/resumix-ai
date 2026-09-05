@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   FileText,
   ShieldCheck,
@@ -20,11 +20,17 @@ import {
   Mail,
   Phone,
   MapPin,
+  AlertTriangle,
 } from 'lucide-react';
 import { formatBytes, cn } from '@/lib/utils';
 import { CVExtractionDTO } from '@cv-ats/contracts';
 import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
 import { Card } from '@/components/ui';
+import * as pdfjsLib from 'pdfjs-dist';
+
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+}
 
 interface ResumePreviewProps {
   originalFilename: string;
@@ -60,6 +66,161 @@ const getSkillPalette = (skillName: string, category?: string) => {
   return SKILL_COLOR_PALETTES[index];
 };
 
+interface PdfCanvasViewerProps {
+  effectivePdfUrl: string;
+  currentPage: number;
+  zoomLevel: number;
+  rotation: number;
+  originalFilename: string;
+  onPagesLoaded?: (pages: number) => void;
+}
+
+const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
+  effectivePdfUrl,
+  currentPage,
+  zoomLevel,
+  rotation,
+  originalFilename,
+  onPagesLoaded,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [renderError, setRenderError] = useState<string | null>(null);
+  const renderTaskRef = useRef<any>(null);
+
+  useEffect(() => {
+    let isCancelled = false;
+    setIsLoading(true);
+    setRenderError(null);
+
+    const loadPdfDoc = async () => {
+      try {
+        let loadingTask: any;
+        if (effectivePdfUrl.startsWith('data:application/pdf;base64,')) {
+          const base64Data = effectivePdfUrl.replace(/^data:application\/pdf;base64,/, '');
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          loadingTask = pdfjsLib.getDocument({ data: byteArray });
+        } else {
+          loadingTask = pdfjsLib.getDocument(effectivePdfUrl);
+        }
+
+        const loadedDoc = await loadingTask.promise;
+        if (!isCancelled) {
+          setPdfDoc(loadedDoc);
+          if (onPagesLoaded) onPagesLoaded(loadedDoc.numPages);
+          setIsLoading(false);
+        }
+      } catch (err: any) {
+        console.error('Error loading PDF with pdfjs:', err);
+        if (!isCancelled) {
+          setIsLoading(false);
+          setRenderError(err?.message || 'Failed to render PDF document.');
+        }
+      }
+    };
+
+    loadPdfDoc();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [effectivePdfUrl]);
+
+  useEffect(() => {
+    if (!pdfDoc || !canvasRef.current || renderError) return;
+
+    let isCancelled = false;
+
+    const renderPage = async () => {
+      if (renderTaskRef.current) {
+        try {
+          renderTaskRef.current.cancel();
+        } catch (_) {}
+      }
+
+      try {
+        const targetPageNum = Math.min(Math.max(1, currentPage), pdfDoc.numPages);
+        const page = await pdfDoc.getPage(targetPageNum);
+        if (isCancelled || !canvasRef.current) return;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const scale = (zoomLevel / 100) * 1.35;
+        const viewport = page.getViewport({ scale, rotation });
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport,
+        };
+
+        const task = page.render(renderContext);
+        renderTaskRef.current = task;
+        await task.promise;
+      } catch (err: any) {
+        if (err?.name !== 'RenderingCancelledException') {
+          console.warn('Page render error:', err);
+        }
+      }
+    };
+
+    renderPage();
+
+    return () => {
+      isCancelled = true;
+      if (renderTaskRef.current) {
+        try {
+          renderTaskRef.current.cancel();
+        } catch (_) {}
+      }
+    };
+  }, [pdfDoc, currentPage, zoomLevel, rotation, renderError]);
+
+  if (renderError) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center p-4 space-y-4">
+        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 p-3 rounded-lg text-xs flex items-center gap-2 max-w-md">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+          <span>Canvas renderer note: {renderError}. Displaying iframe viewer fallback.</span>
+        </div>
+        <iframe
+          src={`${effectivePdfUrl}#toolbar=0&navpanes=0`}
+          title={originalFilename}
+          className="w-full h-[650px] rounded-xl border border-border shadow-sm bg-white"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full flex flex-col items-center justify-center min-h-[550px] overflow-auto py-2">
+      {isLoading && (
+        <div className="flex flex-col items-center justify-center h-[450px] w-full text-muted-foreground text-xs space-y-2">
+          <RefreshCw className="w-6 h-6 animate-spin text-primary" />
+          <p className="font-semibold">Rendering PDF canvas preview...</p>
+        </div>
+      )}
+      <canvas
+        ref={canvasRef}
+        className={cn(
+          'max-w-full rounded-xl border border-border shadow-md transition-all duration-200 bg-white',
+          isLoading ? 'hidden' : 'block'
+        )}
+      />
+    </div>
+  );
+};
+
 export const ResumePreview: React.FC<ResumePreviewProps> = ({
   originalFilename,
   storagePath,
@@ -70,45 +231,17 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
   pageCount = 1,
 }) => {
   const effectivePdfUrl = pdfUrl || SAMPLE_PDF_BASE64;
-  const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [signedUrlTtl, setSignedUrlTtl] = useState(300);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [rotation, setRotation] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [detectedPageCount, setDetectedPageCount] = useState(pageCount || 1);
   const [viewMode, setViewMode] = useState<'embed' | 'vector'>('embed');
-  const totalPages = Math.max(1, pageCount);
+  const totalPages = Math.max(1, detectedPageCount);
 
   useEffect(() => {
     if (currentPage > totalPages) setCurrentPage(1);
   }, [totalPages, currentPage]);
-
-  useEffect(() => {
-    if (!effectivePdfUrl) return;
-
-    if (effectivePdfUrl.startsWith('data:application/pdf;base64,')) {
-      try {
-        const base64Data = effectivePdfUrl.replace(/^data:application\/pdf;base64,/, '');
-        const byteCharacters = atob(base64Data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        setBlobUrl(url);
-
-        return () => {
-          URL.revokeObjectURL(url);
-        };
-      } catch (e) {
-        console.error('Error creating Blob URL from base64 PDF:', e);
-        setBlobUrl(effectivePdfUrl);
-      }
-    } else {
-      setBlobUrl(effectivePdfUrl);
-    }
-  }, [effectivePdfUrl]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -119,7 +252,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
 
   const handleDownload = () => {
     const a = document.createElement('a');
-    a.href = blobUrl || effectivePdfUrl;
+    a.href = effectivePdfUrl;
     a.download = originalFilename;
     a.click();
   };
@@ -227,24 +360,14 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
 
       <div className="w-full bg-muted/20 rounded-xl p-3 min-h-[550px] flex items-start justify-center overflow-auto border border-border">
         {viewMode === 'embed' ? (
-          blobUrl ? (
-            <object
-              data={blobUrl}
-              type="application/pdf"
-              className="w-full h-[650px] rounded-xl border border-border shadow-sm"
-            >
-              <iframe
-                src={blobUrl}
-                title={originalFilename}
-                className="w-full h-[650px] rounded-xl border border-border shadow-sm"
-              />
-            </object>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-[500px] w-full text-muted-foreground text-xs space-y-2">
-              <RefreshCw className="w-6 h-6 animate-spin text-primary" />
-              <p>Loading PDF file...</p>
-            </div>
-          )
+          <PdfCanvasViewer
+            effectivePdfUrl={effectivePdfUrl}
+            currentPage={currentPage}
+            zoomLevel={zoomLevel}
+            rotation={rotation}
+            originalFilename={originalFilename}
+            onPagesLoaded={(count) => setDetectedPageCount(count)}
+          />
         ) : (
           <div
             className="w-full max-w-2xl bg-card border border-border rounded-xl p-6 text-foreground space-y-5 transition-transform duration-300 shadow-sm"

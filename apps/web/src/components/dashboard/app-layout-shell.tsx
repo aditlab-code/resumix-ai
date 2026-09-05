@@ -143,8 +143,8 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
           isOpen={!!deletingJob}
           onClose={() => setDeletingJob(null)}
           onConfirm={confirmDeleteJob}
-          title="Delete Job Opening"
-          message={`Delete job opening "${deletingJob?.title}"? This action cannot be undone.`}
+          title="Delete Job Available"
+          message={`Delete job "${deletingJob?.title}"? This action cannot be undone.`}
           confirmLabel="Delete"
           tone="danger"
         />
