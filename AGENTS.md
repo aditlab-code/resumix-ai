@@ -1,21 +1,17 @@
 # AGENTS.md
 
-Panduan operasional ringkas (*To The Point*) untuk AI coding agent dan kontributor pada proyek **Resumix AI** (Enterprise Recruitment Intelligence & Next-Gen ATS).
-
-> **PRINSIP UTAMA**: Sistem ini adalah **decision-support tool** untuk HR, bukan mesin penentu keputusan rekrutmen otomatis. **DILARANG** membuat fitur yang secara otomatis menerima (`hired`) atau menolak (`rejected`) kandidat berdasarkan skor AI.
-
 ---
 
 ## 1. Service Boundaries & Responsibilities
 
-| Service | Stack | Tanggung Jawab Utama | Hal yang DILARANG |
-|---|---|---|---|
-| **Frontend (`apps/web`)** | Next.js 14, TypeScript, Tailwind | UI/UX HR, form lowongan, dropzone upload, status tracking, preview PDF, review AI. | Secret handling, hitung skor otoritatif, query DB langsung. |
-| **Core API (`apps/api`)** | Node.js, Express, TypeScript | Auth/RBAC, CRUD domain, Signed URL, enqueue job ke Redis Queue. | Parsing PDF/OCR/LLM langsung di request handler HTTP sinkron. |
-| **Queue Worker (`apps/api/src/worker`)** | Redis, BullMQ Worker | Ingestion job asinkron, retry management, panggil AI Service, update status DB. | Mengubah status keputusan kandidat secara otomatis. |
-| **AI Service (`apps/ai-service`)** | FastAPI, Python 3.11+, Pydantic | PDF parsing (PyMuPDF), zero-text rejection rule, Groq LLM parsing, normalisasi skill, kalkulasi skor. | Menulis/membaca langsung ke DB utama tanpa melalui kontrak REST API. |
-| **Database (`database`)** | PostgreSQL 15+ + `pgvector` | Data relasional (12 tabel), similarity vector search (`vector(384)`), audit logs. | Menyimpan berkas PDF mentah secara langsung. |
-| **Storage (`Supabase Storage`)** | Private Object Storage | Menyimpan berkas PDF CV secara privat. | Menjadikan bucket publik tanpa Signed URL sementara. |
+| Service                                  | Stack                            | Tanggung Jawab Utama                                                                                  | Hal yang DILARANG                                                    |
+|------------------------------------------|----------------------------------|-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| **Frontend (`apps/web`)**                | Next.js 14, TypeScript, Tailwind | UI/UX HR, form lowongan, dropzone upload, status tracking, preview PDF, review AI.                    | Secret handling, hitung skor otoritatif, query DB langsung.          |
+| **Core API (`apps/api`)**                | Node.js, Express, TypeScript     | Auth/RBAC, CRUD domain, Signed URL, enqueue job ke Redis Queue.                                       | Parsing PDF/OCR/LLM langsung di request handler HTTP sinkron.        |
+| **Queue Worker (`apps/api/src/worker`)** | Redis, BullMQ Worker             | Ingestion job asinkron, retry management, panggil AI Service, update status DB.                       | Mengubah status keputusan kandidat secara otomatis.                  |
+| **AI Service (`apps/ai-service`)**       | FastAPI, Python 3.11+, Pydantic  | PDF parsing (PyMuPDF), zero-text rejection rule, Groq LLM parsing, normalisasi skill, kalkulasi skor. | Menulis/membaca langsung ke DB utama tanpa melalui kontrak REST API. |
+| **Database (`database`)**                | PostgreSQL 15+ + `pgvector`      | Data relasional (12 tabel), similarity vector search (`vector(384)`), audit logs.                     | Menyimpan berkas PDF mentah secara langsung.                         |
+| **Storage (`Supabase Storage`)**         | Private Object Storage           | Menyimpan berkas PDF CV secara privat.                                                                | Menjadikan bucket publik tanpa Signed URL sementara.                 |
 
 ---
 

@@ -20,9 +20,9 @@ Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** 
 | **Ingestion API Latency**    |    `< 180 ms`     | Core API mengembalikan HTTP 202 instant response (non-blocking queue). |
 | **Screening Efficiency**     |  `85% Reduction`  | Mengurangi waktu pengulasan kandidat dari 10 menit menjadi < 2 detik.  |
 | **Vector Similarity Search** |     `< 12 ms`     | Query HNSW pgvector pada 10,000+ candidate embedding vectors.          |
-| **Zero-Text Short-Circuit**  |     `< 25 ms`     | Menolak PDF scanned/tanpa layer teks secara instan tanpa biaya LLM.    |
+| **Zero-Text Short-Circuit**  |     `< 25 ms`     | Menolak PDF scanned/ tanpa layer teks secara instan tanpa biaya LLM.   |
 | **Hiring Fairness & Bias**   | `0% PII Scoring`  | Atribut foto, gender, usia, & lokasi dilarang digunakan dalam scoring. |
-| **Parsing Cost Efficiency**  | `Rp 0.00 / parse` | Menggunakan Groq Free Tier LLM & local Sentence Transformer model.     |
+| **Parsing Cost Efficiency**  | `Rp 0.00 / parse` | Menggunakan Free Tier LLM & local Sentence Transformer model.          |
 
 ---
 
@@ -141,7 +141,7 @@ Proyek ini dipublikasikan sebagai **Portofolio Teknis & Bukti Kapabilitas Kompet
 
 ### Lisensi Penggunaan:
 * **Source Code (`apps/`, `packages/`, `database/`)**: Dilindungi di bawah [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). Segala bentuk derivasi atau penggunaan source code pada server/jaringan wajib dibuka kembali di bawah lisensi AGPL-3.0.
-* **Dokumentasi & Arsitektur (`README.md`, `ARCHITECTURE.md`, `DESIGN.md`, `docs/`)**: Dilindungi di bawah [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE-DOCS.md).
+* **Dokumentasi & Arsitektur (`README.md`, `ARCHITECTURE.md`, `docs/`)**: Dilindungi di bawah [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE-DOCS.md).
 
 > [!IMPORTANT]
 > **PEMBERITAHUAN UNTUK HR & PERUSAHAAN**:
