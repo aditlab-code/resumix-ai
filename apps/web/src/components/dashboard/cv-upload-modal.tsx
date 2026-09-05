@@ -478,7 +478,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
         ) : (
           <>
             <Field label="Target Lowongan Position" required hint="Pilih posisi lowongan yang akan dicocokkan kualifikasinya.">
-              <Select value={jobId} onChange={(e) => setJobId(e.target.value)} disabled={isProcessing}>
+              <Select value={jobId} onChange={(e) => setJobId(e.target.value)} disabled={isProcessing} sizeVariant="md">
                 {jobs.map((j) => (
                   <option key={j.id} value={j.id}>
                     {j.title} ({j.department}) — min. {j.minimum_experience_months} bln

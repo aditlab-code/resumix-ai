@@ -358,7 +358,9 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 <Select
                   value={activeCategoryFilter}
                   onChange={(e) => setActiveCategoryFilter(e.target.value)}
-                  className="h-9 text-xs font-semibold w-auto"
+                  sizeVariant="sm"
+                  containerClassName="w-auto"
+                  className="font-semibold"
                 >
                   <option value="all">Semua Kategori</option>
                   {categories.map((cat) => (

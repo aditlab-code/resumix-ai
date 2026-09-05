@@ -6,9 +6,8 @@ import { JobsManagerView } from '@/components/dashboard/jobs-manager-view';
 import { CandidateTable } from '@/components/dashboard/candidate-table';
 import { KanbanBoard } from '@/components/candidates/kanban-board';
 import { CandidateComparator } from '@/components/candidates/candidate-comparator';
-import { ScoreBreakdownCard } from '@/components/scoring/score-breakdown';
 import { SubNavTab } from '@/components/dashboard/sub-nav-tab';
-import { EmptyState, Card } from '@/components/ui';
+import { EmptyState } from '@/components/ui';
 import { Briefcase } from 'lucide-react';
 
 export default function JobsPage() {
@@ -17,7 +16,6 @@ export default function JobsPage() {
     selectedJobId,
     activeJob,
     jobApplications,
-    featuredCandidate,
     candidateViewMode,
     setCandidateViewMode,
     handleSelectJob,
@@ -77,52 +75,27 @@ export default function JobsPage() {
               onTabChange={setCandidateViewMode}
             />
 
-            {/* Active Tab Content */}
+            {/* Active Tab Content (Full Width Layout) */}
             {candidateViewMode === 'compare' ? (
               <CandidateComparator
                 applications={jobApplications}
                 onClose={() => setCandidateViewMode('table')}
               />
+            ) : candidateViewMode === 'table' ? (
+              <CandidateTable
+                applications={jobApplications}
+                onSelectCandidate={handleSelectCandidate}
+                onReprocessCv={handleReprocessCv}
+                onOpenUploadModal={() => setIsUploadModalOpen(true)}
+                onDeleteCandidate={(app) => setDeletingApplication(app)}
+              />
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-2">
-                  {candidateViewMode === 'table' ? (
-                    <CandidateTable
-                      applications={jobApplications}
-                      onSelectCandidate={handleSelectCandidate}
-                      onReprocessCv={handleReprocessCv}
-                      onOpenUploadModal={() => setIsUploadModalOpen(true)}
-                      onDeleteCandidate={(app) => setDeletingApplication(app)}
-                    />
-                  ) : (
-                    <KanbanBoard
-                      applications={jobApplications}
-                      onSelectCandidate={handleSelectCandidate}
-                      onUpdateStatus={handleStatusChange}
-                      onDeleteCandidate={(app) => setDeletingApplication(app)}
-                    />
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-3 px-1">
-                    <h2 className="text-h2 font-bold text-ink-default">Penjelasan Skor AI</h2>
-                    {featuredCandidate && (
-                      <span className="text-xs font-bold text-brand-accent truncate max-w-[140px]">
-                        {featuredCandidate.candidate_name}
-                      </span>
-                    )}
-                  </div>
-
-                  {featuredCandidate ? (
-                    <ScoreBreakdownCard score={featuredCandidate.score_breakdown} />
-                  ) : (
-                    <Card className="text-center text-ink-subtle text-xs py-8">
-                      Belum ada kandidat pada lowongan ini.
-                    </Card>
-                  )}
-                </div>
-              </div>
+              <KanbanBoard
+                applications={jobApplications}
+                onSelectCandidate={handleSelectCandidate}
+                onUpdateStatus={handleStatusChange}
+                onDeleteCandidate={(app) => setDeletingApplication(app)}
+              />
             )}
           </div>
         </div>

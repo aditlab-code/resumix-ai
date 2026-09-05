@@ -115,7 +115,9 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
               <Select
                 value={application.status}
                 onChange={(e) => onStatusChange(application.id, e.target.value as ApplicationStatus)}
-                className="w-auto py-1.5 text-xs font-bold uppercase tracking-wider cursor-pointer"
+                sizeVariant="sm"
+                containerClassName="w-auto"
+                className="font-bold uppercase tracking-wider cursor-pointer"
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>

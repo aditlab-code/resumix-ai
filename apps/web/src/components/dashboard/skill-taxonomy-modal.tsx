@@ -432,7 +432,8 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                 <Select
                   value={activeCategoryFilter}
                   onChange={(e) => setActiveCategoryFilter(e.target.value)}
-                  className="text-xs font-semibold"
+                  sizeVariant="sm"
+                  className="font-semibold"
                 >
                   <option value="all">Filter: Semua Rumpun ({taxonomies.length})</option>
                   {categories.map((cat) => {

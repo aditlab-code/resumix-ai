@@ -5,6 +5,8 @@ import { Search, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from './input';
 
+import { Select, SelectProps } from './field';
+
 export const Toolbar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   children,
@@ -37,23 +39,20 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   </div>
 );
 
-export const FilterSelect = React.forwardRef<
-  HTMLSelectElement,
-  React.SelectHTMLAttributes<HTMLSelectElement>
->(({ className, children, ...props }, ref) => (
-  <div className="relative inline-flex items-center shrink-0">
-    <select
+export type FilterSelectProps = SelectProps;
+
+export const FilterSelect = React.forwardRef<HTMLSelectElement, FilterSelectProps>(
+  ({ className, containerClassName, sizeVariant = 'sm', children, ...props }, ref) => (
+    <Select
       ref={ref}
-      className={cn(
-        'flex h-9 w-full rounded-md border border-input bg-background pl-3 pr-8 py-1 text-xs font-semibold text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer appearance-none',
-        className
-      )}
+      sizeVariant={sizeVariant}
+      containerClassName={cn('inline-flex w-auto shrink-0', containerClassName)}
+      className={cn('bg-background font-semibold', className)}
       {...props}
     >
       {children}
-    </select>
-    <ChevronDown className="h-3.5 w-3.5 absolute right-2.5 opacity-50 pointer-events-none text-foreground shrink-0" />
-  </div>
-));
+    </Select>
+  )
+);
 FilterSelect.displayName = 'FilterSelect';
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { CandidateApplication } from '@/lib/types';
 import { ApplicationStatus } from '@cv-ats/contracts';
 import { Clock, GraduationCap, Trash2, Sparkles } from 'lucide-react';
+import { Select } from '@/components/ui';
 
 interface KanbanBoardProps {
   applications: CandidateApplication[];
@@ -162,17 +163,19 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                         className="flex items-center justify-between pt-2.5 border-t border-border text-xs"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <select
+                        <Select
                           value={app.status}
                           onChange={(e) => onUpdateStatus(app.id, e.target.value as ApplicationStatus)}
-                          className="bg-background text-foreground font-medium text-xs rounded-md border border-input px-2.5 py-1 focus:ring-1 focus:ring-ring cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:0.875rem_0.875rem] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                          sizeVariant="sm"
+                          containerClassName="w-auto"
+                          className="font-semibold uppercase tracking-wider text-[11px]"
                         >
-                          <option value="applied">Applied</option>
-                          <option value="screening">Screening</option>
-                          <option value="interview">Interview</option>
-                          <option value="hired">Hired</option>
-                          <option value="rejected">Rejected</option>
-                        </select>
+                          <option value="applied">APPLIED</option>
+                          <option value="screening">SCREENING</option>
+                          <option value="interview">INTERVIEW</option>
+                          <option value="hired">HIRED</option>
+                          <option value="rejected">REJECTED</option>
+                        </Select>
 
                         {onDeleteCandidate && (
                           <button
