@@ -14,11 +14,11 @@ const badgeVariants = cva(
         secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'text-foreground border-border',
-        success: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 border-emerald-500/35 font-bold',
-        warning: 'bg-amber-500/15 text-amber-900 dark:text-amber-200 border-amber-500/35 font-bold',
-        danger: 'bg-rose-500/15 text-rose-800 dark:text-rose-200 border-rose-500/35 font-bold',
-        accent: 'bg-blue-500/15 text-blue-800 dark:text-blue-200 border-blue-500/35 font-bold',
-        neutral: 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-300 dark:border-slate-700 font-bold',
+        success: 'bg-emerald-500/15 text-emerald-800 border-emerald-500/35 font-bold',
+        warning: 'bg-amber-500/15 text-amber-900 border-amber-500/35 font-bold',
+        danger: 'bg-rose-500/15 text-rose-800 border-rose-500/35 font-bold',
+        accent: 'bg-blue-500/15 text-blue-800 border-blue-500/35 font-bold',
+        neutral: 'bg-slate-200 text-slate-900 border-slate-300 font-bold',
       },
     },
     defaultVariants: {
@@ -41,11 +41,11 @@ export type StatusType = ApplicationStatus | ParseStatus;
 type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
 
 const toneClass: Record<Tone, string> = {
-  neutral: 'bg-slate-500/15 text-slate-800 dark:text-slate-200 border-slate-500/30 font-extrabold',
-  accent: 'bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/35 font-extrabold',
-  ok: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/35 font-extrabold',
-  warn: 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/35 font-extrabold',
-  danger: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/35 font-extrabold',
+  neutral: 'bg-slate-500/15 text-slate-800 border-slate-500/30 font-extrabold',
+  accent: 'bg-blue-500/15 text-blue-700 border-blue-500/35 font-extrabold',
+  ok: 'bg-emerald-500/15 text-emerald-700 border-emerald-500/35 font-extrabold',
+  warn: 'bg-amber-500/15 text-amber-800 border-amber-500/35 font-extrabold',
+  danger: 'bg-rose-500/15 text-rose-700 border-rose-500/35 font-extrabold',
 };
 
 const statusMap: Record<StatusType, { label: string; tone: Tone }> = {

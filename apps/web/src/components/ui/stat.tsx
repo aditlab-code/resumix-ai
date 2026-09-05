@@ -18,23 +18,23 @@ const variantStyles: Record<
   { card: string; title: string; hint: string }
 > = {
   blue: {
-    card: 'bg-blue-100/80 dark:bg-blue-950/60 border-blue-300 dark:border-blue-800 hover:border-blue-500 shadow-xs',
-    title: 'text-blue-950 dark:text-blue-200 font-extrabold',
+    card: 'bg-blue-100/80 border-blue-300 hover:border-blue-500 shadow-xs',
+    title: 'text-blue-950 font-extrabold',
     hint: 'bg-blue-600 text-white font-bold border-blue-700',
   },
   indigo: {
-    card: 'bg-indigo-100/80 dark:bg-indigo-950/60 border-indigo-300 dark:border-indigo-800 hover:border-indigo-500 shadow-xs',
-    title: 'text-indigo-950 dark:text-indigo-200 font-extrabold',
+    card: 'bg-indigo-100/80 border-indigo-300 hover:border-indigo-500 shadow-xs',
+    title: 'text-indigo-950 font-extrabold',
     hint: 'bg-indigo-600 text-white font-bold border-indigo-700',
   },
   amber: {
-    card: 'bg-amber-100/80 dark:bg-amber-950/60 border-amber-300 dark:border-amber-800 hover:border-amber-500 shadow-xs',
-    title: 'text-amber-950 dark:text-amber-200 font-extrabold',
+    card: 'bg-amber-100/80 border-amber-300 hover:border-amber-500 shadow-xs',
+    title: 'text-amber-950 font-extrabold',
     hint: 'bg-amber-600 text-white font-bold border-amber-700',
   },
   red: {
-    card: 'bg-rose-100/80 dark:bg-rose-950/60 border-rose-300 dark:border-rose-800 hover:border-rose-500 shadow-xs',
-    title: 'text-rose-950 dark:text-rose-200 font-extrabold',
+    card: 'bg-rose-100/80 border-rose-300 hover:border-rose-500 shadow-xs',
+    title: 'text-rose-950 font-extrabold',
     hint: 'bg-rose-600 text-white font-bold border-rose-700',
   },
   default: {

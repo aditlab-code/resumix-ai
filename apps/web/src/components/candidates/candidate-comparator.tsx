@@ -141,14 +141,14 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
 
                 <div className="flex items-center justify-between bg-muted/20 p-2 rounded border border-border">
                   <span className="text-muted-foreground">Mandatory Skills (30%)</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                  <span className="text-emerald-600 font-bold">
                     {((breakdown.mandatory_skill_score || 0) * 100).toFixed(0)}%
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between bg-muted/20 p-2 rounded border border-border">
                   <span className="text-muted-foreground">Experience Score (20%)</span>
-                  <span className="text-amber-600 dark:text-amber-400 font-bold">
+                  <span className="text-amber-600 font-bold">
                     {((breakdown.experience_score || 0) * 100).toFixed(0)}%
                   </span>
                 </div>
@@ -168,9 +168,9 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
                   {(breakdown.matched_skills || candidateSkills).map((skill: string, idx: number) => (
                     <span
                       key={idx}
-                      className="px-2.5 py-1 rounded-md text-[11px] bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border border-emerald-500/35 flex items-center gap-1 font-bold shadow-2xs"
+                      className="px-2.5 py-1 rounded-md text-[11px] bg-emerald-500/15 text-emerald-900 border border-emerald-500/35 flex items-center gap-1 font-bold shadow-2xs"
                     >
-                      <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> {skill}
+                      <Check className="w-3 h-3 text-emerald-600" /> {skill}
                     </span>
                   ))}
                 </div>
@@ -182,9 +182,9 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
                       {breakdown.missing_mandatory_skills.map((skill: string, idx: number) => (
                         <span
                           key={idx}
-                          className="px-2.5 py-1 rounded-md text-[11px] bg-rose-500/15 text-rose-900 dark:text-rose-200 border border-rose-500/35 flex items-center gap-1 font-mono font-bold shadow-2xs"
+                          className="px-2.5 py-1 rounded-md text-[11px] bg-rose-500/15 text-rose-900 border border-rose-500/35 flex items-center gap-1 font-mono font-bold shadow-2xs"
                         >
-                          <X className="w-3 h-3 text-rose-600 dark:text-rose-400" /> {skill}
+                          <X className="w-3 h-3 text-rose-600" /> {skill}
                         </span>
                       ))}
                     </div>

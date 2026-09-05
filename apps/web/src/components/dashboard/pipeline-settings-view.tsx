@@ -517,7 +517,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
             <div className="p-4 rounded-xl border flex items-center justify-between bg-muted/40 border-border">
               <span className="font-bold text-sm text-foreground">Total Akumulasi Bobot:</span>
-              <span className={cn('text-xl font-extrabold tabular-nums', weightValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive')}>
+              <span className={cn('text-xl font-extrabold tabular-nums', weightValid ? 'text-emerald-600' : 'text-destructive')}>
                 {totalWeight}% {weightValid ? '(Sesuai Spec 100%)' : '(Wajib 100%)'}
               </span>
             </div>

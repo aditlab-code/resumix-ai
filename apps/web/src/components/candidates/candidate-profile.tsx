@@ -23,14 +23,14 @@ interface CandidateProfileProps {
 }
 
 const SKILL_COLOR_PALETTES = [
-  { bg: 'bg-blue-500/15', text: 'text-blue-900 dark:text-blue-100', border: 'border-blue-500/35', badge: 'bg-blue-600 text-white' },
-  { bg: 'bg-indigo-500/15', text: 'text-indigo-900 dark:text-indigo-100', border: 'border-indigo-500/35', badge: 'bg-indigo-600 text-white' },
-  { bg: 'bg-purple-500/15', text: 'text-purple-900 dark:text-purple-100', border: 'border-purple-500/35', badge: 'bg-purple-600 text-white' },
-  { bg: 'bg-cyan-500/15', text: 'text-cyan-950 dark:text-cyan-100', border: 'border-cyan-500/35', badge: 'bg-cyan-600 text-white' },
-  { bg: 'bg-emerald-500/15', text: 'text-emerald-950 dark:text-emerald-100', border: 'border-emerald-500/35', badge: 'bg-emerald-600 text-white' },
-  { bg: 'bg-teal-500/15', text: 'text-teal-950 dark:text-teal-100', border: 'border-teal-500/35', badge: 'bg-teal-600 text-white' },
-  { bg: 'bg-amber-500/15', text: 'text-amber-950 dark:text-amber-100', border: 'border-amber-500/35', badge: 'bg-amber-600 text-white' },
-  { bg: 'bg-rose-500/15', text: 'text-rose-950 dark:text-rose-100', border: 'border-rose-500/35', badge: 'bg-rose-600 text-white' },
+  { bg: 'bg-blue-500/15', text: 'text-blue-900', border: 'border-blue-500/35', badge: 'bg-blue-600 text-white' },
+  { bg: 'bg-indigo-500/15', text: 'text-indigo-900', border: 'border-indigo-500/35', badge: 'bg-indigo-600 text-white' },
+  { bg: 'bg-purple-500/15', text: 'text-purple-900', border: 'border-purple-500/35', badge: 'bg-purple-600 text-white' },
+  { bg: 'bg-cyan-500/15', text: 'text-cyan-950', border: 'border-cyan-500/35', badge: 'bg-cyan-600 text-white' },
+  { bg: 'bg-emerald-500/15', text: 'text-emerald-950', border: 'border-emerald-500/35', badge: 'bg-emerald-600 text-white' },
+  { bg: 'bg-teal-500/15', text: 'text-teal-950', border: 'border-teal-500/35', badge: 'bg-teal-600 text-white' },
+  { bg: 'bg-amber-500/15', text: 'text-amber-950', border: 'border-amber-500/35', badge: 'bg-amber-600 text-white' },
+  { bg: 'bg-rose-500/15', text: 'text-rose-950', border: 'border-rose-500/35', badge: 'bg-rose-600 text-white' },
 ];
 
 const getSkillPalette = (skillName: string, category?: string) => {
@@ -117,7 +117,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                       <p className="text-xs text-primary font-semibold mt-0.5">{displaySubTitle}</p>
                     )}
                   </div>
-                  <span className="text-[10px] text-blue-700 dark:text-blue-300 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
+                  <span className="text-[10px] text-blue-700 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
                     {exp.start_date || '?'} — {exp.is_current ? 'Present' : exp.end_date || '?'} (
                     {exp.duration_months || 0} bln)
                   </span>
@@ -137,7 +137,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                       {exp.technologies.map((tech, tIdx) => (
                         <span
                           key={tIdx}
-                          className="px-2 py-0.5 bg-teal-500/15 text-teal-800 dark:text-teal-200 border border-teal-500/35 text-[11px] font-bold rounded-md"
+                          className="px-2 py-0.5 bg-teal-500/15 text-teal-800 border border-teal-500/35 text-[11px] font-bold rounded-md"
                         >
                           {tech}
                         </span>
@@ -150,13 +150,13 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                 {exp.projects && exp.projects.length > 0 && (
                   <div className="pt-2 border-t border-border/60 space-y-1.5">
                     <span className="text-[10px] font-extrabold text-muted-foreground flex items-center gap-1 uppercase tracking-wider">
-                      <FolderGit2 className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" /> Proyek Kunci
+                      <FolderGit2 className="w-3.5 h-3.5 text-purple-600" /> Proyek Kunci
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {exp.projects.map((proj, pIdx) => (
                         <span
                           key={pIdx}
-                          className="px-2.5 py-0.5 bg-purple-500/15 text-purple-800 dark:text-purple-200 border border-purple-500/35 text-[11px] font-bold rounded-md"
+                          className="px-2.5 py-0.5 bg-purple-500/15 text-purple-800 border border-purple-500/35 text-[11px] font-bold rounded-md"
                         >
                           {proj}
                         </span>
@@ -198,7 +198,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                     )}
                   </div>
                   {(edu.start_year || edu.end_year) && (
-                    <span className="text-[10px] text-blue-700 dark:text-blue-300 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
+                    <span className="text-[10px] text-blue-700 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
                       {edu.start_year || '?'} — {edu.end_year || '?'}
                     </span>
                   )}
@@ -221,8 +221,8 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
           </SectionLabel>
           <div className="space-y-1.5">
             {extraction.certifications.map((c, i) => (
-              <div key={i} className="text-xs text-indigo-950 dark:text-indigo-100 bg-indigo-500/15 border border-indigo-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2">
-                <Award className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <div key={i} className="text-xs text-indigo-950 bg-indigo-500/15 border border-indigo-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2">
+                <Award className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                 <span>{c}</span>
               </div>
             ))}
@@ -237,8 +237,8 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
           </SectionLabel>
           <div className="space-y-1.5">
             {extraction.projects.map((p, i) => (
-              <div key={i} className="text-xs text-purple-950 dark:text-purple-100 bg-purple-500/15 border border-purple-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2">
-                <Code className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+              <div key={i} className="text-xs text-purple-950 bg-purple-500/15 border border-purple-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2">
+                <Code className="w-3.5 h-3.5 text-purple-600 shrink-0" />
                 <span>{p}</span>
               </div>
             ))}
@@ -260,13 +260,13 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
               href={pf.url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-sky-950 dark:text-sky-100 bg-sky-500/15 border border-sky-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center justify-between gap-2 hover:bg-sky-500/25 transition-colors"
+              className="text-xs text-sky-950 bg-sky-500/15 border border-sky-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center justify-between gap-2 hover:bg-sky-500/25 transition-colors"
             >
               <div className="flex items-center gap-2 truncate">
-                <Globe className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
+                <Globe className="w-3.5 h-3.5 text-sky-600 shrink-0" />
                 <span className="truncate">{pf.title}</span>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
+              <ExternalLink className="w-3.5 h-3.5 text-sky-600 shrink-0" />
             </a>
           ))}
         </div>
@@ -283,12 +283,12 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
           {extraction.references.map((rf, i) => (
             <div
               key={i}
-              className="text-xs text-emerald-950 dark:text-emerald-100 bg-emerald-500/15 border border-emerald-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2"
+              className="text-xs text-emerald-950 bg-emerald-500/15 border border-emerald-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2"
             >
-              <UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               <div>
                 <span className="block font-bold">{rf.name}</span>
-                {rf.role && <span className="block text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">{rf.role} {rf.company ? `(${rf.company})` : ''}</span>}
+                {rf.role && <span className="block text-[11px] text-emerald-700 font-semibold">{rf.role} {rf.company ? `(${rf.company})` : ''}</span>}
               </div>
             </div>
           ))}
@@ -298,9 +298,9 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
 
     {/* Catatan AI Extraction */}
     {extraction.extraction_warnings && extraction.extraction_warnings.length > 0 && (
-      <div className="p-4 bg-amber-500/15 border border-amber-500/35 text-amber-900 dark:text-amber-100 rounded-xl text-xs space-y-2 font-medium">
-        <h4 className="flex items-center gap-2 font-bold text-amber-900 dark:text-amber-100 uppercase tracking-wider text-[11px]">
-          <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+      <div className="p-4 bg-amber-500/15 border border-amber-500/35 text-amber-900 rounded-xl text-xs space-y-2 font-medium">
+        <h4 className="flex items-center gap-2 font-bold text-amber-900 uppercase tracking-wider text-[11px]">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
           Catatan AI Extraction ({extraction.extraction_warnings.length})
         </h4>
         <ul className="list-disc list-inside space-y-1 text-xs">

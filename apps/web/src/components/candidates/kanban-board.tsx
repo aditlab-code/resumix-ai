@@ -22,36 +22,36 @@ const COLUMNS: {
   {
     status: 'applied',
     title: 'Applied',
-    bgPalette: 'bg-blue-100/80 dark:bg-blue-950/50 border-blue-300 dark:border-blue-800/80',
-    headerText: 'text-blue-950 dark:text-blue-200 font-extrabold',
+    bgPalette: 'bg-blue-100/80 border-blue-300',
+    headerText: 'text-blue-950 font-extrabold',
     headerBadge: 'bg-blue-600 text-white border-blue-700',
   },
   {
     status: 'screening',
     title: 'Screening',
-    bgPalette: 'bg-purple-100/80 dark:bg-purple-950/50 border-purple-300 dark:border-purple-800/80',
-    headerText: 'text-purple-950 dark:text-purple-200 font-extrabold',
+    bgPalette: 'bg-purple-100/80 border-purple-300',
+    headerText: 'text-purple-950 font-extrabold',
     headerBadge: 'bg-purple-600 text-white border-purple-700',
   },
   {
     status: 'interview',
     title: 'Interview',
-    bgPalette: 'bg-amber-100/80 dark:bg-amber-950/50 border-amber-300 dark:border-amber-800/80',
-    headerText: 'text-amber-950 dark:text-amber-200 font-extrabold',
-    headerBadge: 'bg-amber-600 text-white border-amber-700',
+    bgPalette: 'bg-amber-100/80 border-amber-300',
+    headerText: 'text-amber-950 font-extrabold',
+    headerBadge: 'bg-amber-600 text-white border-purple-700',
   },
   {
     status: 'hired',
     title: 'Hired',
-    bgPalette: 'bg-emerald-100/80 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-800/80',
-    headerText: 'text-emerald-950 dark:text-emerald-200 font-extrabold',
+    bgPalette: 'bg-emerald-100/80 border-emerald-300',
+    headerText: 'text-emerald-950 font-extrabold',
     headerBadge: 'bg-emerald-600 text-white border-emerald-700',
   },
   {
     status: 'rejected',
     title: 'Rejected',
-    bgPalette: 'bg-rose-100/80 dark:bg-rose-950/50 border-rose-300 dark:border-rose-800/80',
-    headerText: 'text-rose-950 dark:text-rose-200 font-extrabold',
+    bgPalette: 'bg-rose-100/80 border-rose-300',
+    headerText: 'text-rose-950 font-extrabold',
     headerBadge: 'bg-rose-600 text-white border-rose-700',
   },
 ];
@@ -63,8 +63,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onDeleteCandidate,
 }) => {
   const getScoreBadgeClass = (score: number) => {
-    if (score >= 80) return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30';
-    if (score >= 60) return 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30';
+    if (score >= 80) return 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30';
+    if (score >= 60) return 'bg-amber-500/10 text-amber-700 border-amber-500/30';
     return 'bg-destructive/10 text-destructive border-destructive/30';
   };
 
@@ -145,13 +145,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                         {candidateSkills.slice(0, 3).map((skill: string, idx: number) => (
                           <span
                             key={idx}
-                            className="text-[11px] px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-900 dark:text-blue-200 border border-blue-500/35 font-bold shadow-2xs"
+                            className="text-[11px] px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-900 border border-blue-500/35 font-bold shadow-2xs"
                           >
                             {skill}
                           </span>
                         ))}
                         {candidateSkills.length > 3 && (
-                          <span className="text-[11px] px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-900 dark:text-indigo-200 border border-indigo-500/35 font-extrabold shadow-2xs">
+                          <span className="text-[11px] px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-900 border border-indigo-500/35 font-extrabold shadow-2xs">
                             +{candidateSkills.length - 3}
                           </span>
                         )}

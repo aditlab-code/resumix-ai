@@ -45,9 +45,9 @@ const getRecommendationText = (score: number) => {
 };
 
 const getRecommendationBadgeClass = (score: number) => {
-  if (score >= 80) return 'bg-emerald-500/20 text-emerald-900 dark:text-emerald-100 border border-emerald-500/40 font-black shadow-2xs';
-  if (score >= 60) return 'bg-amber-500/20 text-amber-950 dark:text-amber-100 border border-amber-500/40 font-black shadow-2xs';
-  return 'bg-rose-500/20 text-rose-950 dark:text-rose-100 border border-rose-500/40 font-black shadow-2xs';
+  if (score >= 80) return 'bg-emerald-500/20 text-emerald-900 border border-emerald-500/40 font-black shadow-2xs';
+  if (score >= 60) return 'bg-amber-500/20 text-amber-950 border border-amber-500/40 font-black shadow-2xs';
+  return 'bg-rose-500/20 text-rose-950 border border-rose-500/40 font-black shadow-2xs';
 };
 
 export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
@@ -197,11 +197,11 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
                   )}`}
                 >
                   {application.job_fit_score >= 80 ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   ) : application.job_fit_score >= 60 ? (
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                   ) : (
-                    <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
+                    <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
                   )}
                   {getRecommendationText(application.job_fit_score)}
                 </span>
