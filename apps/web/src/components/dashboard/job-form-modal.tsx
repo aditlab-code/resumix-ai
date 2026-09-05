@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { JobPosting } from '@/lib/types';
-import { Overlay, Field, Input, Textarea, Button } from '@/components/ui';
+import { Overlay, Field, Input, Textarea, Button, Tabs } from '@/components/ui';
 
 import { importLinkedInJob } from '@/lib/api-client';
-import { Sparkles, Loader2, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface JobFormModalProps {
   mode: 'create' | 'edit';
@@ -156,140 +156,133 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       size="lg"
-      title={mode === 'edit' ? 'Edit lowongan' : 'Lowongan baru'}
+      title={
+        <div>
+          <h3 className="text-base font-bold text-foreground">
+            {mode === 'edit' ? 'Edit Posisi Lowongan' : 'Tambah Lowongan Baru'}
+          </h3>
+          <p className="text-xs font-normal text-muted-foreground mt-0.5">
+            {mode === 'edit' ? 'Perbarui kualifikasi & kriteria Job-Fit' : 'Terbitkan lowongan kerja dan kriteria Job-Fit score'}
+          </p>
+        </div>
+      }
+      subheader={
+        mode === 'create' ? (
+          <Tabs
+            items={[
+              { key: 'manual', label: 'Input Manual' },
+              { key: 'linkedin', label: 'Import AI (LinkedIn / Glints)' },
+            ]}
+            active={activeTab}
+            onChange={(k) => setActiveTab(k as 'manual' | 'linkedin')}
+            className="w-full justify-start"
+          />
+        ) : undefined
+      }
       footer={
-        <>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+        <div className="flex items-center justify-end gap-4 sm:gap-4 w-full">
+          <Button variant="ghost" size="md" onClick={onClose} className="px-6">
             Batal
           </Button>
           {activeTab === 'manual' ? (
-            <Button size="sm" type="submit" form="job-form">
-              {mode === 'edit' ? 'Simpan' : 'Terbitkan'}
+            <Button size="md" type="submit" form="job-form" className="px-6">
+              {mode === 'edit' ? 'Simpan Perubahan' : 'Terbitkan Lowongan'}
             </Button>
           ) : (
             <Button
-              size="sm"
+              size="md"
               onClick={handleLinkedInImport}
               disabled={isImporting || !rawLinkedInText.trim()}
-              iconLeft={isImporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              className="px-6"
+              iconLeft={isImporting ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
             >
               {isImporting ? 'Mengekstrak AI...' : 'Auto-Ekstrak & Embedding'}
             </Button>
           )}
-        </>
+        </div>
       }
     >
-      {mode === 'create' && (
-        <div className="flex border-b border-line mb-4">
-          <button
-            type="button"
-            onClick={() => setActiveTab('manual')}
-            className={`px-4 py-2 text-xs font-bold border-b-2 transition-colors flex items-center gap-1.5 ${
-              activeTab === 'manual'
-                ? 'border-accent text-accent'
-                : 'border-transparent text-ink-muted hover:text-ink'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            Input Manual
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('linkedin')}
-            className={`px-4 py-2 text-xs font-bold border-b-2 transition-colors flex items-center gap-1.5 ${
-              activeTab === 'linkedin'
-                ? 'border-accent text-accent'
-                : 'border-transparent text-ink-muted hover:text-ink'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-accent" />
-            Import dari LinkedIn / Glints (AI Auto)
-          </button>
-        </div>
-      )}
+      <div className="space-y-4">
+        {importStatus && (
+          <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-medium">
+            {importStatus}
+          </div>
+        )}
 
-      {importStatus && (
-        <div className="mb-3 p-3 bg-accent-soft text-accent rounded text-xs flex items-center gap-2 font-medium">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
-          {importStatus}
-        </div>
-      )}
+        {importError && (
+          <div className="p-3.5 bg-destructive/10 border border-destructive/20 text-destructive rounded-xl text-xs font-medium">
+            {importError}
+          </div>
+        )}
 
-      {importError && (
-        <div className="mb-3 p-3 bg-danger-soft text-danger rounded text-xs flex items-center gap-2 font-medium">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          {importError}
-        </div>
-      )}
-
-      {activeTab === 'linkedin' && mode === 'create' ? (
-        <div className="space-y-3">
-          <Field
-            label="Tempelkan Teks Deskripsi Lowongan (LinkedIn / Glints / JobStreet)"
-            required
-            hint="Groq LLM akan mengekstrak judul, skill wajib, dan membuat 384-dim job_embedding secara otomatis."
-          >
-            <Textarea
-              rows={8}
-              value={rawLinkedInText}
-              onChange={(e) => setRawLinkedInText(e.target.value)}
-              placeholder="We are looking for a Senior Backend Engineer. Minimum 3 years of experience. Must master Python, PostgreSQL, and Docker..."
-              className="font-mono text-xs"
-            />
-
-          </Field>
-        </div>
-      ) : (
-        <form id="job-form" onSubmit={handleSubmit} className="space-y-3">
-          <Field label="Judul posisi" required>
-            <Input
+        {activeTab === 'linkedin' && mode === 'create' ? (
+          <div className="space-y-4">
+            <Field
+              label="Tempelkan Teks Deskripsi Lowongan (LinkedIn / Glints / JobStreet)"
               required
-              value={form.title}
-              onChange={(e) => set('title', e.target.value)}
-              placeholder="Senior Python Backend Developer"
-            />
-          </Field>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Departemen">
-              <Input value={form.department} onChange={(e) => set('department', e.target.value)} />
-            </Field>
-            <Field label="Lokasi & skema">
-              <Input value={form.location} onChange={(e) => set('location', e.target.value)} />
+              hint="Groq LLM akan mengekstrak judul, skill wajib, dan membuat 384-dim job_embedding secara otomatis."
+            >
+              <Textarea
+                rows={8}
+                value={rawLinkedInText}
+                onChange={(e) => setRawLinkedInText(e.target.value)}
+                placeholder="We are looking for a Senior Backend Engineer. Minimum 3 years of experience. Must master Python, PostgreSQL, and Docker..."
+                className="font-mono text-xs leading-relaxed"
+              />
             </Field>
           </div>
+        ) : (
+          <form id="job-form" onSubmit={handleSubmit} className="space-y-4">
+            <Field label="Judul Posisi Lowongan" required>
+              <Input
+                required
+                value={form.title}
+                onChange={(e) => set('title', e.target.value)}
+                placeholder="Senior Python Backend Developer"
+              />
+            </Field>
 
-          <Field label="Minimum pengalaman (bulan)" required>
-            <Input
-              type="number"
-              required
-              min={0}
-              value={form.minExpMonths}
-              onChange={(e) => set('minExpMonths', Number(e.target.value))}
-              className="font-mono"
-            />
-          </Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <Field label="Departemen">
+                <Input value={form.department} onChange={(e) => set('department', e.target.value)} />
+              </Field>
+              <Field label="Lokasi & Skema Kerja">
+                <Input value={form.location} onChange={(e) => set('location', e.target.value)} />
+              </Field>
+            </div>
 
-          <Field label="Skill wajib" required hint="Dipisahkan koma. Bobot 30% pada formula Job-Fit.">
-            <Input
-              required
-              value={form.mandatory}
-              onChange={(e) => set('mandatory', e.target.value)}
-              placeholder="Python, PostgreSQL, Docker"
-              className="font-mono"
-            />
-          </Field>
+            <Field label="Minimum Pengalaman Kerja (Bulan)" required hint="Digunakan untuk scoring pengalaman $S_{exp}$. Contoh: 24 bulan = 2 tahun.">
+              <Input
+                type="number"
+                required
+                min={0}
+                value={form.minExpMonths}
+                onChange={(e) => set('minExpMonths', Number(e.target.value))}
+                className="font-mono"
+              />
+            </Field>
 
-          <Field label="Skill tambahan" hint="Dipisahkan koma.">
-            <Input
-              value={form.preferred}
-              onChange={(e) => set('preferred', e.target.value)}
-              placeholder="Redis, FastAPI, Kubernetes"
-              className="font-mono"
-            />
-          </Field>
-        </form>
-      )}
+            <Field label="Skill Wajib (Mandatory)" required hint="Dipisahkan koma. Memiliki bobot 30% pada formula Job-Fit.">
+              <Input
+                required
+                value={form.mandatory}
+                onChange={(e) => set('mandatory', e.target.value)}
+                placeholder="Python, PostgreSQL, Docker"
+                className="font-mono"
+              />
+            </Field>
+
+            <Field label="Skill Tambahan (Preferred)" hint="Dipisahkan koma. Memiliki bobot 5% pada formula Job-Fit.">
+              <Input
+                value={form.preferred}
+                onChange={(e) => set('preferred', e.target.value)}
+                placeholder="Redis, FastAPI, Kubernetes"
+                className="font-mono"
+              />
+            </Field>
+          </form>
+        )}
+      </div>
     </Overlay>
   );
 };

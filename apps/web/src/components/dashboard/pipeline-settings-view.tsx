@@ -621,11 +621,11 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               />
             </Field>
 
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setEditingItem(null)}>
+            <DialogFooter className="pt-4 gap-4 sm:gap-4">
+              <Button type="button" variant="outline" size="md" onClick={() => setEditingItem(null)} className="px-5">
                 Batal
               </Button>
-              <Button type="submit" variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
+              <Button type="submit" variant="primary" size="md" className="px-6" iconLeft={<Save className="w-4 h-4 text-white" />}>
                 Simpan Perubahan
               </Button>
             </DialogFooter>

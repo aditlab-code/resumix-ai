@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Plus, Upload, Trash2, Search, FileCode, Check, X, Tag } from 'lucide-react';
-import { Overlay, Button, Field, Input, Select, Card } from '@/components/ui';
+import { Trash2, Search, Check, X } from 'lucide-react';
+import { Overlay, Button, Field, Input, Select, Tabs } from '@/components/ui';
 
 interface SkillTaxonomyItem {
   id: string;
@@ -41,6 +41,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
   const [categories, setCategories] = useState<string[]>(DEFAULT_CATEGORIES);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState<'manage' | 'add' | 'upload'>('manage');
 
   // Form State
   const [canonicalName, setCanonicalName] = useState('');
@@ -102,17 +103,15 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
   };
 
   const handleConfirmAddNewCategory = () => {
-    const slug = newCategoryName.toLowerCase().trim().replace(/\s+/g, '_');
-    if (!slug) return;
-
-    if (!categories.includes(slug)) {
-      const updatedCats = [...categories, slug];
+    if (!newCategoryName.trim()) return;
+    const cleanCat = newCategoryName.toLowerCase().trim().replace(/\s+/g, '_');
+    if (!categories.includes(cleanCat)) {
+      const updatedCats = [...categories, cleanCat];
       saveCategories(updatedCats);
-      onAddToast('success', 'Kategori Ditambahkan', `Kategori baru "${formatCategoryLabel(slug)}" berhasil dibuat.`);
-      onAddAuditLog('CREATE_TAXONOMY_CATEGORY', 'taxonomy_categories', slug, `Membuat kategori taksonomi baru: ${slug}`);
+      setCategoryInput(cleanCat);
+      onAddToast('success', 'Kategori Ditambahkan', `Kategori baru "${formatCategoryLabel(cleanCat)}" berhasil dibuat.`);
+      onAddAuditLog('ADD_TAXONOMY_CATEGORY', 'taxonomy_categories', cleanCat, `Menambahkan kategori taksonomi baru: ${cleanCat}`);
     }
-
-    setCategoryInput(slug);
     setIsAddingNewCategory(false);
     setNewCategoryName('');
   };
@@ -127,14 +126,12 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
     const updatedCats = categories.filter((c) => c !== catToDelete);
     saveCategories(updatedCats);
 
-    // Reassign items with deleted category to 'custom'
-    const updatedItems = taxonomies.map((item) =>
-      item.category === catToDelete ? { ...item, category: 'custom' } : item
-    );
-    saveTaxonomies(updatedItems);
+    const updatedTax = taxonomies.map((t) => (t.category === catToDelete ? { ...t, category: 'custom' } : t));
+    saveTaxonomies(updatedTax);
 
-    if (activeCategoryFilter === catToDelete) setActiveCategoryFilter('all');
-    if (categoryInput === catToDelete) setCategoryInput('backend');
+    if (activeCategoryFilter === catToDelete) {
+      setActiveCategoryFilter('all');
+    }
 
     onAddToast('info', 'Kategori Dihapus', `Kategori "${formatCategoryLabel(catToDelete)}" berhasil dihapus.`);
     onAddAuditLog('DELETE_TAXONOMY_CATEGORY', 'taxonomy_categories', catToDelete, `Menghapus kategori taksonomi: ${catToDelete}`);
@@ -142,40 +139,48 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
 
   const handleAddTaxonomy = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canonicalName.trim()) return;
-
-    const synList = synonymsInput
-      .split(',')
-      .map((s) => s.trim().toLowerCase())
-      .filter((s) => s.length > 0);
-
-    const targetCategory = isAddingNewCategory && newCategoryName.trim()
-      ? newCategoryName.toLowerCase().trim().replace(/\s+/g, '_')
-      : categoryInput;
-
-    if (isAddingNewCategory && targetCategory) {
-      if (!categories.includes(targetCategory)) {
-        saveCategories([...categories, targetCategory]);
-      }
+    if (!canonicalName.trim()) {
+      onAddToast('error', 'Form Tidak Lengkap', 'Nama skill utama (canonical name) wajib diisi.');
+      return;
     }
 
-    const newItem: SkillTaxonomyItem = {
-      id: `tax-${Date.now()}`,
-      canonical_name: canonicalName.trim(),
-      synonyms: synList,
-      category: targetCategory || 'custom',
-    };
+    const synonyms = synonymsInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
 
-    const updated = [newItem, ...taxonomies.filter((t) => t.canonical_name.toLowerCase() !== canonicalName.trim().toLowerCase())];
-    saveTaxonomies(updated);
+    const existingIndex = taxonomies.findIndex(
+      (t) => t.canonical_name.toLowerCase() === canonicalName.trim().toLowerCase()
+    );
 
-    onAddToast('success', 'Taksonomi Skill Ditambahkan', `Skill "${canonicalName}" dengan ${synList.length} sinonim berhasil disimpan.`);
-    onAddAuditLog('REGISTER_SKILL_TAXONOMY', 'skill_taxonomies', newItem.id, `Mendaftarkan sinonim skill: ${canonicalName} -> [${synList.join(', ')}]`);
+    let updatedTax: SkillTaxonomyItem[];
+    if (existingIndex >= 0) {
+      const existing = taxonomies[existingIndex];
+      const mergedSynonyms = Array.from(new Set([...existing.synonyms, ...synonyms]));
+      updatedTax = [...taxonomies];
+      updatedTax[existingIndex] = {
+        ...existing,
+        synonyms: mergedSynonyms,
+        category: categoryInput,
+      };
+      onAddToast('success', 'Taksonomi Diperbarui', `Sinonim untuk "${canonicalName}" telah diperbarui.`);
+      onAddAuditLog('UPDATE_SKILL_TAXONOMY', 'skill_taxonomies', existing.id, `Memperbarui sinonim skill "${canonicalName}": [${mergedSynonyms.join(', ')}]`);
+    } else {
+      const newItem: SkillTaxonomyItem = {
+        id: `tax-${Date.now()}`,
+        canonical_name: canonicalName.trim(),
+        synonyms: synonyms.length > 0 ? synonyms : [canonicalName.trim().toLowerCase()],
+        category: categoryInput,
+      };
+      updatedTax = [newItem, ...taxonomies];
+      onAddToast('success', 'Taksonomi Ditambahkan', `Skill "${canonicalName}" berhasil ditambahkan ke kamus taksonomi.`);
+      onAddAuditLog('ADD_SKILL_TAXONOMY', 'skill_taxonomies', newItem.id, `Menambahkan taksonomi skill baru "${canonicalName}" dengan sinonim: [${newItem.synonyms.join(', ')}]`);
+    }
 
+    saveTaxonomies(updatedTax);
     setCanonicalName('');
     setSynonymsInput('');
-    setIsAddingNewCategory(false);
-    setNewCategoryName('');
+    setActiveTab('manage');
   };
 
   const handleDeleteTaxonomy = (id: string, name: string) => {
@@ -195,57 +200,50 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
     reader.onload = (event) => {
       try {
         const text = event.target?.result as string;
-        let newItems: SkillTaxonomyItem[] = [];
-        const detectedCategories = new Set<string>();
+        let importedItems: SkillTaxonomyItem[] = [];
 
         if (file.name.endsWith('.json')) {
           const parsed = JSON.parse(text);
-          const rawArr = Array.isArray(parsed) ? parsed : [parsed];
-          newItems = rawArr.map((item: any, idx: number) => {
-            const cat = (item.category || 'custom').toLowerCase().trim().replace(/\s+/g, '_');
-            detectedCategories.add(cat);
-            return {
-              id: `tax-upload-${Date.now()}-${idx}`,
+          if (Array.isArray(parsed)) {
+            importedItems = parsed.map((item: any, idx: number) => ({
+              id: item.id || `tax-imp-${Date.now()}-${idx}`,
               canonical_name: item.canonical_name || item.name || 'Unknown',
-              synonyms: Array.isArray(item.synonyms) ? item.synonyms : (item.synonyms || '').split(',').map((s: string) => s.trim()),
+              synonyms: Array.isArray(item.synonyms) ? item.synonyms : [String(item.canonical_name || '').toLowerCase()],
+              category: item.category || 'custom',
+            }));
+          }
+        } else if (file.name.endsWith('.csv')) {
+          const lines = text.split(/\r?\n/).filter((l) => l.trim());
+          importedItems = lines.slice(1).map((line, idx) => {
+            const parts = line.split(';').map((p) => p.trim());
+            const canonical = parts[0] || 'Unknown';
+            const synStr = parts[1] || canonical.toLowerCase();
+            const cat = parts[2] || 'custom';
+            return {
+              id: `tax-csv-${Date.now()}-${idx}`,
+              canonical_name: canonical,
+              synonyms: synStr.split(',').map((s) => s.trim()).filter(Boolean),
               category: cat,
             };
           });
-        } else if (file.name.endsWith('.csv')) {
-          const lines = text.split('\n').filter((l) => l.trim());
-          lines.forEach((line, idx) => {
-            if (idx === 0 && line.toLowerCase().includes('canonical')) return;
-            const parts = line.split(';');
-            if (parts.length >= 2) {
-              const name = parts[0].trim();
-              const syns = parts[1].split(',').map((s) => s.trim()).filter((s) => s);
-              const cat = (parts[2]?.trim() || 'custom').toLowerCase().replace(/\s+/g, '_');
-              if (name) {
-                detectedCategories.add(cat);
-                newItems.push({
-                  id: `tax-upload-${Date.now()}-${idx}`,
-                  canonical_name: name,
-                  synonyms: syns,
-                  category: cat,
-                });
-              }
-            }
-          });
         }
 
-        if (newItems.length > 0) {
-          const mergedItems = [...newItems, ...taxonomies];
-          saveTaxonomies(mergedItems);
+        if (importedItems.length > 0) {
+          const merged = [...taxonomies];
+          let addedCount = 0;
+          importedItems.forEach((imp) => {
+            if (!merged.some((m) => m.canonical_name.toLowerCase() === imp.canonical_name.toLowerCase())) {
+              merged.push(imp);
+              addedCount++;
+            }
+          });
 
-          if (detectedCategories.size > 0) {
-            const mergedCats = Array.from(new Set([...categories, ...Array.from(detectedCategories)]));
-            saveCategories(mergedCats);
-          }
-
-          onAddToast('success', 'Upload Taksonomi Berhasil', `Berhasil mengimpor ${newItems.length} data taksonomi sinonim skill.`);
-          onAddAuditLog('UPLOAD_SKILL_TAXONOMIES', 'skill_taxonomies', file.name, `Mengunggah ${newItems.length} sinonim taksonomi dari file ${file.name}`);
+          saveTaxonomies(merged);
+          onAddToast('success', 'Import Berhasil', `${addedCount} taksonomi sinonim berhasil diimport dari berkas ${file.name}.`);
+          onAddAuditLog('BULK_IMPORT_TAXONOMY', 'skill_taxonomies', `bulk-${Date.now()}`, `Import masal ${addedCount} taksonomi skill dari file: ${file.name}`);
+          setActiveTab('manage');
         } else {
-          onAddToast('error', 'Format Berkas Tidak Sesuai', 'Pastikan berkas JSON atau CSV memiliki kolom canonical_name dan synonyms.');
+          onAddToast('error', 'Format Berkas Rusak', 'Tidak ada data taksonomi valid yang dapat diekstrak.');
         }
       } catch (err) {
         onAddToast('error', 'Gagal Membaca Berkas', 'Berkas JSON/CSV tidak valid atau rusak.');
@@ -280,33 +278,43 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
       onClose={onClose}
       size="3xl"
       title={
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-accent" />
-          <span>Kelola Taksonomi Skill & Sinonim</span>
+        <div>
+          <h3 className="text-base font-bold text-foreground">Taksonomi Skill & Kamus Sinonim</h3>
+          <p className="text-xs font-normal text-muted-foreground mt-0.5">
+            Normalisasi variasi penulisan skill untuk akurasi Mandatory Skill Penalty Engine
+          </p>
         </div>
       }
+      subheader={
+        <Tabs
+          items={[
+            { key: 'manage', label: `Daftar Taksonomi (${taxonomies.length})` },
+            { key: 'add', label: 'Tambah Manual' },
+            { key: 'upload', label: 'Import Masal (JSON/CSV)' },
+          ]}
+          active={activeTab}
+          onChange={(k) => setActiveTab(k as any)}
+          className="w-full justify-start overflow-x-auto"
+        />
+      }
       footer={
-        <Button variant="ghost" size="sm" onClick={onClose}>
-          Tutup
-        </Button>
+        <div className="flex items-center justify-end gap-3.5 w-full">
+          <Button variant="ghost" size="md" onClick={onClose} className="px-6">
+            Tutup
+          </Button>
+        </div>
       }
     >
       <div className="space-y-4">
-        <p className="text-xs text-ink-muted">
-          Kelola sinonim dan alias teknologi kustom untuk membantu <strong>Skill Normalizer & Mandatory Skill Penalty Engine</strong> mengenali variasi penulisan skill kandidat secara presisi.
-        </p>
-
-        {/* Section: Add & Upload Form */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <Card className="md:col-span-2 space-y-3 p-3">
-            <h3 className="text-xs font-bold text-ink flex items-center gap-1.5">
-              <Plus className="w-3.5 h-3.5 text-accent" />
-              Tambah Taksonomi Baru
+        {activeTab === 'add' && (
+          <div className="space-y-3.5 p-4 bg-card border border-border rounded-xl shadow-xs">
+            <h3 className="text-xs font-bold text-foreground border-b border-border pb-2">
+              Tambah Taksonomi Skill Baru
             </h3>
 
-            <form onSubmit={handleAddTaxonomy} className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <Field label="Skill Utama (Canonical)" required>
+            <form onSubmit={handleAddTaxonomy} className="space-y-3.5 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <Field label="Skill Utama (Canonical)" required hint="Contoh: Golang, Python, PostgreSQL">
                   <Input
                     required
                     placeholder="Contoh: Golang"
@@ -315,7 +323,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                   />
                 </Field>
 
-                <Field label="Kategori Rumpun">
+                <Field label="Kategori Rumpun Skill">
                   {!isAddingNewCategory ? (
                     <Select
                       value={categoryInput}
@@ -370,31 +378,31 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                 />
               </Field>
 
-              <div className="flex justify-end">
-                <Button type="submit" size="sm" iconLeft={<Plus className="w-3.5 h-3.5" />}>
+              <div className="flex justify-end pt-2">
+                <Button type="submit" size="md" className="px-6">
                   Simpan Taksonomi
                 </Button>
               </div>
             </form>
-          </Card>
+          </div>
+        )}
 
-          <Card className="p-3 space-y-2 flex flex-col justify-between">
+        {activeTab === 'upload' && (
+          <div className="p-5 bg-card border border-border rounded-xl shadow-xs space-y-4">
             <div>
-              <h3 className="text-xs font-bold text-ink flex items-center gap-1.5 mb-1">
-                <Upload className="w-3.5 h-3.5 text-accent" />
+              <h3 className="text-xs font-bold text-foreground mb-1">
                 Upload Masal (JSON/CSV)
               </h3>
-              <p className="text-[11px] text-ink-subtle leading-relaxed">
-                Unggah berkas taksonomi sinonim dalam format JSON atau CSV (dipisahkan titik koma <code>;</code>).
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Unggah berkas taksonomi sinonim dalam format JSON atau CSV (dipisahkan titik koma <code>;</code>) untuk menambahkan puluhan taksonomi secara sekaligus.
               </p>
             </div>
 
-            <label className="border border-dashed border-line hover:border-accent bg-canvas/50 hover:bg-canvas rounded p-3 text-center cursor-pointer block transition-colors mt-2">
-              <FileCode className="w-6 h-6 mx-auto mb-1 text-ink-subtle" />
-              <span className="text-xs font-bold text-accent block">
-                {isUploading ? 'Memproses...' : 'Pilih Berkas JSON/CSV'}
+            <label className="border-2 border-dashed border-border hover:border-primary/50 bg-muted/30 hover:bg-muted/50 rounded-xl p-6 text-center cursor-pointer block transition-all">
+              <span className="text-xs font-bold text-primary block">
+                {isUploading ? 'Memproses Berkas...' : 'Pilih Berkas JSON atau CSV'}
               </span>
-              <span className="text-[10px] text-ink-subtle">Contoh: skill_taxonomies.json</span>
+              <span className="text-[11px] text-muted-foreground mt-1 block">Format file: skill_taxonomies.json atau skill_taxonomies.csv</span>
               <input
                 type="file"
                 accept=".json,.csv"
@@ -403,91 +411,94 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                 onChange={handleFileUpload}
               />
             </label>
-          </Card>
-        </div>
-
-        {/* Section: Search & Category Filter (No Scrolling Needed) */}
-        <div className="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-line">
-          <div className="relative flex-1 w-full">
-            <Input
-              placeholder="Cari skill atau sinonim..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 text-xs"
-            />
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-subtle" />
           </div>
+        )}
 
-          <div className="w-full sm:w-60 shrink-0 flex items-center gap-1">
-            <Select
-              value={activeCategoryFilter}
-              onChange={(e) => setActiveCategoryFilter(e.target.value)}
-              className="text-xs font-semibold"
-            >
-              <option value="all">Filter: Semua Rumpun ({taxonomies.length})</option>
-              {categories.map((cat) => {
-                const count = taxonomies.filter((t) => t.category === cat).length;
-                return (
-                  <option key={cat} value={cat}>
-                    {formatCategoryLabel(cat)} ({count})
-                  </option>
-                );
-              })}
-            </Select>
-
-            {activeCategoryFilter !== 'all' && !DEFAULT_CATEGORIES.slice(0, 4).includes(activeCategoryFilter) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => handleDeleteCategory(activeCategoryFilter, e)}
-                title={`Hapus kategori "${formatCategoryLabel(activeCategoryFilter)}"`}
-                className="text-danger hover:bg-danger-soft p-1 shrink-0"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-
-
-        {/* Section: Taxonomy List Table */}
-        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-          {filteredTaxonomies.length === 0 ? (
-            <div className="text-center py-8 text-xs text-ink-subtle italic">
-              Tidak ada taksonomi sinonim skill yang cocok dengan pencarian.
-            </div>
-          ) : (
-            filteredTaxonomies.map((item) => (
-              <div key={item.id} className="bg-canvas border border-line rounded p-2.5 flex items-start justify-between gap-3 text-xs">
-                <div className="space-y-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-ink text-sm">{item.canonical_name}</span>
-                    <span className="bg-line/70 text-ink-subtle text-[10px] font-mono px-1.5 py-0.5 rounded uppercase">
-                      {formatCategoryLabel(item.category)}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {item.synonyms.map((syn, idx) => (
-                      <span key={idx} className="bg-surface text-ink-muted border border-line text-[11px] px-1.5 py-0.5 rounded font-mono">
-                        {syn}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDeleteTaxonomy(item.id, item.canonical_name)}
-                  aria-label={`Hapus ${item.canonical_name}`}
-                  className="text-danger hover:text-danger hover:bg-danger-soft p-1"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
+        {activeTab === 'manage' && (
+          <>
+            {/* Section: Search & Category Filter */}
+            <div className="flex flex-col sm:flex-row items-center gap-2.5">
+              <div className="relative flex-1 w-full">
+                <Input
+                  placeholder="Cari skill utama atau sinonim..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8 text-xs"
+                />
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               </div>
-            ))
-          )}
-        </div>
+
+              <div className="w-full sm:w-64 shrink-0 flex items-center gap-1.5">
+                <Select
+                  value={activeCategoryFilter}
+                  onChange={(e) => setActiveCategoryFilter(e.target.value)}
+                  className="text-xs font-semibold"
+                >
+                  <option value="all">Filter: Semua Rumpun ({taxonomies.length})</option>
+                  {categories.map((cat) => {
+                    const count = taxonomies.filter((t) => t.category === cat).length;
+                    return (
+                      <option key={cat} value={cat}>
+                        {formatCategoryLabel(cat)} ({count})
+                      </option>
+                    );
+                  })}
+                </Select>
+
+                {activeCategoryFilter !== 'all' && !DEFAULT_CATEGORIES.slice(0, 4).includes(activeCategoryFilter) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => handleDeleteCategory(activeCategoryFilter, e)}
+                    title={`Hapus kategori "${formatCategoryLabel(activeCategoryFilter)}"`}
+                    className="text-destructive hover:bg-destructive/10 p-1 shrink-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Section: Taxonomy List Table */}
+            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+              {filteredTaxonomies.length === 0 ? (
+                <div className="text-center py-10 text-xs text-muted-foreground italic">
+                  Tidak ada taksonomi sinonim skill yang cocok dengan pencarian.
+                </div>
+              ) : (
+                filteredTaxonomies.map((item) => (
+                  <div key={item.id} className="bg-muted/40 border border-border rounded-xl p-3.5 flex items-start justify-between gap-3 text-xs shadow-2xs">
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-foreground text-sm">{item.canonical_name}</span>
+                        <span className="bg-primary/10 text-primary border border-primary/20 text-[10px] font-mono font-bold px-2 py-0.5 rounded-md uppercase">
+                          {formatCategoryLabel(item.category)}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {item.synonyms.map((syn, idx) => (
+                          <span key={idx} className="bg-background text-foreground border border-border text-[11px] px-2 py-0.5 rounded-md font-mono shadow-2xs">
+                            {syn}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteTaxonomy(item.id, item.canonical_name)}
+                      aria-label={`Hapus ${item.canonical_name}`}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10 p-1 shrink-0"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
       </div>
     </Overlay>
   );

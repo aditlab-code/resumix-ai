@@ -45,9 +45,9 @@ const getRecommendationText = (score: number) => {
 };
 
 const getRecommendationBadgeClass = (score: number) => {
-  if (score >= 80) return 'bg-emerald-500/20 text-emerald-900 border border-emerald-500/40 font-black shadow-2xs';
-  if (score >= 60) return 'bg-amber-500/20 text-amber-950 border border-amber-500/40 font-black shadow-2xs';
-  return 'bg-rose-500/20 text-rose-950 border border-rose-500/40 font-black shadow-2xs';
+  if (score >= 80) return 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 border border-emerald-500/30 font-bold shadow-2xs';
+  if (score >= 60) return 'bg-amber-500/15 text-amber-800 dark:text-amber-200 border border-amber-500/30 font-bold shadow-2xs';
+  return 'bg-rose-500/15 text-rose-800 dark:text-rose-200 border border-rose-500/30 font-bold shadow-2xs';
 };
 
 export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({

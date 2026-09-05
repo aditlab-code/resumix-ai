@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ProcessingTimeline } from '@/components/ui/processing-timeline';
-import { Overlay, Field, Input, Select, Button } from '@/components/ui';
+import { Overlay, Field, Input, Select, Button, Tabs } from '@/components/ui';
 import { JobPosting, CandidateApplication } from '@/lib/types';
 import { ParseStatus } from '@cv-ats/contracts';
 import {
@@ -18,7 +18,7 @@ import {
   extractCVSections,
   extractPortfoliosAndReferences,
 } from '@/lib/utils';
-import { Upload, FileText, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -46,10 +46,12 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
   onUploadSuccess,
 }) => {
   const [jobId, setJobId] = useState(selectedJobId);
+  const [activeTab, setActiveTab] = useState<'upload' | 'guidelines'>('upload');
 
   React.useEffect(() => {
     if (isOpen) {
       setJobId(selectedJobId);
+      setActiveTab('upload');
     }
   }, [isOpen, selectedJobId]);
   const [file, setFile] = useState<File | null>(null);
@@ -146,7 +148,6 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       const slug = candidateName.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
       email = slug ? `${slug}@example.com` : '';
     }
-    // Phone: never fabricated. Empty means "not listed on the CV".
 
     const detectedSkills: { name: string; normalized_name: string; category: string }[] = [];
     const sections = extractCVSections(fullText);
@@ -191,8 +192,6 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const { projects, certifications } = extractProjectsAndAwards(fullText);
     const { portfolios, references } = extractPortfoliosAndReferences(fullText);
 
-    // Total experience: prefer explicit "since YYYY", else span of the earliest
-    // dated project/education entry to now, else sum of entry durations.
     const thisYear = new Date().getFullYear();
     const sinceYear = parseSinceYear(fullText);
     const datedYears = [
@@ -419,136 +418,164 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       isOpen={isOpen}
       onClose={close}
       size="lg"
-      title="Unggah CV kandidat (PDF)"
+      title={
+        <div>
+          <h3 className="text-base font-bold text-foreground">Unggah CV Kandidat</h3>
+          <p className="text-xs font-normal text-muted-foreground mt-0.5">Format PDF (Maksimum 10 MB) untuk ekstraksi & scoring AI</p>
+        </div>
+      }
+      subheader={
+        <Tabs
+          items={[
+            { key: 'upload', label: 'Unggah Berkas PDF' },
+            { key: 'guidelines', label: 'Ketentuan Parsing' },
+          ]}
+          active={activeTab}
+          onChange={(k) => setActiveTab(k as 'upload' | 'guidelines')}
+          className="w-full justify-start"
+        />
+      }
       footer={
-        <>
-          <Button variant="ghost" size="sm" onClick={close} disabled={isProcessing}>
+        <div className="flex items-center justify-end gap-4 sm:gap-4 w-full">
+          <Button variant="ghost" size="md" onClick={close} disabled={isProcessing} className="px-6">
             Batal
           </Button>
-          <Button
-            size="sm"
-            onClick={handleStartUpload}
-            disabled={!file || isProcessing}
-            iconLeft={
-              isProcessing ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <CheckCircle2 className="w-4 h-4" />
-              )
-            }
-          >
-            {isProcessing ? 'Mengekstrak...' : 'Mulai ekstraksi & scoring'}
-          </Button>
-        </>
+          {activeTab === 'upload' && (
+            <Button
+              size="md"
+              onClick={handleStartUpload}
+              disabled={!file || isProcessing}
+              className="px-6"
+              iconLeft={isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
+            >
+              {isProcessing ? 'Mengekstrak...' : 'Mulai Ekstraksi & Scoring'}
+            </Button>
+          )}
+        </div>
       }
     >
       <div className="space-y-4">
-        <Field label="Target lowongan" required>
-          <Select value={jobId} onChange={(e) => setJobId(e.target.value)} disabled={isProcessing}>
-            {jobs.map((j) => (
-              <option key={j.id} value={j.id}>
-                {j.title} ({j.department}) — min. {j.minimum_experience_months} bln
-              </option>
-            ))}
-          </Select>
-        </Field>
-
-        {!isProcessing && !file && (
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragOver(true);
-            }}
-            onDragLeave={() => setIsDragOver(false)}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`rounded p-8 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-3 border border-dashed ${
-              isDragOver ? 'border-accent bg-accent-soft' : 'border-line bg-canvas hover:border-accent'
-            }`}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={(e) => e.target.files && handleFileSelect(e.target.files[0])}
-              accept=".pdf,application/pdf"
-              className="hidden"
-            />
-            <div className="w-11 h-11 rounded-full bg-surface text-ink-muted flex items-center justify-center">
-              <Upload className="w-5 h-5" />
+        {activeTab === 'guidelines' ? (
+          <div className="space-y-3.5">
+            <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2">
+              <h4 className="text-xs font-bold text-foreground">
+                Persyaratan Layer Teks PDF
+              </h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Sistem ATS memproses berkas PDF berbasis layer teks (*searchable text layer*). PDF hasil *scanned image* atau foto dokumen tanpa layer teks akan ditandai dengan status <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-amber-700 dark:text-amber-300 border border-border">needs_review</code> untuk tindakan manual HR.
+              </p>
             </div>
-            <div>
-              <p className="text-xs font-bold text-ink">Klik atau tarik & lepas file PDF</p>
-              <p className="text-[11px] text-ink-subtle mt-1">PDF maksimum 10 MB, disimpan di storage privat.</p>
+
+            <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2">
+              <h4 className="text-xs font-bold text-foreground">
+                Keamanan & Storage Privat
+              </h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Setiap dokumen CV kandidat disimpan dalam private storage privat Supabase dengan Temporary Signed URL (TTL maks. 300 detik) untuk melindungi data PII kandidat.
+              </p>
             </div>
           </div>
-        )}
+        ) : (
+          <>
+            <Field label="Target Lowongan Position" required hint="Pilih posisi lowongan yang akan dicocokkan kualifikasinya.">
+              <Select value={jobId} onChange={(e) => setJobId(e.target.value)} disabled={isProcessing}>
+                {jobs.map((j) => (
+                  <option key={j.id} value={j.id}>
+                    {j.title} ({j.department}) — min. {j.minimum_experience_months} bln
+                  </option>
+                ))}
+              </Select>
+            </Field>
 
-        {file && !isProcessing && (
-          <div className="space-y-3">
-            <div className="bg-canvas rounded p-3 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-9 h-9 rounded bg-surface flex items-center justify-center text-ink-muted shrink-0">
-                  <FileText className="w-4 h-4" />
+            {!isProcessing && !file && (
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragOver(true);
+                }}
+                onDragLeave={() => setIsDragOver(false)}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`rounded-xl p-8 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 border-2 border-dashed ${
+                  isDragOver
+                    ? 'border-primary bg-primary/5 shadow-sm'
+                    : 'border-border bg-muted/30 hover:border-primary/50 hover:bg-muted/50'
+                }`}
+              >
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={(e) => e.target.files && handleFileSelect(e.target.files[0])}
+                  accept=".pdf,application/pdf"
+                  className="hidden"
+                />
+                <p className="text-xs font-bold text-foreground">Klik atau Tarik & Lepas Berkas PDF CV</p>
+                <p className="text-[11px] text-muted-foreground">Ukuran berkas maks 10 MB. Disimpan aman dalam storage privat.</p>
+              </div>
+            )}
+
+            {file && !isProcessing && (
+              <div className="space-y-3.5">
+                <div className="bg-muted/50 border border-border rounded-xl p-3.5 flex items-center justify-between gap-3 shadow-xs">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground truncate">{file.name}</p>
+                    <p className="text-[11px] text-muted-foreground font-mono">{formatBytes(file.size)}</p>
+                  </div>
+                  <Button variant="danger-soft" size="md" onClick={() => setFile(null)} className="px-4">
+                    Ganti Berkas
+                  </Button>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-ink truncate">{file.name}</p>
-                  <p className="text-[10px] text-ink-subtle font-mono">{formatBytes(file.size)}</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-card border border-border rounded-xl">
+                  <Field label="Nama Lengkap Kandidat" required>
+                    <Input
+                      required
+                      value={candidateNameInput}
+                      onChange={(e) => setCandidateNameInput(e.target.value)}
+                      placeholder="Nama kandidat"
+                    />
+                  </Field>
+                  <Field label="Email Kandidat" required>
+                    <Input
+                      type="email"
+                      required
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      placeholder="nama@example.com"
+                    />
+                  </Field>
+                  <Field label="Nomor Telepon" className="sm:col-span-2">
+                    <Input
+                      value={phoneInput}
+                      onChange={(e) => setPhoneInput(e.target.value)}
+                      placeholder="+62 812-3456-7890"
+                    />
+                  </Field>
                 </div>
               </div>
-              <Button variant="danger-soft" size="sm" onClick={() => setFile(null)}>
-                Ganti
-              </Button>
-            </div>
+            )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Field label="Nama lengkap" required>
-                <Input
-                  required
-                  value={candidateNameInput}
-                  onChange={(e) => setCandidateNameInput(e.target.value)}
-                  placeholder="Nama kandidat"
-                />
-              </Field>
-              <Field label="Email" required>
-                <Input
-                  type="email"
-                  required
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
-                  placeholder="nama@example.com"
-                />
-              </Field>
-              <Field label="Nomor telepon" className="sm:col-span-2">
-                <Input
-                  value={phoneInput}
-                  onChange={(e) => setPhoneInput(e.target.value)}
-                  placeholder="+62 812-3456-7890"
-                />
-              </Field>
-            </div>
-          </div>
-        )}
-
-        {isProcessing && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-accent-soft rounded">
-              <Loader2 className="w-5 h-5 text-accent animate-spin shrink-0" />
-              <div>
-                <h4 className="text-accent">Mengekstrak data PDF & menghitung skor</h4>
-                <p className="text-[11px] text-ink-muted">
-                  {candidateNameInput} ({emailInput})
-                </p>
+            {isProcessing && (
+              <div className="space-y-3.5">
+                <div className="flex items-center gap-3 p-4 bg-primary/10 border border-primary/20 rounded-xl text-foreground">
+                  <Loader2 className="w-5 h-5 text-primary animate-spin shrink-0" />
+                  <div>
+                    <h4 className="text-xs font-bold text-foreground">Mengekstrak Data PDF & Menghitung Skor Job-Fit</h4>
+                    <p className="text-[11px] text-muted-foreground font-medium mt-0.5">
+                      {candidateNameInput} ({emailInput})
+                    </p>
+                  </div>
+                </div>
+                <ProcessingTimeline currentStatus={currentStep} />
               </div>
-            </div>
-            <ProcessingTimeline currentStatus={currentStep} />
-          </div>
-        )}
+            )}
 
-        {errorMsg && (
-          <div className="p-3 bg-danger-soft text-danger rounded text-xs flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 shrink-0" />
-            {errorMsg}
-          </div>
+            {errorMsg && (
+              <div className="p-3.5 bg-destructive/10 border border-destructive/20 text-destructive rounded-xl text-xs font-medium">
+                {errorMsg}
+              </div>
+            )}
+          </>
         )}
       </div>
     </Overlay>

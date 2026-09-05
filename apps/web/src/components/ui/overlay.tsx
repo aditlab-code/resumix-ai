@@ -46,8 +46,8 @@ export const Overlay: React.FC<OverlayProps> = ({
   if (variant === 'side') {
     return (
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent side="right" className="flex flex-col p-0 gap-0 w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
-          <SheetHeader className="px-6 py-4 border-b border-border">
+        <SheetContent side="right" className="flex flex-col p-0 gap-0 w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl shadow-2xl border-l border-border bg-background">
+          <SheetHeader className="px-8 pt-7 pb-5 border-b border-border bg-background shrink-0 text-left pr-16">
             {typeof title === 'string' ? (
               <SheetTitle className="text-lg font-bold text-foreground truncate">{title}</SheetTitle>
             ) : (
@@ -55,12 +55,12 @@ export const Overlay: React.FC<OverlayProps> = ({
             )}
             {header}
           </SheetHeader>
-          {subheader && <div className="shrink-0 border-b border-border bg-muted/50">{subheader}</div>}
-          <div className={cn('flex-1 overflow-y-auto px-6 py-5 text-sm text-muted-foreground', bodyClassName)}>
+          {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
+          <div className={cn('flex-1 overflow-y-auto px-8 py-6 text-sm text-foreground', bodyClassName)}>
             {children}
           </div>
           {footer && (
-            <div className="flex items-center justify-end gap-2.5 px-6 py-4 border-t border-border bg-muted/30 shrink-0">
+            <div className="flex items-center justify-end gap-4 px-8 py-5 border-t border-border bg-muted/30 shrink-0">
               {footer}
             </div>
           )}
@@ -71,8 +71,8 @@ export const Overlay: React.FC<OverlayProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('p-0 gap-0 overflow-hidden', centerSizeClass[size])}>
-        <DialogHeader className="px-6 py-4 border-b border-border">
+      <DialogContent className={cn('p-0 gap-0 overflow-hidden border border-border bg-background shadow-2xl sm:rounded-2xl', centerSizeClass[size])}>
+        <DialogHeader className="px-8 pt-7 pb-5 border-b border-border bg-background shrink-0 text-left pr-16">
           {typeof title === 'string' ? (
             <DialogTitle className="text-lg font-bold text-foreground truncate">{title}</DialogTitle>
           ) : (
@@ -80,12 +80,12 @@ export const Overlay: React.FC<OverlayProps> = ({
           )}
           {header}
         </DialogHeader>
-        {subheader && <div className="shrink-0 border-b border-border bg-muted/50">{subheader}</div>}
-        <div className={cn('flex-1 max-h-[70vh] overflow-y-auto px-6 py-5 text-sm text-muted-foreground', bodyClassName)}>
+        {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
+        <div className={cn('flex-1 max-h-[75vh] overflow-y-auto px-8 py-6 text-sm text-foreground', bodyClassName)}>
           {children}
         </div>
         {footer && (
-          <div className="flex items-center justify-end gap-2.5 px-6 py-4 border-t border-border bg-muted/30 shrink-0">
+          <div className="flex items-center justify-end gap-4 px-8 py-5 border-t border-border bg-muted/30 shrink-0">
             {footer}
           </div>
         )}
@@ -119,13 +119,14 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     title={title}
     size="sm"
     footer={
-      <>
-        <Button variant="ghost" size="sm" onClick={onClose}>
+      <div className="flex items-center justify-end gap-4 sm:gap-4 w-full">
+        <Button variant="ghost" size="md" onClick={onClose} className="px-5">
           Batal
         </Button>
         <Button
           variant={tone === 'danger' ? 'destructive' : 'default'}
-          size="sm"
+          size="md"
+          className="px-6"
           onClick={() => {
             onConfirm();
             onClose();
@@ -133,11 +134,9 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         >
           {confirmLabel}
         </Button>
-      </>
+      </div>
     }
   >
     <p className="text-xs text-muted-foreground leading-relaxed">{message}</p>
   </Overlay>
 );
-
-
