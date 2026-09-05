@@ -371,6 +371,13 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
                       />
                     </div>
                   </Field>
+                  <Field label="IPK / GPA">
+                    <Input
+                      value={edu.gpa !== undefined && edu.gpa !== null ? String(edu.gpa) : ''}
+                      onChange={(e) => updateEducation(idx, { gpa: e.target.value })}
+                      placeholder="e.g. 3.85"
+                    />
+                  </Field>
                 </div>
               </EntryCard>
             ))}

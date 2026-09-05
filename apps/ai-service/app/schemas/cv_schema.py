@@ -52,6 +52,8 @@ class Education(BaseModel):
     major: str | None = None
     start_year: int | None = None
     end_year: int | None = None
+    gpa: float | str | None = None
+
 
 
 class Portfolio(BaseModel):

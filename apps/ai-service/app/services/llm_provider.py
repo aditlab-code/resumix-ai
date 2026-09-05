@@ -34,11 +34,12 @@ OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
   ],
   "education": [
     {
-      "institution": "University / School Name",
-      "degree": "Degree / Qualification (e.g. S1, S2, SMA, SMP)",
-      "major": "Major / Field of Study",
+      "institution": "Full University, Institute, Polytechnic, or High School Name (e.g. Universitas Indonesia, Institut Teknologi Bandung, SMA Negeri 1 Bandung, SMK Telkom)",
+      "degree": "Degree or Qualification (e.g. S1, S2, S3, D3, D4, SMA, SMK, High School)",
+      "major": "Major or Field of Study (e.g. Computer Science, Teknik Informatika, IPA, IPS)",
       "start_year": 2018,
-      "end_year": 2022
+      "end_year": 2022,
+      "gpa": "3.85 / 4.00 or 3.85 or 85.0"
     }
   ],
   "projects": ["Project or Work Title 1"],
@@ -62,7 +63,7 @@ OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
 RULES:
 1. Extract ALL facts written in the text accurately.
 2. Extract ALL work experiences listed in the CV. Do NOT limit or skip any company or job.
-3. Parse education history with high precision. Primary focus is on academic qualifications: Doktoral/Ph.D (S3), Magister/Master (S2), Sarjana/Bachelor (S1), Diploma (D3/D4), and SMA/SMK/MAN/MA. Classify degrees accurately into standard ATS terminology.
+3. Parse education history with maximum precision. Extract full exact institution names for universities, institutes, polytechnics, and high schools (SMA/SMK/MAN/MA). Do NOT truncate institution names or merge them with city/location strings or job roles. Extract IPK/GPA values (e.g. "3.85", "3.42", "3.75 / 4.00") accurately into the "gpa" field. Classify degrees accurately into standard ATS terminology (Doktoral/S3, Magister/S2, Sarjana/S1, Diploma/D3/D4, SMA/SMK).
 4. Extract ALL skills mentioned (technical, software, tools, competencies, administration).
 5. Extract ALL projects, portfolio links (GitHub, Figma, Behance, Drive, Dribbble, personal websites), achievements, awards, and certifications.
 6. Extract ALL work references/referees (name, job title, company, contact details).

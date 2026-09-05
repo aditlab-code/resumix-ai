@@ -60,7 +60,9 @@ export interface EducationDTO {
   major?: string;
   start_year?: number;
   end_year?: number;
+  gpa?: string | number;
 }
+
 
 export interface PortfolioDTO {
   title: string;

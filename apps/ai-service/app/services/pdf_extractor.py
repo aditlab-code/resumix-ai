@@ -37,7 +37,7 @@ def extract_pdf_text(file_bytes: bytes) -> tuple[str, dict]:
             full_text_list = []
 
             for page in doc:
-                full_text_list.append(page.get_text())
+                full_text_list.append(page.get_text("text", sort=True))
 
             raw_text = "\n".join(full_text_list)
             raw_text = clean_pdf_text(raw_text)

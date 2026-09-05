@@ -1,6 +1,7 @@
 import { Pool } from 'pg';
 import { env } from '../config/env';
-import { ApplicationStatus, ParseStatus, ScoreBreakdown, CVExtractionDTO } from '@cv-ats/contracts';
+import { ApplicationStatus, ParseStatus, ScoreBreakdown, CVExtractionDTO, EducationDTO } from '@cv-ats/contracts';
+
 
 export interface ApplicationRecord {
   application_id: string;
@@ -109,6 +110,29 @@ export class DBService {
       );
     }
   }
+
+  /**
+   * Save Candidate Educations History
+   */
+  async saveCandidateEducations(candidateId: string, documentId: string, educations: EducationDTO[]): Promise<void> {
+    for (const edu of educations) {
+      await this.pool.query(
+        `INSERT INTO candidate_educations (candidate_id, document_id, institution, degree, major, start_year, end_year, gpa)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [
+          candidateId,
+          documentId,
+          edu.institution || null,
+          edu.degree || null,
+          edu.major || null,
+          edu.start_year || null,
+          edu.end_year || null,
+          edu.gpa ? String(edu.gpa) : null,
+        ]
+      );
+    }
+  }
+
 
   /**
    * Save Application Record & Score Breakdown

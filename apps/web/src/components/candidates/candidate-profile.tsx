@@ -197,11 +197,19 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                       <p className="text-xs text-primary font-semibold mt-0.5">{subDetails}</p>
                     )}
                   </div>
-                  {(edu.start_year || edu.end_year) && (
-                    <span className="text-[10px] text-blue-700 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
-                      {edu.start_year || '?'} — {edu.end_year || '?'}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5 shrink-0 self-start">
+                    {edu.gpa && (
+                      <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-mono font-extrabold bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/35">
+                        IPK {edu.gpa}
+                      </span>
+                    )}
+                    {(edu.start_year || edu.end_year) && (
+                      <span className="text-[10px] text-blue-700 dark:text-blue-400 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35">
+                        {edu.start_year || '?'} — {edu.end_year || '?'}
+                      </span>
+                    )}
+                  </div>
+
                 </div>
               </Card>
             );
