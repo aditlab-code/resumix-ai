@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Label } from './label';
 import { Input as ShadcnInput } from './input';
 import { Textarea as ShadcnTextarea } from './textarea';
+import { ChevronDown } from 'lucide-react';
 
 interface FieldProps {
   label?: React.ReactNode;
@@ -36,16 +37,19 @@ export const Select = React.forwardRef<
   HTMLSelectElement,
   React.SelectHTMLAttributes<HTMLSelectElement>
 >(({ className, children, ...props }, ref) => (
-  <select
-    ref={ref}
-    className={cn(
-      'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer font-medium appearance-none bg-[url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")] bg-[length:0.875rem_0.875rem] bg-[right_0.75rem_center] bg-no-repeat pr-8',
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </select>
+  <div className="relative flex items-center w-full">
+    <select
+      ref={ref}
+      className={cn(
+        'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer appearance-none pr-9',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </select>
+    <ChevronDown className="h-4 w-4 absolute right-3 opacity-50 pointer-events-none text-foreground shrink-0" />
+  </div>
 ));
 Select.displayName = 'Select';
 

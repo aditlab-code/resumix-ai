@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Search } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from './input';
 
@@ -37,19 +37,23 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   </div>
 );
 
-export const FilterSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = ({
-  className,
-  children,
-  ...props
-}) => (
-  <select
-    className={cn(
-      'flex h-9 rounded-md border border-input bg-background px-3 py-1 text-xs font-semibold text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-colors',
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </select>
-);
+export const FilterSelect = React.forwardRef<
+  HTMLSelectElement,
+  React.SelectHTMLAttributes<HTMLSelectElement>
+>(({ className, children, ...props }, ref) => (
+  <div className="relative inline-flex items-center shrink-0">
+    <select
+      ref={ref}
+      className={cn(
+        'flex h-9 w-full rounded-md border border-input bg-background pl-3 pr-8 py-1 text-xs font-semibold text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer appearance-none',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </select>
+    <ChevronDown className="h-3.5 w-3.5 absolute right-2.5 opacity-50 pointer-events-none text-foreground shrink-0" />
+  </div>
+));
+FilterSelect.displayName = 'FilterSelect';
 

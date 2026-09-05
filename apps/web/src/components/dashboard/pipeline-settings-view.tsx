@@ -269,7 +269,6 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
             <CardHeader
               className="p-0 border-none mb-2"
               title="Tambah Skill & Sinonim Baru"
-              subtitle="Kamus deterministik ini digunakan untuk mencocokkan variasi penulisan skill pada CV pelamar."
             />
 
             <form onSubmit={handleAddSkill} className="space-y-4">
@@ -342,9 +341,6 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
               <div>
                 <h3 className="text-lg font-bold text-foreground">Daftar Kamus Skill ({filteredTaxonomies.length})</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Ringkasan 5 skill per halaman. Gunakan navigasi pagination di bawah.
-                </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -475,7 +471,6 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
           <CardHeader
             className="p-0 border-none mb-2"
             title="Pengaturan Bobot Formula Scoring"
-            subtitle="Bobot penilaian otomatis kandidat (Total bobot harus bernilai 100%)."
           />
 
           <div className="space-y-5">
@@ -537,7 +532,6 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
           <CardHeader
             className="p-0 border-none mb-2"
             title="Konfigurasi Model LLM Groq & System Guardrails"
-            subtitle="Atur provider LLM, model name, API key, dan instruksi keputusan HR."
           />
 
           <div className="space-y-4">

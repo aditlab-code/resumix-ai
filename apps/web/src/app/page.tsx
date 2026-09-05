@@ -38,13 +38,9 @@ export default function DashboardPage() {
         <Card className="lg:col-span-2 space-y-4 p-5">
           <div className="flex items-center justify-between border-b border-surface-border pb-3">
             <div>
-              <h2 className="text-h2 font-bold text-ink-default flex items-center gap-2">
-                <Users className="w-5 h-5 text-brand-accent" />
+              <h2 className="text-h2 font-bold text-ink-default">
                 Distribusi Status Recruitment Pipeline
               </h2>
-              <p className="text-caption text-ink-subtle mt-0.5">
-                Ringkasan sebaran kandidat di seluruh tahapan rekrutmen aktif.
-              </p>
             </div>
             <Link href="/candidates">
               <Button variant="ghost" size="sm" iconRight={<ArrowRight className="w-4 h-4" />}>
@@ -125,13 +121,8 @@ export default function DashboardPage() {
                   <div className="p-2 rounded-md bg-blue-50 text-blue-600">
                     <FileText className="w-5 h-5" />
                   </div>
-                  <div>
-                    <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                      Unggah Berkas CV
-                    </div>
-                    <div className="text-caption text-ink-subtle">
-                      Proses ekstraksi & AI Scoring otomatis
-                    </div>
+                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
+                    Unggah Berkas CV
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
@@ -145,13 +136,8 @@ export default function DashboardPage() {
                   <div className="p-2 rounded-md bg-emerald-50 text-emerald-600">
                     <Plus className="w-5 h-5" />
                   </div>
-                  <div>
-                    <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                      Terbitkan Lowongan Baru
-                    </div>
-                    <div className="text-caption text-ink-subtle">
-                      Tentukan skill wajib & preferensi
-                    </div>
+                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
+                    Terbitkan Lowongan Baru
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
@@ -165,13 +151,8 @@ export default function DashboardPage() {
                   <div className="p-2 rounded-md bg-purple-50 text-purple-600">
                     <Briefcase className="w-5 h-5" />
                   </div>
-                  <div>
-                    <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                      Kelola Posisi Lowongan
-                    </div>
-                    <div className="text-caption text-ink-subtle">
-                      Daftar posisi aktif & kriteria skill
-                    </div>
+                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
+                    Kelola Posisi Lowongan
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
