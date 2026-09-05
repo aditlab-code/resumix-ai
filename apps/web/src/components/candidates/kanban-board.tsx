@@ -3,7 +3,7 @@
 import React from 'react';
 import { CandidateApplication } from '@/lib/types';
 import { ApplicationStatus } from '@cv-ats/contracts';
-import { Clock, GraduationCap, Trash2 } from 'lucide-react';
+import { Clock, GraduationCap, Trash2, Sparkles } from 'lucide-react';
 
 interface KanbanBoardProps {
   applications: CandidateApplication[];
@@ -12,12 +12,48 @@ interface KanbanBoardProps {
   onDeleteCandidate?: (candidate: CandidateApplication) => void;
 }
 
-const COLUMNS: { status: ApplicationStatus; title: string; topBorder: string }[] = [
-  { status: 'applied', title: 'Applied', topBorder: 'border-t-primary' },
-  { status: 'screening', title: 'Screening', topBorder: 'border-t-purple-500' },
-  { status: 'interview', title: 'Interview', topBorder: 'border-t-amber-500' },
-  { status: 'hired', title: 'Hired', topBorder: 'border-t-emerald-500' },
-  { status: 'rejected', title: 'Rejected', topBorder: 'border-t-destructive' },
+const COLUMNS: {
+  status: ApplicationStatus;
+  title: string;
+  bgPalette: string;
+  headerText: string;
+  headerBadge: string;
+}[] = [
+  {
+    status: 'applied',
+    title: 'Applied',
+    bgPalette: 'bg-blue-100/80 dark:bg-blue-950/50 border-blue-300 dark:border-blue-800/80',
+    headerText: 'text-blue-950 dark:text-blue-200 font-extrabold',
+    headerBadge: 'bg-blue-600 text-white border-blue-700',
+  },
+  {
+    status: 'screening',
+    title: 'Screening',
+    bgPalette: 'bg-purple-100/80 dark:bg-purple-950/50 border-purple-300 dark:border-purple-800/80',
+    headerText: 'text-purple-950 dark:text-purple-200 font-extrabold',
+    headerBadge: 'bg-purple-600 text-white border-purple-700',
+  },
+  {
+    status: 'interview',
+    title: 'Interview',
+    bgPalette: 'bg-amber-100/80 dark:bg-amber-950/50 border-amber-300 dark:border-amber-800/80',
+    headerText: 'text-amber-950 dark:text-amber-200 font-extrabold',
+    headerBadge: 'bg-amber-600 text-white border-amber-700',
+  },
+  {
+    status: 'hired',
+    title: 'Hired',
+    bgPalette: 'bg-emerald-100/80 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-800/80',
+    headerText: 'text-emerald-950 dark:text-emerald-200 font-extrabold',
+    headerBadge: 'bg-emerald-600 text-white border-emerald-700',
+  },
+  {
+    status: 'rejected',
+    title: 'Rejected',
+    bgPalette: 'bg-rose-100/80 dark:bg-rose-950/50 border-rose-300 dark:border-rose-800/80',
+    headerText: 'text-rose-950 dark:text-rose-200 font-extrabold',
+    headerBadge: 'bg-rose-600 text-white border-rose-700',
+  },
 ];
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
@@ -40,13 +76,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         return (
           <div
             key={col.status}
-            className={`flex flex-col bg-muted/40 rounded-xl border border-border border-t-4 ${col.topBorder} p-3.5 min-h-[540px] shadow-sm`}
+            className={`flex flex-col rounded-xl border ${col.bgPalette} p-3.5 min-h-[540px] shadow-sm transition-all`}
           >
             {/* Column Header */}
             <div className="flex items-center justify-between mb-3.5 px-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-xs uppercase tracking-wider text-foreground">{col.title}</h3>
-                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-background text-muted-foreground border border-border">
+                <h3 className={`text-xs uppercase tracking-wider ${col.headerText}`}>{col.title}</h3>
+                <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full border ${col.headerBadge}`}>
                   {columnApps.length}
                 </span>
               </div>
@@ -82,12 +118,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                         </div>
 
                         <div
-                          className={`px-2 py-0.5 rounded-full border text-xs font-bold tabular-nums shrink-0 ${getScoreBadgeClass(
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[11px] font-mono font-extrabold tabular-nums shrink-0 ${getScoreBadgeClass(
                             app.job_fit_score
                           )}`}
-                          title="Job-Fit Score"
+                          title={`AI Job-Fit Score: ${app.job_fit_score.toFixed(1)}%`}
                         >
-                          {app.job_fit_score.toFixed(1)}%
+                          <Sparkles className="w-3 h-3 shrink-0" />
+                          <span>{app.job_fit_score.toFixed(0)}%</span>
                         </div>
                       </div>
 
@@ -108,13 +145,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                         {candidateSkills.slice(0, 3).map((skill: string, idx: number) => (
                           <span
                             key={idx}
-                            className="text-[11px] px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border font-medium"
+                            className="text-[11px] px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-900 dark:text-blue-200 border border-blue-500/35 font-bold shadow-2xs"
                           >
                             {skill}
                           </span>
                         ))}
                         {candidateSkills.length > 3 && (
-                          <span className="text-[11px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-medium">
+                          <span className="text-[11px] px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-900 dark:text-indigo-200 border border-indigo-500/35 font-extrabold shadow-2xs">
                             +{candidateSkills.length - 3}
                           </span>
                         )}

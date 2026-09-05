@@ -376,7 +376,7 @@ export const DocumentationView: React.FC = () => {
           <nav className="space-y-5">
             {DOC_CATEGORIES.map((cat) => (
               <div key={cat.title} className="space-y-2">
-                <span className="text-[11px] font-bold text-ink-subtle uppercase tracking-wider px-2 block">
+                <span className="text-xs font-extrabold text-foreground uppercase tracking-wider px-2 block">
                   {cat.title}
                 </span>
                 <div className="space-y-1">

@@ -39,15 +39,9 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
     <div className="flex flex-col gap-6 bg-card text-card-foreground border border-border rounded-xl p-6 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border pb-4">
-        <div>
-          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-            <Scale className="w-4 h-4 text-primary" />
-            Matriks Perbandingan Kandidat
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Pilih hingga 3 kandidat untuk membandingkan kecocokan skill, pengalaman, dan breakdown skor AI side-by-side.
-          </p>
-        </div>
+        <h2 className="text-base font-bold text-foreground">
+          Matriks Perbandingan Kandidat
+        </h2>
         <Button variant="outline" size="sm" onClick={onClose}>
           Tutup
         </Button>
@@ -174,7 +168,7 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
                   {(breakdown.matched_skills || candidateSkills).map((skill: string, idx: number) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 rounded-md text-[11px] bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 flex items-center gap-1 font-medium"
+                      className="px-2.5 py-1 rounded-md text-[11px] bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border border-emerald-500/35 flex items-center gap-1 font-bold shadow-2xs"
                     >
                       <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> {skill}
                     </span>
@@ -188,9 +182,9 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
                       {breakdown.missing_mandatory_skills.map((skill: string, idx: number) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded-md text-[11px] bg-destructive/10 text-destructive border border-destructive/20 flex items-center gap-1 font-mono font-medium"
+                          className="px-2.5 py-1 rounded-md text-[11px] bg-rose-500/15 text-rose-900 dark:text-rose-200 border border-rose-500/35 flex items-center gap-1 font-mono font-bold shadow-2xs"
                         >
-                          <X className="w-3 h-3" /> {skill}
+                          <X className="w-3 h-3 text-rose-600 dark:text-rose-400" /> {skill}
                         </span>
                       ))}
                     </div>

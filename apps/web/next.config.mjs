@@ -8,6 +8,14 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@cv-ats/contracts'],
+  experimental: {
+    turbo: {
+      resolveAlias: {
+        canvas: './src/lib/empty.js',
+        encoding: './src/lib/empty.js',
+      },
+    },
+  },
   webpack: (config, { isServer }) => {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;

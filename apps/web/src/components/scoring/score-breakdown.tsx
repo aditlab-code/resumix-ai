@@ -55,7 +55,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
 
       <div className="pt-4 border-t border-border space-y-4">
         <div>
-          <SectionLabel className="mb-2 flex items-center gap-1.5 normal-case tracking-normal text-foreground font-semibold text-xs">
+          <SectionLabel className="mb-2.5 flex items-center gap-1.5 normal-case tracking-normal text-foreground font-extrabold text-xs">
             <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             Skill cocok ({score.matched_skills.length})
           </SectionLabel>
@@ -64,9 +64,9 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
               score.matched_skills.map((skill) => (
                 <span
                   key={skill}
-                  className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-semibold rounded-full"
+                  className="px-3 py-1 bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border border-emerald-500/35 text-xs font-bold rounded-full shadow-2xs flex items-center gap-1"
                 >
-                  {skill}
+                  <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> {skill}
                 </span>
               ))
             ) : (
@@ -77,7 +77,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
 
         {score.missing_mandatory_skills.length > 0 && (
           <div>
-            <SectionLabel className="mb-2 flex items-center gap-1.5 normal-case tracking-normal text-destructive font-semibold text-xs">
+            <SectionLabel className="mb-2.5 flex items-center gap-1.5 normal-case tracking-normal text-destructive font-extrabold text-xs">
               <AlertCircle className="w-4 h-4 text-destructive" />
               Skill wajib belum ditemukan ({score.missing_mandatory_skills.length})
             </SectionLabel>
@@ -85,7 +85,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
               {score.missing_mandatory_skills.map((skill) => (
                 <span
                   key={skill}
-                  className="px-2.5 py-0.5 bg-destructive/10 text-destructive border border-destructive/20 text-xs font-semibold rounded-full"
+                  className="px-3 py-1 bg-rose-500/15 text-rose-900 dark:text-rose-200 border border-rose-500/35 text-xs font-bold rounded-full shadow-2xs font-mono"
                 >
                   {skill}
                 </span>

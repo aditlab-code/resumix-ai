@@ -51,16 +51,6 @@ export function SubNavTab<T extends string = string>({
             >
               {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
               <span>{tab.label}</span>
-              {typeof tab.count === 'number' && (
-                <span
-                  className={cn(
-                    'px-2 py-0.5 rounded-full text-[11px] font-bold tabular-nums',
-                    isActive ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-background/80 text-muted-foreground'
-                  )}
-                >
-                  {tab.count}
-                </span>
-              )}
             </button>
           );
         })}

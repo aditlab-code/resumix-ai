@@ -46,7 +46,7 @@ export const Overlay: React.FC<OverlayProps> = ({
   if (variant === 'side') {
     return (
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent side="right" className="flex flex-col p-0 gap-0 sm:max-w-2xl lg:max-w-3xl">
+        <SheetContent side="right" className="flex flex-col p-0 gap-0 w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
           <SheetHeader className="px-6 py-4 border-b border-border">
             {typeof title === 'string' ? (
               <SheetTitle className="text-lg font-bold text-foreground truncate">{title}</SheetTitle>

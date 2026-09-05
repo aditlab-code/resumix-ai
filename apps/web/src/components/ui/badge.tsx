@@ -6,19 +6,19 @@ import { ApplicationStatus, ParseStatus } from '@cv-ats/contracts';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow-2xs',
   {
     variants: {
       variant: {
         default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
         secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        outline: 'text-foreground',
-        success: 'border-transparent bg-emerald-100 text-emerald-900 border-emerald-300 font-bold',
-        warning: 'border-transparent bg-amber-100 text-amber-950 border-amber-300 font-bold',
-        danger: 'border-transparent bg-rose-100 text-rose-900 border-rose-300 font-bold',
-        accent: 'border-transparent bg-blue-100 text-blue-900 border-blue-300 font-bold',
-        neutral: 'border-transparent bg-slate-200 text-slate-900 border-slate-300 font-bold',
+        outline: 'text-foreground border-border',
+        success: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 border-emerald-500/35 font-bold',
+        warning: 'bg-amber-500/15 text-amber-900 dark:text-amber-200 border-amber-500/35 font-bold',
+        danger: 'bg-rose-500/15 text-rose-800 dark:text-rose-200 border-rose-500/35 font-bold',
+        accent: 'bg-blue-500/15 text-blue-800 dark:text-blue-200 border-blue-500/35 font-bold',
+        neutral: 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-300 dark:border-slate-700 font-bold',
       },
     },
     defaultVariants: {
@@ -41,11 +41,11 @@ export type StatusType = ApplicationStatus | ParseStatus;
 type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
 
 const toneClass: Record<Tone, string> = {
-  neutral: 'bg-slate-200 text-slate-900 border border-slate-300 font-bold',
-  accent: 'bg-blue-100 text-blue-900 border border-blue-300 font-bold',
-  ok: 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold',
-  warn: 'bg-amber-100 text-amber-950 border border-amber-300 font-bold',
-  danger: 'bg-rose-100 text-rose-900 border border-rose-300 font-bold',
+  neutral: 'bg-slate-500/15 text-slate-800 dark:text-slate-200 border-slate-500/30 font-extrabold',
+  accent: 'bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/35 font-extrabold',
+  ok: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/35 font-extrabold',
+  warn: 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/35 font-extrabold',
+  danger: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/35 font-extrabold',
 };
 
 const statusMap: Record<StatusType, { label: string; tone: Tone }> = {
@@ -78,7 +78,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase shadow-2xs',
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-extrabold tracking-wider uppercase border shadow-2xs',
         toneClass[config.tone],
         className
       )}

@@ -6,6 +6,7 @@ import {
   Trash2,
   Search,
   Plus,
+  Pencil,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -19,6 +20,11 @@ import {
   Select,
   Textarea,
   RangeField,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
 } from '@/components/ui';
 import { SubNavTab, TabItem } from './sub-nav-tab';
 
@@ -85,6 +91,12 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   const [categoryInput, setCategoryInput] = useState('backend');
   const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+
+  // Edit Skill Modal State
+  const [editingItem, setEditingItem] = useState<SkillTaxonomyItem | null>(null);
+  const [editCanonicalName, setEditCanonicalName] = useState('');
+  const [editSynonymsInput, setEditSynonymsInput] = useState('');
+  const [editCategoryInput, setEditCategoryInput] = useState('backend');
 
   const totalWeight = semanticWeight + mandatoryWeight + experienceWeight + preferredWeight;
   const weightValid = totalWeight === 100;
@@ -171,6 +183,41 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     if (onAddAuditLog) onAddAuditLog('taxonomy_created', 'skill_taxonomies', newItem.id, `Tambah skill "${newItem.canonical_name}" ke kamus.`);
   };
 
+  const handleOpenEditModal = (item: SkillTaxonomyItem) => {
+    setEditingItem(item);
+    setEditCanonicalName(item.canonical_name);
+    setEditSynonymsInput(item.synonyms.join(', '));
+    setEditCategoryInput(item.category);
+  };
+
+  const handleSaveEditSkill = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingItem || !editCanonicalName.trim()) return;
+
+    const updatedSynonyms = editSynonymsInput
+      .split(',')
+      .map((s) => s.trim().toLowerCase())
+      .filter((s) => s);
+
+    const updatedList = taxonomies.map((item) => {
+      if (item.id === editingItem.id) {
+        return {
+          ...item,
+          canonical_name: editCanonicalName.trim(),
+          synonyms: updatedSynonyms,
+          category: editCategoryInput,
+        };
+      }
+      return item;
+    });
+
+    saveTaxonomies(updatedList);
+    setEditingItem(null);
+
+    if (onAddToast) onAddToast('success', 'Skill Diperbarui', `Skill "${editCanonicalName.trim()}" berhasil diperbarui.`);
+    if (onAddAuditLog) onAddAuditLog('taxonomy_updated', 'skill_taxonomies', editingItem.id, `Perbarui skill "${editCanonicalName.trim()}" di kamus.`);
+  };
+
   const handleDeleteSkill = (id: string, name: string) => {
     const updated = taxonomies.filter((t) => t.id !== id);
     saveTaxonomies(updated);
@@ -201,9 +248,9 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   );
 
   const settingsTabs: TabItem<'dictionary' | 'scoring' | 'llm'>[] = [
-    { id: 'dictionary', label: 'Kamus Taksonomi Skill', count: taxonomies.length },
+    { id: 'dictionary', label: 'Kamus Taksonomi Skill' },
     { id: 'scoring', label: 'Bobot Formula Scoring' },
-    { id: 'llm', label: 'Groq LLM & Guardrails' },
+    { id: 'llm', label: 'LLM Config' },
   ];
 
   return (
@@ -352,14 +399,24 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSkill(item.id, item.canonical_name)}
-                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 p-2 rounded-md transition-colors shrink-0"
-                      title="Hapus Skill"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditModal(item)}
+                        className="text-muted-foreground hover:text-foreground hover:bg-muted p-2 rounded-md transition-colors"
+                        title="Edit Skill"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSkill(item.id, item.canonical_name)}
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 p-2 rounded-md transition-colors"
+                        title="Hapus Skill"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
@@ -528,6 +585,53 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
           </div>
         </Card>
       )}
+
+      {/* Edit Skill Modal Dialog */}
+      <Dialog open={editingItem !== null} onOpenChange={(open) => !open && setEditingItem(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold">Edit Skill & Sinonim</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSaveEditSkill} className="space-y-4 py-2">
+            <Field label="Nama Skill Resmi (Canonical Name)" required>
+              <Input
+                value={editCanonicalName}
+                onChange={(e) => setEditCanonicalName(e.target.value)}
+                placeholder="Contoh: PostgreSQL"
+                required
+              />
+            </Field>
+
+            <Field label="Kategori Skill">
+              <Select value={editCategoryInput} onChange={(e) => setEditCategoryInput(e.target.value)}>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {formatCategoryLabel(cat)}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+
+            <Field label="Daftar Sinonim (Pisahkan dengan Koma)">
+              <Input
+                value={editSynonymsInput}
+                onChange={(e) => setEditSynonymsInput(e.target.value)}
+                placeholder="postgres, pg, psql"
+              />
+            </Field>
+
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => setEditingItem(null)}>
+                Batal
+              </Button>
+              <Button type="submit" variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
+                Simpan Perubahan
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
