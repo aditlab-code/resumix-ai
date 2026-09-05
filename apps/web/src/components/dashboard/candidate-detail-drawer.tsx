@@ -179,12 +179,12 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Sidebar Column (Sticky Summary & Contact) */}
           <div className="lg:col-span-4 space-y-4 sticky top-0">
-            {/* Glassmorphism AI Decision Card */}
+            {/* AI Decision Card */}
             <Card className="p-5 space-y-4 bg-gradient-to-br from-primary/10 via-primary/5 to-card border border-primary/20 rounded-xl backdrop-blur-md shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between gap-2 border-b border-primary/15 pb-3">
                 <span className="text-xs font-extrabold text-primary uppercase tracking-wider flex items-center gap-1.5 font-mono">
                   <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-                  AI Decision Card
+                  Decision Summary
                 </span>
                 <span className="text-xs font-extrabold font-mono px-2.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
                   {application.job_fit_score.toFixed(1)}/100

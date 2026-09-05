@@ -220,14 +220,14 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
             <Field
               label="Paste Job Description Text (LinkedIn / Glints / JobStreet)"
               required
-              hint="Groq LLM will automatically extract title, required skills, and generate 384-dim job_embedding."
+              hint="AI LLM will automatically extract title, required skills, preferred skills, for Job-Fit scoring."
             >
               <Textarea
                 rows={8}
                 value={rawLinkedInText}
                 onChange={(e) => setRawLinkedInText(e.target.value)}
                 placeholder="We are looking for a Senior Backend Engineer. Minimum 3 years of experience. Must master Python, PostgreSQL, and Docker..."
-                className="font-mono text-xs leading-relaxed"
+                className="font-sans text-xs leading-relaxed"
               />
             </Field>
           </div>
@@ -251,7 +251,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               </Field>
             </div>
 
-            <Field label="Minimum Work Experience (Months)" required hint="Used for experience scoring $S_{exp}$. Example: 24 months = 2 years.">
+            <Field label="Minimum Work Experience (Months)" required hint="Used for experience scoring. Example: 24 months = 2 years.">
               <Input
                 type="number"
                 required
@@ -262,7 +262,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               />
             </Field>
 
-            <Field label="Mandatory Skills" required hint="Comma-separated. Has 30% weight in Job-Fit formula.">
+            <Field label="Mandatory Skills" required hint="Comma-separated. weight in Job-Fit configuration.">
               <Input
                 required
                 value={form.mandatory}
@@ -272,7 +272,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               />
             </Field>
 
-            <Field label="Preferred Skills" hint="Comma-separated. Has 5% weight in Job-Fit formula.">
+            <Field label="Preferred Skills" hint="Comma-separated. weight in Job-Fit formula.">
               <Input
                 value={form.preferred}
                 onChange={(e) => set('preferred', e.target.value)}

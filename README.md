@@ -143,10 +143,12 @@ Proyek ini dipublikasikan sebagai **Portofolio Teknis & Bukti Kapabilitas Kompet
 * **Source Code (`apps/`, `packages/`, `database/`)**: Dilindungi di bawah [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). Segala bentuk derivasi atau penggunaan source code pada server/jaringan wajib dibuka kembali di bawah lisensi AGPL-3.0.
 * **Dokumentasi & Arsitektur (`README.md`, `ARCHITECTURE.md`, `docs/`)**: Dilindungi di bawah [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE-DOCS.md).
 
-> [!IMPORTANT]
-> **PEMBERITAHUAN UNTUK HR & PERUSAHAAN**:
-> 1. Tim HR / Evaluator Perusahaan **diperbolehkan** penuh untuk mengulas (*code review*), menguji, dan mengevaluasi kode ini untuk keperluan penilaian rekrutmen kandidat.
+---
+
+> [!IMPORTANT] **PEMBERITAHUAN UNTUK HR & PERUSAHAAN**:
+
+> 1. Tim HR / Evaluator Perusahaan **diperbolehkan** penuh untuk mengulas (*code review*), menguji, dan mengevaluasi kode ini untuk keperluan penilaian rekrutmen.
 > 2. **DILARANG KERAS**: Menyalin, mengambil, menjual, atau mengintegrasikan kode/arsitektur dalam sistem ini ke dalam produk internal/komersial perusahaan tanpa lisensi komersial tertulis dari pembuat (*copyright owner*).
 
 ---
-*Resumix AI Team — Enterprise Recruitment Intelligence & Next-Gen ATS.*
+*Resumix AI — Enterprise Recruitment Intelligence ATS.*

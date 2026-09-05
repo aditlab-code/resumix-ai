@@ -248,9 +248,9 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   );
 
   const settingsTabs: TabItem<'dictionary' | 'scoring' | 'llm'>[] = [
-    { id: 'dictionary', label: 'Skill Taxonomy Dictionary' },
-    { id: 'scoring', label: 'Scoring Formula Weights' },
-    { id: 'llm', label: 'LLM Config' },
+    { id: 'dictionary', label: 'Skill Acronym Config' },
+    { id: 'scoring', label: 'Scoring Config' },
+    { id: 'llm', label: 'LLM API Config' },
   ];
 
   return (
@@ -472,7 +472,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
         <Card className="p-6 space-y-6">
           <CardHeader
             className="p-0 border-none mb-2"
-            title="Scoring Formula Weight Settings"
+            title="Scoring Config"
           />
 
           <div className="space-y-5">

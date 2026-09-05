@@ -138,7 +138,7 @@ export default function DashboardPage() {
                     <Plus className="w-5 h-5" />
                   </div>
                   <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                    Post New Job
+                    Post Available Job
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />

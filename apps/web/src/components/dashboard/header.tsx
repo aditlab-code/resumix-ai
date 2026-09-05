@@ -15,7 +15,7 @@ interface HeaderProps {
 
 const TITLES: Record<ActiveViewType, string> = {
   dashboard: 'Dashboard Overview',
-  jobs: 'Manage Job',
+  jobs: 'Manage Job Available Positions',
   candidates: 'Candidate List & Evaluation',
   settings: 'Settings & Configuration',
   docs: 'Documentation & Guides',

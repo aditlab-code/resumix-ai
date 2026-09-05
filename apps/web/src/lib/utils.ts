@@ -542,7 +542,7 @@ export function extractMultipleEducations(fullText: string): EducationDTO[] {
 
     // High-Precision Madrasah Boundary Guards (prevents false matches with Manajemen, Utama, Master, etc.)
     const isMAN = /\bMadrasah\s+Aliyah\b|\bMAN\s+\d{1,2}\b|\bMAN\s+[A-Z][a-z]+\b|\bMA\s+(?:Negeri|Swasta|IPA|IPS|Keagamaan|Model|[A-Z][a-z]+)\b/i.test(snippet) ||
-                  /\bMadrasah\s+Aliyah\b|\bMAN\s+\d{1,2}\b|\bMAN\s+[A-Z][a-z]+\b/i.test(rawInst);
+      /\bMadrasah\s+Aliyah\b|\bMAN\s+\d{1,2}\b|\bMAN\s+[A-Z][a-z]+\b/i.test(rawInst);
 
     const isMTs = /\bMadrasah\s+Tsanawiyah\b|\bMTs\s+\d{1,2}\b|\bMTs\s+[A-Z][a-z]+\b/i.test(snippet) || /\bMTs\b/i.test(rawInst);
     const isMI = /\bMadrasah\s+Ibtidaiyah\b|\bMI\s+\d{1,2}\b|\bMI\s+[A-Z][a-z]+\b/i.test(snippet) || /\bMI\b/i.test(rawInst);
@@ -791,21 +791,21 @@ export function constructGroqDecisionSummary(
 ): string {
   const matched = breakdown.matched_skills.length > 0 ? breakdown.matched_skills.join(', ') : 'No matching skills detected';
   const missing = breakdown.missing_mandatory_skills.length > 0 ? breakdown.missing_mandatory_skills.join(', ') : 'No mandatory skills missing';
-  
+
   const totalMonths = extraction?.total_experience_months || 0;
   const eduDegree = extraction?.education && extraction.education.length > 0 ? extraction.education[0].degree || '' : '';
   const eduInst = extraction?.education && extraction.education.length > 0 ? extraction.education[0].institution || '' : '';
   const eduStr = eduDegree ? ` with background in ${eduDegree}${eduInst ? ` from ${eduInst}` : ''}` : '';
-  
+
   const projectCount = extraction?.projects?.length || 0;
   const projStr = projectCount > 0 ? ` and a track record of ${projectCount} portfolio projects` : '';
 
   if (score >= 80) {
-    return `[Groq Llama 3.1 AI Decision] HIGHLY RECOMMENDED - PASSED SCREENING. Candidate ${candidateName}${eduStr} achieved a Job-Fit Score of ${score}/100 for the ${jobTitle} position. Possesses core technical qualifications (${matched})${projStr}. HR Recommendation: Proceed to primary technical interview.`;
+    return `[AI Decision] HIGHLY RECOMMENDED - PASSED SCREENING. Candidate ${candidateName}${eduStr} achieved a Job-Fit Score of ${score}/100 for the ${jobTitle} position. Possesses core technical qualifications (${matched})${projStr}. HR Recommendation: Proceed to primary technical interview.`;
   } else if (score >= 60) {
-    return `[Groq Llama 3.1 AI Decision] CONDITIONAL RECOMMENDATION - NEEDS SPECIAL REVIEW. Candidate ${candidateName}${eduStr} scored ${score}/100 with ${totalMonths} months of total experience. Successfully matched skills (${matched}), but has missing mandatory criteria (${missing}). HR Recommendation: Short exploratory interview or coding assessment suggested.`;
+    return `[AI Decision] CONDITIONAL RECOMMENDATION - NEEDS SPECIAL REVIEW. Candidate ${candidateName}${eduStr} scored ${score}/100 with ${totalMonths} months of total experience. Successfully matched skills (${matched}), but has missing mandatory criteria (${missing}). HR Recommendation: Short exploratory interview or coding assessment suggested.`;
   } else {
-    return `[Groq Llama 3.1 AI Decision] RE-SCREENING RECOMMENDED / MANUAL REVIEW. Candidate ${candidateName}${eduStr} achieved a Job-Fit Score of ${score}/100 for the ${jobTitle} position. Demonstrated potential in skills (${matched}), but has not met critical mandatory criteria: (${missing}). HR Recommendation: Review additional portfolio or consider alternative suitable positions.`;
+    return `[AI Decision] RE-SCREENING RECOMMENDED / MANUAL REVIEW. Candidate ${candidateName}${eduStr} achieved a Job-Fit Score of ${score}/100 for the ${jobTitle} position. Demonstrated potential in skills (${matched}), but has not met critical mandatory criteria: (${missing}). HR Recommendation: Review additional portfolio or consider alternative suitable positions.`;
   }
 }
 
@@ -945,7 +945,7 @@ export function extractPortfoliosAndReferences(fullText: string): {
 
   // 2. Strict Detect References Section (HANYA jika ada seksi REFERENSI/REFERENCES eksplisit)
   const refMatch = fullText.match(/(?:REFERENSI|REFERENCES|KONTAK REFERENSI|PEMBERI REFERENSI)\s*[:\-\n]+([\s\S]{20,500})/i);
-  
+
   if (refMatch && refMatch[1]) {
     const targetText = refMatch[1];
     const refLines = targetText.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0 && l.length < 60);
@@ -956,8 +956,8 @@ export function extractPortfoliosAndReferences(fullText: string): {
       if (/(?:PENGALAMAN|PENDIDIKAN|KEAHLIAN|PROJECT|PRESTASI)/i.test(line)) break;
 
       if (/(?:Bpk|Ibu|Mr|Mrs|Dr|Prof|Manager|Supervisor|Director|Head|Lead|CEO|CTO|HRD|Staff)\b/i.test(line) ||
-          /(?:08\d{8,11}|\+62|email|phone|telp)/i.test(line)) {
-        
+        /(?:08\d{8,11}|\+62|email|phone|telp)/i.test(line)) {
+
         const phoneOrEmail = line.match(/(?:08\d{8,11}|\+62\s*\d{8,11}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
         let rawName = line.replace(/(?:08\d{8,11}|\+62\s*\d{8,11}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, '').trim();
         rawName = rawName.replace(/^[@*•\-\s]+/, '').trim();

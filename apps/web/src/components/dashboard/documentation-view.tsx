@@ -28,14 +28,14 @@ const DOC_CATEGORIES: DocCategory[] = [
     items: [
       {
         key: 'readme',
-        label: 'Master README',
+        label: 'Executive Summary',
         icon: FileText,
         description: 'General product specification, installation guide, and Resumix AI product architecture.',
         badge: 'Core',
       },
       {
         key: 'architecture',
-        label: 'Architecture Specification',
+        label: 'Architecture & Service Design',
         icon: Layers,
         description: 'Microservice specifications, service boundaries, and pgvector schema.',
         badge: 'Technical',

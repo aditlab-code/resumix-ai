@@ -13,8 +13,8 @@ interface SidebarProps {
 
 const NAV = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/jobs', label: 'Jobs', icon: Briefcase },
-  { href: '/candidates', label: 'Candidates', icon: Users },
+  { href: '/jobs', label: 'Available Jobs', icon: Briefcase },
+  { href: '/candidates', label: 'Candidates List', icon: Users },
   { href: '/settings', label: 'Settings', icon: Sliders },
   { href: '/docs', label: 'Documentation', icon: BookOpen },
 ];
