@@ -1,10 +1,5 @@
 # Architecture Specification: Resumix AI
 
-> **Master Technical Engineering Specification & System Blueprint**  
-> Dokumen ini menjelaskan spesifikasi arsitektur sistem, batas layanan (*service boundaries*), alur pemrosesan data asinkron, skema database (12 tabel SQL), serta standar teknis untuk proyek **Resumix AI** (Enterprise Recruitment Intelligence & Next-Gen ATS).
-
----
-
 ## 1. Topologi & Ringkasan Arsitektur
 
 Sistem ini dibangun dengan arsitektur **Decoupled Microservices / Monorepo** sebagai *decision-support tool* bagi tim HR (bukan mesin penentu keputusan rekrutmen otomatis).
@@ -34,14 +29,14 @@ graph TD
 
 ## 2. Service Boundaries & Responsibilities
 
-| Service | Komponen & Teknologi | Tanggung Jawab Utama | Hal yang Dilarang (Anti-Patterns) |
-| :--- | :--- | :--- | :--- |
-| **Frontend** | `apps/web`<br>(Next.js 14, TypeScript, Tailwind CSS) | UI/UX HR, form lowongan, dropzone upload CV, tracking status, preview PDF via signed URL, review/edit hasil AI. | Memegang LLM/Database secrets, menghitung skor otoritatif, query langsung ke DB. |
-| **Core API** | `apps/api`<br>(Node.js, Express, TypeScript) | Express server (Port 3001). Routing REST `/api/v1`, Auth/RBAC, CRUD domain (Jobs, Candidates, Applications), signed URL, orkestrasi queue. | Parsing PDF/OCR/LLM langsung pada HTTP request handler sinkron. |
-| **Queue Worker** | `apps/api/src/worker`<br>(Redis, BullMQ Worker) | Konsumsi job asinkron dari queue, retry management, koordinasi eksekusi pipeline AI, update status di PostgreSQL. | Mengubah status keputusan kandidat (`hired`/`rejected`) secara otomatis. |
-| **AI Microservice** | `apps/ai-service`<br>(FastAPI, Python 3.11+) | Microservice REST (Port 8000). Ekstraksi PDF PyMuPDF murni (zero-text rejection), Groq LLM parsing (`llama-3.1-8b-instant`), normalisasi skill, kalkulasi skor. | Menulis/membaca langsung ke database utama tanpa lewat kontrak REST API API/Worker. |
-| **Database** | `database`<br>(PostgreSQL 15+ + `pgvector` & `uuid-ossp`) | Storage relasional ternormalisasi (12 tabel), similarity vector search (dimensi 384), audit log. | Menyimpan berkas PDF mentah secara langsung di tabel SQL. |
-| **Private Storage** | Supabase Storage / S3 Private Bucket | Penyimpanan berkas PDF CV secara privat dan aman. | Menjadikan bucket publik tanpa Signed URL berdurasi terbatas (TTL 300s). |
+| Service             | Komponen & Teknologi                                      | Tanggung Jawab Utama                                                                                                                                            | Hal yang Dilarang (Anti-Patterns)                                                        |
+|:--------------------|:----------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------|
+| **Frontend**        | `apps/web`<br>(Next.js 14, TypeScript, Tailwind CSS)      | UI/UX HR, form lowongan, dropzone upload CV, tracking status, preview PDF via signed URL, review/edit hasil AI.                                                 | Bertanggungjawab LLM/Database secrets, menghitung skor otoritatif, query langsung ke DB. |
+| **Core API**        | `apps/api`<br>(Node.js, Express, TypeScript)              | Express server (Port 3001). Routing REST `/api/v1`, Auth/RBAC, CRUD domain (Jobs, Candidates, Applications), signed URL, orkestrasi queue.                      | Parsing PDF/OCR/LLM langsung pada HTTP request handler sinkron.                          |
+| **Queue Worker**    | `apps/api/src/worker`<br>(Redis, BullMQ Worker)           | Konsumsi job asinkron dari queue, retry management, koordinasi eksekusi pipeline AI, update status di PostgreSQL.                                               | Mengubah status keputusan kandidat (`hired`/`rejected`) secara otomatis.                 |
+| **AI Microservice** | `apps/ai-service`<br>(FastAPI, Python 3.11+)              | Microservice REST (Port 8000). Ekstraksi PDF PyMuPDF murni (zero-text rejection), Groq LLM parsing (`llama-3.1-8b-instant`), normalisasi skill, kalkulasi skor. | Menulis/membaca langsung ke database utama tanpa lewat kontrak REST API API/Worker.      |
+| **Database**        | `database`<br>(PostgreSQL 15+ + `pgvector` & `uuid-ossp`) | Storage relasional ternormalisasi (12 tabel), similarity vector search (dimensi 384), audit log.                                                                | Menyimpan berkas PDF mentah secara langsung di tabel SQL.                                |
+| **Private Storage** | Supabase Storage / S3 Private Bucket                      | Penyimpanan berkas PDF CV secara privat dan aman.                                                                                                               | Menjadikan bucket publik tanpa Signed URL berdurasi terbatas (TTL 300s).                 |
 
 ---
 
@@ -55,10 +50,10 @@ graph TD
 - `GET /api/v1/applications/:id` — Mengambil status aplikasi, snapshot CV, dan *score breakdown*.
 
 ### AI Microservice (`apps/ai-service` — Port 8000)
-- `GET /health` — Status kesehatan service dan penyedia LLM (Groq `llama-3.1-8b-instant`).
+- `GET /health` — Status kesehatan service dan penyedia LLM (Groq, Gemini, OpenAI).
 - `POST /v1/cv/extract-text` — Menerima file PDF (max 10MB), mengekstrak teks via PyMuPDF. Jika PDF tidak memiliki layer teks (`len(text.strip()) == 0`), mengembalikan HTTP 400 `NO_TEXT_LAYER` dan merekomendasikan `parse_status: needs_review`.
-- `POST /v1/cv/llm-extract` — Parsing teks CV ke JSON terstruktur via Groq LLM berskema Pydantic.
-- `POST /v1/cv/normalize-skills` — Normalisasi kamus sinonim skill deterministik.
+- `POST /v1/cv/llm-extract` — Parsing teks CV ke JSON terstruktur via LLM berskema Pydantic.
+- `POST /v1/cv/normalize-skills` — Normalisasi keyword sinonim skill deterministik.
 - `POST /v1/cv/calculate-score` — Menghitung *job-fit score* (0–100) dan breakdown kecocokan kriteria.
 
 ---
@@ -159,7 +154,7 @@ cv-ats-pipeline/
 │   ├── contracts/                   # Shared DTOs & OpenAPI Contracts
 │   └── config/                      # Base TSConfig & ESLint Configurations
 ├── database/
-│   ├── migrations/                  # PostgreSQL SQL Migrations (001_initial_schema.sql)
+│   ├── migrations/                  # PostgreSQL SQL Migrations
 │   ├── seeds/                       # Seed data untuk development
 │   └── functions/                   # Stored Procedures & Vector Search Queries
 ├── docs/
@@ -170,7 +165,6 @@ cv-ats-pipeline/
 ├── docker-compose.yml               # Production Orchestration
 ├── docker-compose.dev.yml           # Development Environment with Hot-Reload
 ├── ARCHITECTURE.md                  # Master Architecture Specification
-├── AGENTS.md                        # Operational Guidelines for AI Agents
 ├── LICENSE                          # GNU AGPL-3.0 Source Code License
 ├── LICENSE-DOCS.md                  # CC BY-NC-SA 4.0 Documentation License
 └── README.md                        # Monorepo Project Overview

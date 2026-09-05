@@ -1,8 +1,4 @@
-# Resumix AI — Enterprise Recruitment Intelligence & Next-Gen ATS
-
-> **Engineering Case Study & Technical Architecture Showcase** 
-
-*Sistem Applicant Tracking System (ATS) & Candidate Intelligence Modern Berbasis Decoupled Monorepo, Asynchronous Worker Engine, API LLM, Dual-Vector pgvector Similarity Search, dan Explainable Multi-Factor Scoring Engine*
+# Resumix AI — Enterprise Recruitment Intelligence ATS
 
 ---
 
@@ -19,14 +15,14 @@ Proses candidate screening pada departemen HR enterprise yang menerima ribuan CV
 Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** yang menggabungkan keandalan arsitektur `Decoupled Monorepo`, pemrosesan asinkron `Redis BullMQ Queue`, ekstraksi terstruktur API LLM (`Groq, Gemini, OpenAI`), pencarian kemiripan vektor `pgvector`, dan kalkulasi kecocokan multi-faktor yang transparan.
 
 ### Key Measurable Achievements & Metrics
-| Engineering Metric           | Benchmark Result | Business Impact / Advantage                                            |
-|:-----------------------------|:----------------:|:-----------------------------------------------------------------------|
-| **Ingestion API Latency**    |    `< 180 ms`    | Core API mengembalikan HTTP 202 instant response (non-blocking queue). |
-| **Screening Efficiency**     | `85% Reduction`  | Mengurangi waktu pengulasan kandidat dari 10 menit menjadi < 2 detik.  |
-| **Vector Similarity Search** |    `< 12 ms`     | Query HNSW pgvector pada 10,000+ candidate embedding vectors.          |
-| **Zero-Text Short-Circuit**  |    `< 25 ms`     | Menolak PDF scanned/tanpa layer teks secara instan tanpa biaya LLM.    |
-| **Hiring Fairness & Bias**   | `0% PII Scoring` | Atribut foto, gender, usia, & lokasi dilarang digunakan dalam scoring. |
-| **Parsing Cost Efficiency**  | `$0.00 / parse`  | Menggunakan Groq Free Tier LLM & local Sentence Transformer model.     |
+| Engineering Metric           | Benchmark Result  | Business Impact / Advantage                                            |
+|:-----------------------------|:-----------------:|:-----------------------------------------------------------------------|
+| **Ingestion API Latency**    |    `< 180 ms`     | Core API mengembalikan HTTP 202 instant response (non-blocking queue). |
+| **Screening Efficiency**     |  `85% Reduction`  | Mengurangi waktu pengulasan kandidat dari 10 menit menjadi < 2 detik.  |
+| **Vector Similarity Search** |     `< 12 ms`     | Query HNSW pgvector pada 10,000+ candidate embedding vectors.          |
+| **Zero-Text Short-Circuit**  |     `< 25 ms`     | Menolak PDF scanned/tanpa layer teks secara instan tanpa biaya LLM.    |
+| **Hiring Fairness & Bias**   | `0% PII Scoring`  | Atribut foto, gender, usia, & lokasi dilarang digunakan dalam scoring. |
+| **Parsing Cost Efficiency**  | `Rp 0.00 / parse` | Menggunakan Groq Free Tier LLM & local Sentence Transformer model.     |
 
 ---
 
@@ -90,25 +86,20 @@ graph LR
     Scoring -->|Return JSON + Dual Vectors + Score| Worker
     Worker -->|Update Results & Embeddings| DB
 ```
-
-> [!TIP]
-> Untuk spesifikasi detail teknis mengenai *Service Boundaries*, *API REST Endpoint Contracts*, *Sequence Diagram*, dan *Skema Database (12 Tabel SQL)*, silakan merujuk ke **[Spesifikasi Arsitektur Sistem (ARCHITECTURE.md)](ARCHITECTURE.md)**.
-
 ---
 
 ## 4. Keunggulan Fitur Utama & Algoritma
 
 1. **Zero-Text Short-Circuit Rule**:
    - Jika berkas PDF tidak memiliki layer teks (`len(raw_text.strip()) == 0`), sistem langsung mengembalikan HTTP 400 `NO_TEXT_LAYER` dan menandai dokumen sebagai `needs_review` untuk tindakan HR tanpa membuang kuota LLM.
-2. **Groq LLM Structured Extraction (`llama-3.1-8b-instant`)**:
+2. **LLM Structured Extraction (`Model llamma`)**:
    - Ekstraksi fakta CV secara ketat menggunakan Pydantic Schema. Atribut PII sensitif (foto, gender, usia, agama) secara otomatis dikeluarkan dari skema ekstraksi.
 3. **Deterministic Skill Normalizer**:
    - Menyamakan variasi penulisan skill (misal: `"NodeJS"`, `"Node.js"`, `"Node JS"`) ke kamus sinonim deterministik (`SYNONYM_DICTIONARY`).
 4. **Dual-Vector Similarity Search (`pgvector`)**:
    - Menghasilkan dua vektor `vector(384)` (*candidate_skill_embedding* & *candidate_role_embedding*) untuk pencarian kemiripan kosinus HNSW presisi tinggi di PostgreSQL.
-5. **Explainable Multi-Factor Scoring Engine v2**:
+5. **Explainable Multi-Factor Scoring Engine**:
    - Menghitung skor akhir (0.0 – 100.0) secara transparan berbasis kombinasi: 45% Semantic Cosine Match, 30% Mandatory Skills Match, 20% Experience Duration Match, dan 5% Preferred Skills Bonus.
-
 ---
 
 ## 5. Panduan Instalasi dan Pengoperasian (Quick Start)
@@ -141,20 +132,10 @@ npm run dev:fullstack   # Atau: docker compose -f docker-compose.dev.yml up
 npm run stop   # Menghentikan port 3000, 3001, 8000 & proses Node/Python
 ```
 
----
-
-## 6. Indeks Dokumentasi Terkait
-
-Seluruh dokumentasi teknis tambahan dapat diakses melalui tab **Dokumentasi** di Web Dashboard atau via file repositori berikut:
-- [Spesifikasi Arsitektur Sistem Detail](ARCHITECTURE.md)
-- [Pedoman Operasional Agent](AGENTS.md)
-- [Evaluasi Metrik & Benchmark 200 Synthetic CVs](docs/evaluation.md)
-- [Lisensi Kode AGPL-3.0](LICENSE)
-- [Lisensi Dokumentasi CC BY-NC-SA 4.0](LICENSE-DOCS.md)
 
 ---
 
-## 7. Lisensi & Perlindungan Hukum (Legal Notice for HR & Companies)
+## 5. Lisensi & Perlindungan Hukum (Legal Notice for HR & Companies)
 
 Proyek ini dipublikasikan sebagai **Portofolio Teknis & Bukti Kapabilitas Kompetensi (Individual Portfolio Showcase)**.
 
@@ -164,7 +145,7 @@ Proyek ini dipublikasikan sebagai **Portofolio Teknis & Bukti Kapabilitas Kompet
 
 > [!IMPORTANT]
 > **PEMBERITAHUAN UNTUK HR & PERUSAHAAN**:
-> 1. Tim HR / Evaluator Perusahaan diperbolehkan penuh untuk mengulas (*code review*), menguji, dan mengevaluasi kode ini untuk keperluan penilaian rekrutmen kandidat.
+> 1. Tim HR / Evaluator Perusahaan **diperbolehkan** penuh untuk mengulas (*code review*), menguji, dan mengevaluasi kode ini untuk keperluan penilaian rekrutmen kandidat.
 > 2. **DILARANG KERAS**: Menyalin, mengambil, menjual, atau mengintegrasikan kode/arsitektur dalam sistem ini ke dalam produk internal/komersial perusahaan tanpa lisensi komersial tertulis dari pembuat (*copyright owner*).
 
 ---

@@ -1,7 +1,5 @@
 # Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)
 
-**Applicable to:** All project documentation files including `README.md`, `ARCHITECTURE.md`, `DESIGN.md`, `AGENTS.md`, and all files in `docs/`.
-
 ---
 
 ## License Summary
