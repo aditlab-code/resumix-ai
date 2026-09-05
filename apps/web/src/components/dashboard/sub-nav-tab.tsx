@@ -29,26 +29,24 @@ export function SubNavTab<T extends string = string>({
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-sunken p-1.5 rounded-md border border-surface-border',
+        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border pb-0 overflow-y-hidden',
         className
       )}
     >
-      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-6 overflow-x-auto overflow-y-hidden no-scrollbar py-0.5">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
-          const Icon = tab.icon;
           return (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                'px-4 py-2 rounded-md text-caption font-semibold flex items-center gap-2 transition-all duration-base whitespace-nowrap focus-ring',
+                'py-2 px-1 text-body font-semibold flex items-center gap-2 transition-all duration-base whitespace-nowrap border-b-2 focus-ring',
                 isActive
-                  ? 'bg-surface-raised text-ink-brand shadow-e1 font-bold border border-surface-border_strong'
-                  : 'text-ink-subtle hover:text-ink-default hover:bg-surface-hover'
+                  ? 'border-brand-accent text-ink-brand font-bold'
+                  : 'border-transparent text-ink-subtle hover:text-ink-default'
               )}
             >
-              {Icon && <Icon className={cn('w-4 h-4', isActive ? 'text-brand-accent' : 'text-ink-faint')} />}
               <span>{tab.label}</span>
               {typeof tab.count === 'number' && (
                 <span
@@ -64,7 +62,7 @@ export function SubNavTab<T extends string = string>({
           );
         })}
       </div>
-      {extraRightContent && <div className="flex items-center gap-2 shrink-0 px-1">{extraRightContent}</div>}
+      {extraRightContent && <div className="flex items-center gap-2 shrink-0 pb-2">{extraRightContent}</div>}
     </div>
   );
 }

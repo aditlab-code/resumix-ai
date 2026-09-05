@@ -1,19 +1,16 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { Plus, Shield, FileText, Save, Menu } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { useAppData } from '@/context/app-data-context';
 
 export type ActiveViewType = 'dashboard' | 'jobs' | 'candidates' | 'settings' | 'docs';
 
 interface HeaderProps {
-  activeView: ActiveViewType;
-  onOpenUploadModal: () => void;
-  onOpenCreateJobModal: () => void;
-  onOpenAuditLogs: () => void;
-  onCopyApiSpec?: () => void;
-  onSaveSettings?: () => void;
   onToggleMobileMenu?: () => void;
+  onSaveSettings?: () => void;
 }
 
 const TITLES: Record<ActiveViewType, string> = {
@@ -33,14 +30,22 @@ const SUBTITLES: Record<ActiveViewType, string> = {
 };
 
 export const Header: React.FC<HeaderProps> = ({
-  activeView,
-  onOpenUploadModal,
-  onOpenCreateJobModal,
-  onOpenAuditLogs,
-  onCopyApiSpec,
-  onSaveSettings,
   onToggleMobileMenu,
+  onSaveSettings,
 }) => {
+  const pathname = usePathname();
+  const {
+    setIsUploadModalOpen,
+    setIsCreateJobModalOpen,
+    setIsAuditLogModalOpen,
+  } = useAppData();
+
+  let activeView: ActiveViewType = 'dashboard';
+  if (pathname.startsWith('/jobs')) activeView = 'jobs';
+  else if (pathname.startsWith('/candidates')) activeView = 'candidates';
+  else if (pathname.startsWith('/settings')) activeView = 'settings';
+  else if (pathname.startsWith('/docs')) activeView = 'docs';
+
   return (
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-raised border border-surface-border p-3.5 sm:p-5 rounded-md shadow-e1 sticky top-0 z-20">
       <div className="flex items-center justify-between md:justify-start gap-3 w-full md:w-auto">
@@ -73,13 +78,13 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Mobile Action Button (Aligned in same row) */}
+        {/* Mobile Action Button */}
         <div className="flex items-center gap-2 md:hidden shrink-0">
           {activeView === 'settings' && (
             <Button
               variant="secondary"
               size="sm"
-              onClick={onOpenAuditLogs}
+              onClick={() => setIsAuditLogModalOpen(true)}
               iconLeft={<Shield className="w-4 h-4 text-ink-subtle" />}
             >
               Audit
@@ -90,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Button
               variant="primary"
               size="sm"
-              onClick={onOpenCreateJobModal}
+              onClick={() => setIsCreateJobModalOpen(true)}
               iconLeft={<Plus className="w-4 h-4 text-white" />}
             >
               Buat
@@ -101,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Button
               variant="primary"
               size="sm"
-              onClick={onOpenUploadModal}
+              onClick={() => setIsUploadModalOpen(true)}
               iconLeft={<FileText className="w-4 h-4 text-white" />}
             >
               Unggah CV
@@ -127,7 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            onClick={onOpenAuditLogs}
+            onClick={() => setIsAuditLogModalOpen(true)}
             iconLeft={<Shield className="w-4 h-4 text-ink-subtle" />}
           >
             Audit Log
@@ -138,7 +143,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Button
             variant="primary"
             size="sm"
-            onClick={onOpenCreateJobModal}
+            onClick={() => setIsCreateJobModalOpen(true)}
             iconLeft={<Plus className="w-4 h-4 text-white" />}
           >
             Buat Lowongan
@@ -149,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Button
             variant="primary"
             size="sm"
-            onClick={onOpenUploadModal}
+            onClick={() => setIsUploadModalOpen(true)}
             iconLeft={<FileText className="w-4 h-4 text-white" />}
           >
             Unggah CV
@@ -170,4 +175,3 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-

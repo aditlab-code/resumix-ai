@@ -3,20 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   Save,
-  RotateCcw,
-  Eye,
-  EyeOff,
-  BookOpen,
-  Plus,
-  Upload,
   Trash2,
   Search,
-  Sliders,
-  Cpu,
-  Check,
-  Tag,
-  FileCode,
-  CheckCircle2,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -77,14 +68,17 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   const [llmProvider, setLlmProvider] = useState('groq');
   const [llmApiKey, setLlmApiKey] = useState(DEFAULT_API_KEY);
   const [llmModel, setLlmModel] = useState('llama-3.1-8b-instant');
-  const [showApiKey, setShowApiKey] = useState(false);
   const [promptDecision, setPromptDecision] = useState(DEFAULT_DECISION_PROMPT);
 
-  // Dictionary Skil State
+  // Dictionary Skill State
   const [taxonomies, setTaxonomies] = useState<SkillTaxonomyItem[]>(DEFAULT_TAXONOMIES);
   const [categories, setCategories] = useState<string[]>(DEFAULT_CATEGORIES);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
+
+  // Dictionary Pagination State (5 items per page)
+  const [dictPage, setDictPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [canonicalName, setCanonicalName] = useState('');
   const [synonymsInput, setSynonymsInput] = useState('');
@@ -113,6 +107,10 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       console.error('Failed to load taxonomies:', e);
     }
   }, []);
+
+  useEffect(() => {
+    setDictPage(1);
+  }, [searchTerm, activeCategoryFilter]);
 
   const saveTaxonomies = (updated: SkillTaxonomyItem[]) => {
     setTaxonomies(updated);
@@ -149,35 +147,43 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       }
     }
 
-    const synonymsArray = synonymsInput
+    const synonyms = synonymsInput
       .split(',')
       .map((s) => s.trim().toLowerCase())
-      .filter((s) => s.length > 0);
+      .filter((s) => s);
 
-    const newSkill: SkillTaxonomyItem = {
+    const newItem: SkillTaxonomyItem = {
       id: `tax-${Date.now()}`,
       canonical_name: canonicalName.trim(),
-      synonyms: Array.from(new Set([canonicalName.trim().toLowerCase(), ...synonymsArray])),
+      synonyms,
       category: targetCategory,
     };
 
-    const updated = [newSkill, ...taxonomies];
+    const updated = [newItem, ...taxonomies];
     saveTaxonomies(updated);
-
-    if (onAddToast) onAddToast('success', 'Skill Ditambahkan', `Skill "${newSkill.canonical_name}" berhasil disimpan ke Dictionary.`);
-    if (onAddAuditLog) onAddAuditLog('CREATE_SKILL_TAXONOMY', 'skill_taxonomies', newSkill.id, `Menambahkan skill dictionary baru: ${newSkill.canonical_name}`);
 
     setCanonicalName('');
     setSynonymsInput('');
     setIsAddingNewCategory(false);
     setNewCategoryName('');
+
+    if (onAddToast) onAddToast('success', 'Skill Ditambahkan', `Skill "${newItem.canonical_name}" disimpan ke kamus.`);
+    if (onAddAuditLog) onAddAuditLog('taxonomy_created', 'skill_taxonomies', newItem.id, `Tambah skill "${newItem.canonical_name}" ke kamus.`);
   };
 
   const handleDeleteSkill = (id: string, name: string) => {
     const updated = taxonomies.filter((t) => t.id !== id);
     saveTaxonomies(updated);
-    if (onAddToast) onAddToast('info', 'Skill Dihapus', `Skill "${name}" telah dihapus.`);
-    if (onAddAuditLog) onAddAuditLog('DELETE_SKILL_TAXONOMY', 'skill_taxonomies', id, `Menghapus skill: ${name}`);
+    if (onAddToast) onAddToast('error', 'Skill Dihapus', `Skill "${name}" dihapus dari kamus.`);
+    if (onAddAuditLog) onAddAuditLog('taxonomy_deleted', 'skill_taxonomies', id, `Hapus skill "${name}" dari kamus.`);
+  };
+
+  const handleSave = () => {
+    if (!weightValid) {
+      if (onAddToast) onAddToast('error', 'Bobot Tidak Valid', 'Total bobot formula scoring harus 100%.');
+      return;
+    }
+    onSaveSettings('Seluruh parameter ATS pipeline berhasil diperbarui.');
   };
 
   const filteredTaxonomies = taxonomies.filter((item) => {
@@ -188,132 +194,127 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     return matchesSearch && matchesCategory;
   });
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!weightValid) return;
-    onSaveSettings(`Pengaturan sistem berhasil diperbarui.`);
-  };
+  const totalPages = Math.ceil(filteredTaxonomies.length / itemsPerPage) || 1;
+  const paginatedTaxonomies = filteredTaxonomies.slice(
+    (dictPage - 1) * itemsPerPage,
+    dictPage * itemsPerPage
+  );
 
-  type TabKey = 'dictionary' | 'scoring' | 'llm';
-
-  const settingsTabs: TabItem<TabKey>[] = [
-    { id: 'dictionary', label: 'Dictionary Skil', icon: BookOpen, count: taxonomies.length },
-    { id: 'scoring', label: 'Formula Scoring', icon: Sliders },
-    { id: 'llm', label: 'Aturan LLM & Integrasi', icon: Cpu },
+  const settingsTabs: TabItem<'dictionary' | 'scoring' | 'llm'>[] = [
+    { id: 'dictionary', label: 'Kamus Taksonomi Skill', count: taxonomies.length },
+    { id: 'scoring', label: 'Bobot Formula Scoring' },
+    { id: 'llm', label: 'Groq LLM & Guardrails' },
   ];
 
   return (
     <div className="space-y-6 w-full min-w-0">
-      {/* Unified SubNavTab Bar */}
+      {/* SubNavTab Underline Bar */}
       <SubNavTab
         tabs={settingsTabs}
         activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as TabKey)}
+        onTabChange={setActiveTab}
       />
 
-      {/* Tab 1: Dictionary Skil */}
+      {/* Tab 1: Kamus Skill */}
       {activeTab === 'dictionary' && (
-        <div className="space-y-5">
+        <div className="space-y-6">
           <Card className="space-y-4">
             <CardHeader
-              title="Tambah Skill ke Dictionary"
-              subtitle="Daftarkan nama resmi skill beserta variasi alias/sinonimnya untuk normalisasi deterministik saat parsing CV."
+              title="Tambah Skill & Sinonim Baru"
+              subtitle="Kamus deterministik ini digunakan untuk mencocokkan variasi penulisan skill pada CV pelamar."
             />
+
             <form onSubmit={handleAddSkill} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Nama Resmi Skill (Canonical)" required>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Field label="Nama Skill Resmi (Canonical Name)">
                   <Input
-                    required
                     value={canonicalName}
                     onChange={(e) => setCanonicalName(e.target.value)}
-                    placeholder="Contoh: TypeScript, Python, PyTorch"
+                    placeholder="Contoh: PostgreSQL"
+                    required
                   />
                 </Field>
 
                 <Field label="Kategori Skill">
-                  {!isAddingNewCategory ? (
-                    <Select
-                      value={categoryInput}
-                      onChange={(e) => {
-                        if (e.target.value === '__NEW__') {
-                          setIsAddingNewCategory(true);
-                        } else {
-                          setCategoryInput(e.target.value);
-                        }
-                      }}
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {formatCategoryLabel(cat)}
-                        </option>
-                      ))}
-                      <option value="__NEW__">+ Tambah Kategori Baru...</option>
-                    </Select>
-                  ) : (
+                  {isAddingNewCategory ? (
                     <div className="flex gap-2">
                       <Input
-                        required
                         value={newCategoryName}
                         onChange={(e) => setNewCategoryName(e.target.value)}
-                        placeholder="Nama Kategori Baru"
+                        placeholder="Kategori baru..."
                       />
                       <Button
                         type="button"
-                        variant="secondary"
+                        variant="ghost"
                         size="sm"
                         onClick={() => setIsAddingNewCategory(false)}
                       >
                         Batal
                       </Button>
                     </div>
+                  ) : (
+                    <Select value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)}>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {formatCategoryLabel(cat)}
+                        </option>
+                      ))}
+                    </Select>
                   )}
                 </Field>
 
-                <Field
-                  label="Sinonim & Alias (Dipisahkan Koma)"
-                  className="sm:col-span-2"
-                  hint="Varian ejaan yang akan otomatis dicocokkan ke nama resmi skill."
-                >
+                <Field label="Daftar Sinonim (Pisahkan dengan Koma)">
                   <Input
                     value={synonymsInput}
                     onChange={(e) => setSynonymsInput(e.target.value)}
-                    placeholder="ts, typescript 5, ts node, node typescript"
+                    placeholder="postgres, pg, psql, postgresql 15"
                   />
                 </Field>
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                {!isAddingNewCategory && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setIsAddingNewCategory(true)}
+                  >
+                    + Kategori Baru
+                  </Button>
+                )}
                 <Button type="submit" variant="primary" size="sm" iconLeft={<Plus className="w-4 h-4 text-white" />}>
-                  Simpan Skill Baru
+                  Tambah ke Kamus
                 </Button>
               </div>
             </form>
           </Card>
 
-          {/* Dictionary Table */}
           <Card className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-3">
               <div>
-                <h3 className="text-h3 font-bold text-slate-900">Daftar Dictionary Skil Terdaftar</h3>
-                <p className="text-caption text-slate-600">Total {filteredTaxonomies.length} entitas skill terdaftar.</p>
+                <h3 className="text-h2 font-bold text-ink-default">Daftar Kamus Skill ({filteredTaxonomies.length})</h3>
+                <p className="text-caption text-ink-subtle">
+                  Ringkasan 5 skill per halaman. Gunakan navigasi pagination di bawah.
+                </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative min-w-[200px]">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-subtle" />
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Cari skill atau sinonim..."
-                    className="w-full pl-9 pr-3 py-1.5 text-caption bg-surface-sunken border border-surface-border rounded-md text-slate-900 focus-ring"
+                    className="w-full pl-9 pr-3 py-1.5 text-caption bg-surface-sunken border border-surface-border rounded-md text-ink-default focus-ring"
                   />
                 </div>
 
                 <select
                   value={activeCategoryFilter}
                   onChange={(e) => setActiveCategoryFilter(e.target.value)}
-                  className="px-3 py-1.5 text-caption bg-surface-sunken border border-surface-border rounded-md text-slate-900 font-semibold focus-ring"
+                  className="px-3 py-1.5 text-caption bg-surface-sunken border border-surface-border rounded-md text-ink-default font-semibold focus-ring"
                 >
                   <option value="all">Semua Kategori</option>
                   {categories.map((cat) => (
@@ -325,24 +326,25 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               </div>
             </div>
 
-            <div className="divide-y divide-surface-border border border-surface-border rounded-md overflow-hidden bg-white">
+            {/* Dictionary Items List (Paginated 5 per page) */}
+            <div className="divide-y divide-surface-border border border-surface-border rounded-md overflow-hidden bg-surface-raised">
               {filteredTaxonomies.length === 0 ? (
-                <div className="p-8 text-center text-slate-500 text-body">
+                <div className="p-8 text-center text-ink-subtle text-body">
                   Tidak ada skill yang cocok dengan pencarian.
                 </div>
               ) : (
-                filteredTaxonomies.map((item) => (
-                  <div key={item.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50">
+                paginatedTaxonomies.map((item) => (
+                  <div key={item.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-surface-hover">
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center gap-2.5">
-                        <span className="font-bold text-body text-slate-900">{item.canonical_name}</span>
-                        <span className="px-2 py-0.5 rounded-pill bg-slate-100 border border-slate-300 text-caption font-bold text-slate-700 uppercase">
+                        <span className="font-bold text-body text-ink-default">{item.canonical_name}</span>
+                        <span className="px-2 py-0.5 rounded-pill bg-surface-sunken border border-surface-border text-caption font-bold text-ink-subtle uppercase">
                           {formatCategoryLabel(item.category)}
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {item.synonyms.map((syn) => (
-                          <span key={syn} className="px-2 py-0.5 rounded-sm bg-blue-50 text-blue-900 border border-blue-200 text-caption font-semibold">
+                          <span key={syn} className="px-2 py-0.5 rounded-sm bg-brand-accent_soft text-brand-accent border border-blue-200 text-caption font-semibold">
                             {syn}
                           </span>
                         ))}
@@ -352,7 +354,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     <button
                       type="button"
                       onClick={() => handleDeleteSkill(item.id, item.canonical_name)}
-                      className="text-slate-400 hover:text-red-700 p-2 rounded-md hover:bg-red-50 focus-ring shrink-0"
+                      className="text-ink-faint hover:text-rose-600 p-2 rounded-md hover:bg-rose-50 focus-ring shrink-0 transition-colors"
                       title="Hapus Skill"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -361,6 +363,50 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 ))
               )}
             </div>
+
+            {/* Pagination Controls */}
+            {filteredTaxonomies.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-surface-sunken border border-surface-border rounded-md text-caption">
+                <span className="text-ink-subtle font-medium">
+                  Menampilkan {Math.min((dictPage - 1) * itemsPerPage + 1, filteredTaxonomies.length)}–
+                  {Math.min(dictPage * itemsPerPage, filteredTaxonomies.length)} dari {filteredTaxonomies.length} skill
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={dictPage === 1}
+                    onClick={() => setDictPage((prev) => Math.max(1, prev - 1))}
+                    iconLeft={<ChevronLeft className="w-4 h-4" />}
+                  >
+                    Sebelumnya
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setDictPage(page)}
+                      className={cn(
+                        'w-8 h-8 rounded-md text-caption font-bold transition-colors focus-ring',
+                        dictPage === page
+                          ? 'bg-blue-600 text-white shadow-e1'
+                          : 'bg-surface-raised border border-surface-border text-ink-default hover:bg-surface-hover'
+                      )}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={dictPage >= totalPages}
+                    onClick={() => setDictPage((prev) => Math.min(totalPages, prev + 1))}
+                    iconRight={<ChevronRight className="w-4 h-4" />}
+                  >
+                    Selanjutnya
+                  </Button>
+                </div>
+              </div>
+            )}
           </Card>
         </div>
       )}
@@ -410,9 +456,9 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               hint="Skor bonus untuk skill preferred opsional."
             />
 
-            <div className="p-4 rounded-md border flex items-center justify-between bg-slate-100 border-slate-300">
-              <span className="font-bold text-body text-slate-900">Total Akumulasi Bobot:</span>
-              <span className={cn('text-h2 font-extrabold tabular-nums', weightValid ? 'text-emerald-700' : 'text-red-700')}>
+            <div className="p-4 rounded-md border flex items-center justify-between bg-surface-sunken border-surface-border">
+              <span className="font-bold text-body text-ink-default">Total Akumulasi Bobot:</span>
+              <span className={cn('text-h2 font-extrabold tabular-nums', weightValid ? 'text-emerald-600' : 'text-rose-600')}>
                 {totalWeight}% {weightValid ? '(Sesuai Spec 100%)' : '(Wajib 100%)'}
               </span>
             </div>
@@ -448,33 +494,26 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               </Select>
             </Field>
 
-            <Field label="Groq API Key" required className="sm:col-span-2">
-              <div className="relative">
-                <Input
-                  type={showApiKey ? 'text' : 'password'}
-                  required
-                  value={llmApiKey}
-                  onChange={(e) => setLlmApiKey(e.target.value)}
-                  className="pr-10 font-mono"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowApiKey(!showApiKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900"
-                >
-                  {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+            <Field label="API Key">
+              <Input
+                type="password"
+                value={llmApiKey}
+                onChange={(e) => setLlmApiKey(e.target.value)}
+              />
             </Field>
 
-            <Field label="System Decision Prompt" className="sm:col-span-2" hint="Instruksi sistem kepada LLM saat menyusun penjelasan objektif skor kandidat.">
-              <Textarea rows={4} value={promptDecision} onChange={(e) => setPromptDecision(e.target.value)} />
+            <Field label="System Prompt Decision Guardrails">
+              <Textarea
+                rows={3}
+                value={promptDecision}
+                onChange={(e) => setPromptDecision(e.target.value)}
+              />
             </Field>
           </div>
 
           <div className="flex justify-end pt-2">
             <Button type="button" onClick={handleSave} variant="primary" size="md" iconLeft={<Save className="w-4 h-4 text-white" />}>
-              Simpan Pengaturan LLM
+              Simpan Konfigurasi LLM
             </Button>
           </div>
         </Card>

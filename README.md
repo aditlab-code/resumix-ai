@@ -1,7 +1,8 @@
 # Resumix AI — Enterprise Recruitment Intelligence & Next-Gen ATS
 
-> **Engineering Portfolio Case Study & Technical Architecture Showcase**  
-> *Sistem Applicant Tracking System (ATS) & Candidate Intelligence Modern Berbasis Decoupled Monorepo, Asynchronous Worker Engine, Groq LLM, Dual-Vector pgvector Similarity Search, dan Explainable Multi-Factor Scoring Engine v2.*
+> **Engineering Case Study & Technical Architecture Showcase** 
+
+*Sistem Applicant Tracking System (ATS) & Candidate Intelligence Modern Berbasis Decoupled Monorepo, Asynchronous Worker Engine, API LLM, Dual-Vector pgvector Similarity Search, dan Explainable Multi-Factor Scoring Engine*
 
 ---
 
@@ -15,17 +16,17 @@ Proses candidate screening pada departemen HR enterprise yang menerima ribuan CV
 4. **Risiko ATS Black Box**: Sistem ATS konvensional yang secara otomatis menolak kandidat tanpa rincian skor yang transparan (*explainable score breakdown*).
 
 ### Solution: Resumix AI
-Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** yang menggabungkan keandalan arsitektur Decoupled Monorepo, pemrosesan asinkron Redis BullMQ Queue, ekstraksi terstruktur Groq LLM (`llama-3.1-8b-instant`), pencarian kemiripan dual-vektor `pgvector`, dan engine kalkulasi kecocokan multi-faktor yang transparan.
+Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** yang menggabungkan keandalan arsitektur `Decoupled Monorepo`, pemrosesan asinkron `Redis BullMQ Queue`, ekstraksi terstruktur API LLM (`Groq, Gemini, OpenAI`), pencarian kemiripan vektor `pgvector`, dan kalkulasi kecocokan multi-faktor yang transparan.
 
 ### Key Measurable Achievements & Metrics
-| Engineering Metric | Benchmark Result | Business Impact / Advantage |
-| :--- | :---: | :--- |
-| **Ingestion API Latency** | `< 180 ms` | Core API mengembalikan HTTP 202 instant response (non-blocking queue). |
-| **Screening Efficiency** | `85% Reduction` | Mengurangi waktu pengulasan kandidat dari 10 menit menjadi < 2 detik. |
-| **Vector Similarity Search** | `< 12 ms` | Query HNSW pgvector pada 10,000+ candidate embedding vectors. |
-| **Zero-Text Short-Circuit** | `< 25 ms` | Menolak PDF scanned/tanpa layer teks secara instan tanpa biaya LLM. |
-| **Hiring Fairness & Bias** | `0% PII Scoring` | Atribut foto, gender, usia, & lokasi dilarang digunakan dalam scoring. |
-| **Parsing Cost Efficiency** | `$0.00 / parse` | Menggunakan Groq Free Tier LLM & local Sentence Transformer model. |
+| Engineering Metric           | Benchmark Result | Business Impact / Advantage                                            |
+|:-----------------------------|:----------------:|:-----------------------------------------------------------------------|
+| **Ingestion API Latency**    |    `< 180 ms`    | Core API mengembalikan HTTP 202 instant response (non-blocking queue). |
+| **Screening Efficiency**     | `85% Reduction`  | Mengurangi waktu pengulasan kandidat dari 10 menit menjadi < 2 detik.  |
+| **Vector Similarity Search** |    `< 12 ms`     | Query HNSW pgvector pada 10,000+ candidate embedding vectors.          |
+| **Zero-Text Short-Circuit**  |    `< 25 ms`     | Menolak PDF scanned/tanpa layer teks secara instan tanpa biaya LLM.    |
+| **Hiring Fairness & Bias**   | `0% PII Scoring` | Atribut foto, gender, usia, & lokasi dilarang digunakan dalam scoring. |
+| **Parsing Cost Efficiency**  | `$0.00 / parse`  | Menggunakan Groq Free Tier LLM & local Sentence Transformer model.     |
 
 ---
 
@@ -33,13 +34,13 @@ Resumix AI dibangun sebagai **Human-in-the-Loop Candidate Intelligence System** 
 
 Resumix AI mengadopsi tema **Enterprise Dark Blue Navy** yang terkesan tepercaya, bersih, presisi, dan profesional tanpa nuansa ungu.
 
-| Token Name | Visual Preview | Application & Component Usage |
-| :--- | :---: | :--- |
-| **Enterprise Obsidian (ink.DEFAULT)** | ![#0F172A](https://via.placeholder.com/15/0F172A/000000?text=+) | Primary Bold Text, Header Titles, Card Headers |
-| **Deep Navy Text (ink.muted)** | ![#1E293B](https://via.placeholder.com/15/1E293B/000000?text=+) | Body Paragraphs, High-Contrast Descriptions, List Items |
-| **Slate Metadata (ink.subtle)** | ![#334155](https://via.placeholder.com/15/334155/000000?text=+) | Captions, Subtitles, Form Field Hints |
-| **Enterprise Navy Blue (Brand Accent)** | ![#1D4ED8](https://via.placeholder.com/15/1D4ED8/000000?text=+) | Primary Buttons, Active Tabs, Interactive Highlights |
-| **Light Canvas (Background)** | ![#F8FAFC](https://via.placeholder.com/15/F8FAFC/000000?text=+) | Dashboard App Background, Input Fills |
+| Token Name                              |                         Visual Preview                          | Application & Component Usage                           |
+|:----------------------------------------|:---------------------------------------------------------------:|:--------------------------------------------------------|
+| **Enterprise Obsidian (ink.DEFAULT)**   | ![#0F172A](https://via.placeholder.com/15/0F172A/000000?text=+) | Primary Bold Text, Header Titles, Card Headers          |
+| **Deep Navy Text (ink.muted)**          | ![#1E293B](https://via.placeholder.com/15/1E293B/000000?text=+) | Body Paragraphs, High-Contrast Descriptions, List Items |
+| **Slate Metadata (ink.subtle)**         | ![#334155](https://via.placeholder.com/15/334155/000000?text=+) | Captions, Subtitles, Form Field Hints                   |
+| **Enterprise Navy Blue (Brand Accent)** | ![#1D4ED8](https://via.placeholder.com/15/1D4ED8/000000?text=+) | Primary Buttons, Active Tabs, Interactive Highlights    |
+| **Light Canvas (Background)**           | ![#F8FAFC](https://via.placeholder.com/15/F8FAFC/000000?text=+) | Dashboard App Background, Input Fills                   |
 
 ---
 
