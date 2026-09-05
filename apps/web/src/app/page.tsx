@@ -2,10 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
+import './globals.css';
 import { useAppData } from '@/context/app-data-context';
 import { StatsOverview } from '@/components/dashboard/stats-overview';
 import { Card, Button } from '@/components/ui';
-import { FileText, Plus, ArrowRight, Users, Briefcase } from 'lucide-react';
+import { FileText, Plus, ArrowRight, Briefcase } from 'lucide-react';
 
 export default function DashboardPage() {
   const {
@@ -39,12 +40,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between border-b border-surface-border pb-3">
             <div>
               <h2 className="text-h2 font-bold text-ink-default">
-                Distribusi Status Recruitment Pipeline
+                Recruitment Status
               </h2>
             </div>
             <Link href="/candidates">
               <Button variant="ghost" size="sm" iconRight={<ArrowRight className="w-4 h-4" />}>
-                Lihat Pelamar
+                View Candidates
               </Button>
             </Link>
           </div>
@@ -75,9 +76,9 @@ export default function DashboardPage() {
           {totalApplications > 0 && (
             <div className="space-y-1.5 pt-2">
               <div className="flex justify-between text-xs font-semibold text-ink-subtle">
-                <span>Kemajuan Seleksi (Total: {totalApplications} Pelamar)</span>
+                <span>Selection Progress (Total: {totalApplications} Applicants)</span>
                 <span>
-                  {Math.round(((statusCounts.interview + statusCounts.hired) / totalApplications) * 100)}% Lolos Screening
+                  {Math.round(((statusCounts.interview + statusCounts.hired) / totalApplications) * 100)}% Shortlisted
                 </span>
               </div>
               <div className="w-full bg-surface-sunken h-2.5 rounded-pill overflow-hidden flex">
@@ -110,7 +111,7 @@ export default function DashboardPage() {
         <Card className="space-y-4 p-5 flex flex-col justify-between">
           <div>
             <h2 className="text-h2 font-bold text-ink-default border-b border-surface-border pb-3">
-              Aksi Cepat
+              Quick Actions
             </h2>
             <div className="space-y-3 mt-4">
               <button
@@ -122,7 +123,7 @@ export default function DashboardPage() {
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                    Unggah Berkas CV
+                    Upload Resume CV
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
@@ -137,7 +138,7 @@ export default function DashboardPage() {
                     <Plus className="w-5 h-5" />
                   </div>
                   <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                    Terbitkan Lowongan Baru
+                    Post New Job
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
@@ -152,7 +153,7 @@ export default function DashboardPage() {
                     <Briefcase className="w-5 h-5" />
                   </div>
                   <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
-                    Kelola Posisi Lowongan
+                    Manage Jobs
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />

@@ -420,15 +420,15 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       size="lg"
       title={
         <div>
-          <h3 className="text-base font-bold text-foreground">Unggah CV Kandidat</h3>
-          <p className="text-xs font-normal text-muted-foreground mt-0.5">Format PDF (Maksimum 10 MB) untuk ekstraksi & scoring AI</p>
+          <h3 className="text-base font-bold text-foreground">Upload Candidate Resume</h3>
+          <p className="text-xs font-normal text-muted-foreground mt-0.5">PDF Format (Max 10 MB) for AI extraction & scoring</p>
         </div>
       }
       subheader={
         <Tabs
           items={[
-            { key: 'upload', label: 'Unggah Berkas PDF' },
-            { key: 'guidelines', label: 'Ketentuan Parsing' },
+            { key: 'upload', label: 'Upload PDF File' },
+            { key: 'guidelines', label: 'Parsing Guidelines' },
           ]}
           active={activeTab}
           onChange={(k) => setActiveTab(k as 'upload' | 'guidelines')}
@@ -438,7 +438,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       footer={
         <div className="flex items-center justify-end gap-4 sm:gap-4 w-full">
           <Button variant="ghost" size="md" onClick={close} disabled={isProcessing} className="px-6">
-            Batal
+            Cancel
           </Button>
           {activeTab === 'upload' && (
             <Button
@@ -448,7 +448,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
               className="px-6"
               iconLeft={isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
             >
-              {isProcessing ? 'Mengekstrak...' : 'Mulai Ekstraksi & Scoring'}
+              {isProcessing ? 'Extracting...' : 'Start Extraction & Scoring'}
             </Button>
           )}
         </div>
@@ -459,29 +459,29 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
           <div className="space-y-3.5">
             <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2">
               <h4 className="text-xs font-bold text-foreground">
-                Persyaratan Layer Teks PDF
+                PDF Text Layer Requirements
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Sistem ATS memproses berkas PDF berbasis layer teks (*searchable text layer*). PDF hasil *scanned image* atau foto dokumen tanpa layer teks akan ditandai dengan status <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-amber-700 dark:text-amber-300 border border-border">needs_review</code> untuk tindakan manual HR.
+                The ATS system processes PDF files containing a searchable text layer. Scanned images or photos without a readable text layer will be flagged with status <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-amber-700 dark:text-amber-300 border border-border">needs_review</code> for manual HR review.
               </p>
             </div>
 
             <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2">
               <h4 className="text-xs font-bold text-foreground">
-                Keamanan & Storage Privat
+                Security & Private Storage
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Setiap dokumen CV kandidat disimpan dalam private storage privat Supabase dengan Temporary Signed URL (TTL maks. 300 detik) untuk melindungi data PII kandidat.
+                Each candidate resume document is securely stored in private storage with Temporary Signed URLs (max TTL 300 seconds) to protect candidate PII data.
               </p>
             </div>
           </div>
         ) : (
           <>
-            <Field label="Target Lowongan Position" required hint="Pilih posisi lowongan yang akan dicocokkan kualifikasinya.">
+            <Field label="Target Job Position" required hint="Select the target position to match candidate qualifications.">
               <Select value={jobId} onChange={(e) => setJobId(e.target.value)} disabled={isProcessing} sizeVariant="md">
                 {jobs.map((j) => (
                   <option key={j.id} value={j.id}>
-                    {j.title} ({j.department}) — min. {j.minimum_experience_months} bln
+                    {j.title} ({j.department}) — min. {j.minimum_experience_months} mos
                   </option>
                 ))}
               </Select>
@@ -509,8 +509,8 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
                   accept=".pdf,application/pdf"
                   className="hidden"
                 />
-                <p className="text-xs font-bold text-foreground">Klik atau Tarik & Lepas Berkas PDF CV</p>
-                <p className="text-[11px] text-muted-foreground">Ukuran berkas maks 10 MB. Disimpan aman dalam storage privat.</p>
+                <p className="text-xs font-bold text-foreground">Click or Drag & Drop PDF Resume</p>
+                <p className="text-[11px] text-muted-foreground">Max file size 10 MB. Securely stored in private storage.</p>
               </div>
             )}
 
@@ -522,29 +522,29 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
                     <p className="text-[11px] text-muted-foreground font-mono">{formatBytes(file.size)}</p>
                   </div>
                   <Button variant="danger-soft" size="md" onClick={() => setFile(null)} className="px-4">
-                    Ganti Berkas
+                    Replace File
                   </Button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-card border border-border rounded-xl">
-                  <Field label="Nama Lengkap Kandidat" required>
+                  <Field label="Candidate Full Name" required>
                     <Input
                       required
                       value={candidateNameInput}
                       onChange={(e) => setCandidateNameInput(e.target.value)}
-                      placeholder="Nama kandidat"
+                      placeholder="Candidate name"
                     />
                   </Field>
-                  <Field label="Email Kandidat" required>
+                  <Field label="Candidate Email" required>
                     <Input
                       type="email"
                       required
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
-                      placeholder="nama@example.com"
+                      placeholder="name@example.com"
                     />
                   </Field>
-                  <Field label="Nomor Telepon" className="sm:col-span-2">
+                  <Field label="Phone Number" className="sm:col-span-2">
                     <Input
                       value={phoneInput}
                       onChange={(e) => setPhoneInput(e.target.value)}
@@ -560,7 +560,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
                 <div className="flex items-center gap-3 p-4 bg-primary/10 border border-primary/20 rounded-xl text-foreground">
                   <Loader2 className="w-5 h-5 text-primary animate-spin shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-foreground">Mengekstrak Data PDF & Menghitung Skor Job-Fit</h4>
+                    <h4 className="text-xs font-bold text-foreground">Extracting PDF Data & Calculating Job-Fit Score</h4>
                     <p className="text-[11px] text-muted-foreground font-medium mt-0.5">
                       {candidateNameInput} ({emailInput})
                     </p>

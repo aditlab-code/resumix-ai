@@ -257,7 +257,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
   };
 
   const formatCategoryLabel = (cat: string): string => {
-    if (cat === 'all') return 'SEMUA';
+    if (cat === 'all') return 'ALL';
     if (cat === 'data_ai') return 'Data & AI';
     if (cat === 'devops') return 'DevOps & Cloud';
     if (cat === 'mobile') return 'Mobile Dev';
@@ -279,18 +279,18 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
       size="3xl"
       title={
         <div>
-          <h3 className="text-base font-bold text-foreground">Taksonomi Skill & Kamus Sinonim</h3>
+          <h3 className="text-base font-bold text-foreground">Skill Taxonomy & Synonym Dictionary</h3>
           <p className="text-xs font-normal text-muted-foreground mt-0.5">
-            Normalisasi variasi penulisan skill untuk akurasi Mandatory Skill Penalty Engine
+            Normalize skill variations for Mandatory Skill Penalty Engine accuracy
           </p>
         </div>
       }
       subheader={
         <Tabs
           items={[
-            { key: 'manage', label: `Daftar Taksonomi (${taxonomies.length})` },
-            { key: 'add', label: 'Tambah Manual' },
-            { key: 'upload', label: 'Import Masal (JSON/CSV)' },
+            { key: 'manage', label: `Taxonomy List (${taxonomies.length})` },
+            { key: 'add', label: 'Manual Entry' },
+            { key: 'upload', label: 'Bulk Import (JSON/CSV)' },
           ]}
           active={activeTab}
           onChange={(k) => setActiveTab(k as any)}
@@ -300,7 +300,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
       footer={
         <div className="flex items-center justify-end gap-3.5 w-full">
           <Button variant="ghost" size="md" onClick={onClose} className="px-6">
-            Tutup
+            Close
           </Button>
         </div>
       }
@@ -309,21 +309,21 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
         {activeTab === 'add' && (
           <div className="space-y-3.5 p-4 bg-card border border-border rounded-xl shadow-xs">
             <h3 className="text-xs font-bold text-foreground border-b border-border pb-2">
-              Tambah Taksonomi Skill Baru
+              Add New Skill Taxonomy
             </h3>
 
             <form onSubmit={handleAddTaxonomy} className="space-y-3.5 pt-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                <Field label="Skill Utama (Canonical)" required hint="Contoh: Golang, Python, PostgreSQL">
+                <Field label="Primary Skill (Canonical)" required hint="Example: Golang, Python, PostgreSQL">
                   <Input
                     required
-                    placeholder="Contoh: Golang"
+                    placeholder="Example: Golang"
                     value={canonicalName}
                     onChange={(e) => setCanonicalName(e.target.value)}
                   />
                 </Field>
 
-                <Field label="Kategori Rumpun Skill">
+                <Field label="Skill Category">
                   {!isAddingNewCategory ? (
                     <Select
                       value={categoryInput}
@@ -334,13 +334,13 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                           {formatCategoryLabel(cat)}
                         </option>
                       ))}
-                      <option value="__NEW_CATEGORY__">+ Tambah Kategori Baru...</option>
+                      <option value="__NEW_CATEGORY__">+ Add New Category...</option>
                     </Select>
                   ) : (
                     <div className="flex items-center gap-1.5">
                       <Input
                         autoFocus
-                        placeholder="Kategori baru..."
+                        placeholder="New category..."
                         value={newCategoryName}
                         onChange={(e) => setNewCategoryName(e.target.value)}
                         className="text-xs"
@@ -351,7 +351,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                         onClick={handleConfirmAddNewCategory}
                         disabled={!newCategoryName.trim()}
                         className="p-2"
-                        aria-label="Konfirmasi kategori baru"
+                        aria-label="Confirm new category"
                       >
                         <Check className="w-3.5 h-3.5" />
                       </Button>
@@ -361,7 +361,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                         size="sm"
                         onClick={() => setIsAddingNewCategory(false)}
                         className="p-2"
-                        aria-label="Batal tambah kategori"
+                        aria-label="Cancel new category"
                       >
                         <X className="w-3.5 h-3.5" />
                       </Button>
@@ -370,7 +370,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                 </Field>
               </div>
 
-              <Field label="Daftar Sinonim / Alias (Pisahkan dengan koma)" hint="Contoh: go, gin, gorm, go lang">
+              <Field label="Synonym / Alias List (Comma-separated)" hint="Example: go, gin, gorm, go lang">
                 <Input
                   placeholder="go, gin, gorm, go lang"
                   value={synonymsInput}
@@ -380,7 +380,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
 
               <div className="flex justify-end pt-2">
                 <Button type="submit" size="md" className="px-6">
-                  Simpan Taksonomi
+                  Save Taxonomy
                 </Button>
               </div>
             </form>
@@ -391,18 +391,18 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
           <div className="p-5 bg-card border border-border rounded-xl shadow-xs space-y-4">
             <div>
               <h3 className="text-xs font-bold text-foreground mb-1">
-                Upload Masal (JSON/CSV)
+                Bulk Upload (JSON/CSV)
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Unggah berkas taksonomi sinonim dalam format JSON atau CSV (dipisahkan titik koma <code>;</code>) untuk menambahkan puluhan taksonomi secara sekaligus.
+                Upload synonym taxonomy files in JSON or CSV format (semicolon-separated <code>;</code>) to add dozens of taxonomies simultaneously.
               </p>
             </div>
 
             <label className="border-2 border-dashed border-border hover:border-primary/50 bg-muted/30 hover:bg-muted/50 rounded-xl p-6 text-center cursor-pointer block transition-all">
               <span className="text-xs font-bold text-primary block">
-                {isUploading ? 'Memproses Berkas...' : 'Pilih Berkas JSON atau CSV'}
+                {isUploading ? 'Processing File...' : 'Select JSON or CSV File'}
               </span>
-              <span className="text-[11px] text-muted-foreground mt-1 block">Format file: skill_taxonomies.json atau skill_taxonomies.csv</span>
+              <span className="text-[11px] text-muted-foreground mt-1 block">File format: skill_taxonomies.json or skill_taxonomies.csv</span>
               <input
                 type="file"
                 accept=".json,.csv"
@@ -420,7 +420,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
             <div className="flex flex-col sm:flex-row items-center gap-2.5">
               <div className="relative flex-1 w-full">
                 <Input
-                  placeholder="Cari skill utama atau sinonim..."
+                  placeholder="Search primary skill or synonym..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8 text-xs"
@@ -435,7 +435,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                   sizeVariant="sm"
                   className="font-semibold"
                 >
-                  <option value="all">Filter: Semua Rumpun ({taxonomies.length})</option>
+                  <option value="all">Filter: All Categories ({taxonomies.length})</option>
                   {categories.map((cat) => {
                     const count = taxonomies.filter((t) => t.category === cat).length;
                     return (
@@ -451,7 +451,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={(e) => handleDeleteCategory(activeCategoryFilter, e)}
-                    title={`Hapus kategori "${formatCategoryLabel(activeCategoryFilter)}"`}
+                    title={`Delete category "${formatCategoryLabel(activeCategoryFilter)}"`}
                     className="text-destructive hover:bg-destructive/10 p-1 shrink-0"
                   >
                     <X className="w-4 h-4" />
@@ -464,7 +464,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
             <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
               {filteredTaxonomies.length === 0 ? (
                 <div className="text-center py-10 text-xs text-muted-foreground italic">
-                  Tidak ada taksonomi sinonim skill yang cocok dengan pencarian.
+                  No skill synonym taxonomies match your search.
                 </div>
               ) : (
                 filteredTaxonomies.map((item) => (
@@ -489,7 +489,7 @@ export const SkillTaxonomyModal: React.FC<SkillTaxonomyModalProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDeleteTaxonomy(item.id, item.canonical_name)}
-                      aria-label={`Hapus ${item.canonical_name}`}
+                      aria-label={`Delete ${item.canonical_name}`}
                       className="text-destructive hover:text-destructive hover:bg-destructive/10 p-1 shrink-0"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

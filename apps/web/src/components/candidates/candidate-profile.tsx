@@ -48,7 +48,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     {/* Summary Card */}
     {extraction.summary && (
       <Card className="p-4 space-y-2 bg-card border border-border rounded-xl">
-        <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">Ringkasan Profil (AI)</SectionLabel>
+        <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">Profile Summary (AI)</SectionLabel>
         <p className="text-xs text-muted-foreground font-medium leading-relaxed bg-muted/30 p-3 rounded-lg border border-border/50">
           {extraction.summary}
         </p>
@@ -59,7 +59,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     <Card className="p-4 space-y-2.5 bg-card border border-border rounded-xl">
       <SectionLabel className="flex items-center gap-1.5 text-xs font-extrabold text-foreground uppercase tracking-wider">
         <Code className="w-3.5 h-3.5 text-primary" />
-        Keahlian & Technical Tags ({extraction.skills?.length || 0})
+        Skills & Technical Tags ({extraction.skills?.length || 0})
       </SectionLabel>
       <div className="flex flex-wrap gap-1.5">
         {extraction.skills && extraction.skills.length > 0 ? (
@@ -80,7 +80,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
             );
           })
         ) : (
-          <span className="text-xs text-muted-foreground italic">Tidak ada data skill</span>
+          <span className="text-xs text-muted-foreground italic">No skill data available</span>
         )}
       </div>
     </Card>
@@ -88,7 +88,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     <div className="space-y-2">
       <SectionLabel className="flex items-center gap-1.5 text-xs font-extrabold text-foreground uppercase tracking-wider">
         <Briefcase className="w-3.5 h-3.5 text-primary" />
-        Pengalaman Kerja & Proyek ({extraction.work_experience?.length || 0})
+        Work Experience & Projects ({extraction.work_experience?.length || 0})
       </SectionLabel>
       <div className="space-y-2.5">
         {extraction.work_experience && extraction.work_experience.length > 0 ? (
@@ -100,7 +100,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                 exp.description.trim().toLowerCase().startsWith(exp.role.trim().toLowerCase()));
 
             const isLongRole = exp.role && exp.role.length > 55;
-            const displayTitle = isLongRole ? (exp.company || 'Pengalaman Kerja') : (exp.role || 'Role');
+            const displayTitle = isLongRole ? (exp.company || 'Work Experience') : (exp.role || 'Role');
             const displaySubTitle = isLongRole ? null : exp.company;
             const bodyDescription = isLongRole
               ? exp.role
@@ -119,7 +119,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                   </div>
                   <span className="text-[10px] text-blue-700 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
                     {exp.start_date || '?'} — {exp.is_current ? 'Present' : exp.end_date || '?'} (
-                    {exp.duration_months || 0} bln)
+                    {exp.duration_months || 0} mos)
                   </span>
                 </div>
 
@@ -131,7 +131,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                 {exp.technologies && exp.technologies.length > 0 && (
                   <div className="pt-1.5 space-y-1">
                     <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
-                      Teknologi:
+                      Technologies:
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {exp.technologies.map((tech, tIdx) => (
@@ -150,7 +150,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                 {exp.projects && exp.projects.length > 0 && (
                   <div className="pt-2 border-t border-border/60 space-y-1.5">
                     <span className="text-[10px] font-extrabold text-muted-foreground flex items-center gap-1 uppercase tracking-wider">
-                      <FolderGit2 className="w-3.5 h-3.5 text-purple-600" /> Proyek Kunci
+                      <FolderGit2 className="w-3.5 h-3.5 text-purple-600" /> Key Projects
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {exp.projects.map((proj, pIdx) => (
@@ -168,7 +168,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
             );
           })
         ) : (
-          <span className="text-xs text-muted-foreground italic">Tidak ada pengalaman kerja</span>
+          <span className="text-xs text-muted-foreground italic">No work experience available</span>
         )}
       </div>
     </div>
@@ -176,16 +176,16 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     {/* Pendidikan */}
     <div className="space-y-2.5">
       <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">
-        Pendidikan ({extraction.education?.length || 0})
+        Education ({extraction.education?.length || 0})
       </SectionLabel>
       <div className="space-y-2">
         {extraction.education && extraction.education.length > 0 ? (
           extraction.education.map((edu, idx) => {
-            const hasInst = edu.institution && edu.institution.trim() !== '' && edu.institution.trim() !== 'Tidak tercantum';
-            const displayInst = hasInst && edu.institution ? edu.institution.trim() : (edu.degree || 'Pendidikan');
+            const hasInst = edu.institution && edu.institution.trim() !== '' && edu.institution.trim() !== 'Tidak tercantum' && edu.institution.trim() !== 'Not listed';
+            const displayInst = hasInst && edu.institution ? edu.institution.trim() : (edu.degree || 'Education');
             
             const subDetails = [edu.degree, edu.major]
-              .filter((x) => x && x.trim() !== '' && x.trim() !== 'Tidak tercantum' && x.trim() !== displayInst)
+              .filter((x) => x && x.trim() !== '' && x.trim() !== 'Tidak tercantum' && x.trim() !== 'Not listed' && x.trim() !== displayInst)
               .join(' — ');
 
             return (
@@ -207,7 +207,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
             );
           })
         ) : (
-          <span className="text-xs text-muted-foreground italic">Tidak ada data pendidikan</span>
+          <span className="text-xs text-muted-foreground italic">No education data available</span>
         )}
       </div>
     </div>
@@ -217,7 +217,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
       {extraction.certifications && extraction.certifications.length > 0 && (
         <div className="space-y-2">
           <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">
-            Sertifikasi ({extraction.certifications.length})
+            Certifications ({extraction.certifications.length})
           </SectionLabel>
           <div className="space-y-1.5">
             {extraction.certifications.map((c, i) => (
@@ -233,7 +233,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
       {extraction.projects && extraction.projects.length > 0 && (
         <div className="space-y-2">
           <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">
-            Portofolio Proyek ({extraction.projects.length})
+            Project Portfolio ({extraction.projects.length})
           </SectionLabel>
           <div className="space-y-1.5">
             {extraction.projects.map((p, i) => (
@@ -251,7 +251,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     {extraction.portfolios && extraction.portfolios.length > 0 && (
       <div className="space-y-2">
         <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">
-          Portofolio Link ({extraction.portfolios.length})
+          Portfolio Links ({extraction.portfolios.length})
         </SectionLabel>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {extraction.portfolios.map((pf, i) => (
@@ -277,7 +277,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     {extraction.references && extraction.references.length > 0 && (
       <div className="space-y-2">
         <SectionLabel className="text-xs font-extrabold text-foreground uppercase tracking-wider">
-          Referensi Kerja ({extraction.references.length})
+          Work References ({extraction.references.length})
         </SectionLabel>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {extraction.references.map((rf, i) => (
@@ -301,7 +301,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
       <div className="p-4 bg-amber-500/15 border border-amber-500/35 text-amber-900 rounded-xl text-xs space-y-2 font-medium">
         <h4 className="flex items-center gap-2 font-bold text-amber-900 uppercase tracking-wider text-[11px]">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-          Catatan AI Extraction ({extraction.extraction_warnings.length})
+          AI Extraction Warnings ({extraction.extraction_warnings.length})
         </h4>
         <ul className="list-disc list-inside space-y-1 text-xs">
           {extraction.extraction_warnings.map((w, i) => (

@@ -47,9 +47,9 @@ export default function JobsPage() {
       {jobs.length === 0 ? (
         <EmptyState
           icon={<Briefcase className="w-8 h-8 text-brand-accent" />}
-          title="Belum Ada Lowongan Kerja Diterbitkan"
-          description="Sistem siap menerima kriteria lowongan. Buat lowongan kerja baru untuk mulai menerima dan menganalisis CV pelamar."
-          actionLabel="Buat Lowongan Kerja Baru"
+          title="No Job Openings Posted Yet"
+          description="The system is ready for job criteria. Create a new job opening to start receiving and analyzing candidate resumes."
+          actionLabel="Create New Job Opening"
           onAction={() => setIsCreateJobModalOpen(true)}
         />
       ) : (
@@ -59,7 +59,7 @@ export default function JobsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
               <div>
                 <h2 className="text-h2 font-bold text-ink-default">
-                  Evaluasi Pelamar — <span className="text-brand-accent">{activeJob?.title || 'Posisi'}</span>
+                  Applicant Evaluation — <span className="text-brand-accent">{activeJob?.title || 'Position'}</span>
                 </h2>
               </div>
             </div>
@@ -67,9 +67,9 @@ export default function JobsPage() {
             {/* Global Underline Button Tabs */}
             <SubNavTab
               tabs={[
-                { id: 'table', label: 'Tabel Pelamar', count: jobApplications.length },
+                { id: 'table', label: 'Applicants Table', count: jobApplications.length },
                 { id: 'kanban', label: 'Kanban Board' },
-                { id: 'compare', label: 'Komparasi Matriks' },
+                { id: 'compare', label: 'Matrix Comparison' },
               ]}
               activeTab={candidateViewMode}
               onTabChange={setCandidateViewMode}

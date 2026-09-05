@@ -64,11 +64,11 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({
         <SearchInput
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Cari kandidat, email, skill"
+          placeholder="Search candidate, email, skill..."
         />
         <div className="flex items-center gap-2 sm:ml-auto">
           <FilterSelect value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="all">Semua status</option>
+            <option value="all">All statuses</option>
             <option value="screening">Screening</option>
             <option value="applied">Applied</option>
             <option value="interview">Interview</option>
@@ -77,9 +77,9 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({
             <option value="failed">Failed</option>
           </FilterSelect>
           <FilterSelect value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}>
-            <option value="score_desc">Skor tertinggi</option>
-            <option value="score_asc">Skor terendah</option>
-            <option value="date_desc">Terbaru</option>
+            <option value="score_desc">Highest score</option>
+            <option value="score_asc">Lowest score</option>
+            <option value="date_desc">Most recent</option>
           </FilterSelect>
         </div>
       </Toolbar>
@@ -91,9 +91,9 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({
         onRowClick={onSelectCandidate}
         empty={
           <EmptyState
-            title="Tidak ada kandidat"
-            description="Sesuaikan pencarian atau filter status."
-            actionLabel="Unggah CV"
+            title="No candidates found"
+            description="Adjust search term or status filter."
+            actionLabel="Upload CV"
             onAction={onOpenUploadModal}
           />
         }

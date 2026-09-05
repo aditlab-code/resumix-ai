@@ -1,6 +1,6 @@
 import React from 'react';
-import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { AppDataProvider } from '@/context/app-data-context';
 import { AppLayoutShell } from '@/components/dashboard/app-layout-shell';
 import { Toaster } from '@/components/ui/sonner';

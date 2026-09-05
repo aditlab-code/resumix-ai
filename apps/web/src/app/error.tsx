@@ -16,12 +16,12 @@ export default function Error({
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 bg-surface border border-line rounded my-8 p-8 text-center">
-      <h2>Kendala pada halaman</h2>
+      <h2>Page Error</h2>
       <p className="text-xs text-ink-muted max-w-sm">
-        {error.message || 'Terjadi kesalahan sistem saat memproses halaman ini.'}
+        {error.message || 'A system error occurred while processing this page.'}
       </p>
       <Button size="sm" onClick={() => reset()}>
-        Coba lagi
+        Try again
       </Button>
     </div>
   );

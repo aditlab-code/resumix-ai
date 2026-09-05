@@ -36,7 +36,7 @@ const EntryCard: React.FC<{ label: string; onDelete: () => void; children: React
         type="button"
         onClick={onDelete}
         className="text-ink-subtle hover:text-danger p-1 rounded transition-colors"
-        aria-label="Hapus entri"
+        aria-label="Delete entry"
       >
         <Trash2 className="w-3.5 h-3.5" />
       </button>
@@ -53,7 +53,7 @@ const AddButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
     onClick={onClick}
     iconLeft={<Plus className="w-3.5 h-3.5" />}
   >
-    Tambah
+    Add
   </Button>
 );
 
@@ -97,9 +97,9 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     setEducations((prev) => [
       ...prev,
       {
-        institution: 'Universitas / Institut Baru',
-        degree: 'Sarjana (S1)',
-        major: 'Teknik Informatika',
+        institution: 'New University / Institute',
+        degree: 'Bachelor',
+        major: 'Computer Science',
         start_year: 2018,
         end_year: 2022,
       },
@@ -113,14 +113,14 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     setWorkExperiences((prev) => [
       ...prev,
       {
-        company: 'Nama Perusahaan / Proyek Baru',
+        company: 'New Company / Project Name',
         role: 'Software Developer',
         start_date: '2023-01',
         end_date: 'Present',
         is_current: true,
         duration_months: 12,
-        description: 'Tanggung jawab utama dan kontribusi proyek.',
-        projects: ['Proyek Utama'],
+        description: 'Key responsibilities and project contributions.',
+        projects: ['Main Project'],
       },
     ]);
   const updateExperience = (index: number, patch: Partial<WorkExperienceDTO>) =>
@@ -132,9 +132,9 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     setPortfolios((prev) => [
       ...prev,
       {
-        title: 'Judul Portofolio / Proyek Baru',
+        title: 'New Portfolio / Project Title',
         url: 'https://github.com/username/project',
-        description: 'Deskripsi singkat portofolio karya.',
+        description: 'Short portfolio description.',
       },
     ]);
   const updatePortfolio = (index: number, patch: Partial<PortfolioDTO>) =>
@@ -146,9 +146,9 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     setReferences((prev) => [
       ...prev,
       {
-        name: 'Nama Pemberi Referensi',
+        name: 'Reference Contact Name',
         role: 'Manager / Supervisor',
-        company: 'Nama Perusahaan',
+        company: 'Company Name',
         contact_info: 'email@example.com / +62 812-xxxx-xxxx',
       },
     ]);
@@ -165,7 +165,7 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     );
     const companies = workExperiences.map((w) => w.company || '').filter((c) => c.length > 0);
     setSummary(
-      constructExecutiveSummary(fullName || 'Kandidat', totalMonths || 24, skillList, job.title, companies)
+      constructExecutiveSummary(fullName || 'Candidate', totalMonths || 24, skillList, job.title, companies)
     );
   };
 
@@ -217,15 +217,15 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-5 text-xs">
       <div className="bg-canvas rounded p-3 space-y-3">
-        <SectionLabel>Kontak &amp; ringkasan</SectionLabel>
+        <SectionLabel>Contact &amp; Summary</SectionLabel>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Field label="Nama lengkap" required>
+          <Field label="Full Name" required>
             <Input required value={fullName} onChange={(e) => setFullName(e.target.value)} />
           </Field>
           <Field label="Email" required>
             <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </Field>
-          <Field label="No. telepon">
+          <Field label="Phone Number">
             <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
           </Field>
         </div>
@@ -233,13 +233,13 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
         <Field
           label={
             <span className="flex items-center justify-between w-full">
-              Ringkasan profil
+              Profile Summary
               <button
                 type="button"
                 onClick={handleRegenerateSummary}
                 className="text-[11px] font-bold text-brand-accent hover:underline flex items-center gap-1"
               >
-                <Sparkles className="w-3 h-3" /> Regenerasi AI
+                <Sparkles className="w-3 h-3" /> AI Regenerate
               </button>
             </span>
           }
@@ -247,36 +247,36 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
           <Textarea rows={2} value={summary} onChange={(e) => setSummary(e.target.value)} />
         </Field>
 
-        <Field label="Skill teknis" hint="Dipisahkan koma.">
+        <Field label="Technical Skills" hint="Comma-separated.">
           <Input value={skillsText} onChange={(e) => setSkillsText(e.target.value)} />
         </Field>
       </div>
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <SectionLabel>Pengalaman kerja &amp; proyek ({workExperiences.length})</SectionLabel>
+          <SectionLabel>Work Experience &amp; Projects ({workExperiences.length})</SectionLabel>
           <AddButton onClick={addExperience} />
         </div>
         {workExperiences.length === 0 ? (
-          <p className="text-ink-subtle italic text-center py-3">Belum ada entri.</p>
+          <p className="text-ink-subtle italic text-center py-3">No entries yet.</p>
         ) : (
           <div className="space-y-2">
             {workExperiences.map((exp, idx) => (
-              <EntryCard key={idx} label={`Entri #${idx + 1}`} onDelete={() => deleteExperience(idx)}>
+              <EntryCard key={idx} label={`Entry #${idx + 1}`} onDelete={() => deleteExperience(idx)}>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Field label="Perusahaan / proyek">
+                  <Field label="Company / Project">
                     <Input
                       value={exp.company || ''}
                       onChange={(e) => updateExperience(idx, { company: e.target.value })}
                     />
                   </Field>
-                  <Field label="Peran">
+                  <Field label="Role">
                     <Input
                       value={exp.role || ''}
                       onChange={(e) => updateExperience(idx, { role: e.target.value })}
                     />
                   </Field>
-                  <Field label="Durasi (bulan)">
+                  <Field label="Duration (Months)">
                     <Input
                       type="number"
                       min={0}
@@ -289,14 +289,14 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
                   </Field>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Field label="Periode">
+                  <Field label="Period">
                     <div className="flex items-center gap-2">
                       <Input
                         value={exp.start_date || ''}
                         onChange={(e) => updateExperience(idx, { start_date: e.target.value })}
                         placeholder="2023-01"
                       />
-                      <span className="text-ink-subtle">s/d</span>
+                      <span className="text-ink-subtle">to</span>
                       <Input
                         value={exp.end_date || ''}
                         onChange={(e) => updateExperience(idx, { end_date: e.target.value })}
@@ -304,14 +304,14 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
                       />
                     </div>
                   </Field>
-                  <Field label="Proyek kunci" hint="Dipisahkan koma.">
+                  <Field label="Key Projects" hint="Comma-separated.">
                     <Input
                       value={(exp.projects || []).join(', ')}
                       onChange={(e) => updateExperience(idx, { projects: splitList(e.target.value) })}
                     />
                   </Field>
                 </div>
-                <Field label="Deskripsi">
+                <Field label="Description">
                   <Textarea
                     rows={2}
                     value={exp.description || ''}
@@ -326,35 +326,35 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <SectionLabel>Pendidikan ({educations.length})</SectionLabel>
+          <SectionLabel>Education ({educations.length})</SectionLabel>
           <AddButton onClick={addEducation} />
         </div>
         {educations.length === 0 ? (
-          <p className="text-ink-subtle italic text-center py-3">Belum ada entri.</p>
+          <p className="text-ink-subtle italic text-center py-3">No entries yet.</p>
         ) : (
           <div className="space-y-2">
             {educations.map((edu, idx) => (
-              <EntryCard key={idx} label={`Pendidikan #${idx + 1}`} onDelete={() => deleteEducation(idx)}>
+              <EntryCard key={idx} label={`Education #${idx + 1}`} onDelete={() => deleteEducation(idx)}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Field label="Institusi">
+                  <Field label="Institution">
                     <Input
                       value={edu.institution || ''}
                       onChange={(e) => updateEducation(idx, { institution: e.target.value })}
                     />
                   </Field>
-                  <Field label="Jenjang">
+                  <Field label="Degree">
                     <Input
                       value={edu.degree || ''}
                       onChange={(e) => updateEducation(idx, { degree: e.target.value })}
                     />
                   </Field>
-                  <Field label="Jurusan">
+                  <Field label="Major">
                     <Input
                       value={edu.major || ''}
                       onChange={(e) => updateEducation(idx, { major: e.target.value })}
                     />
                   </Field>
-                  <Field label="Tahun">
+                  <Field label="Years">
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -362,7 +362,7 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
                         onChange={(e) => updateEducation(idx, { start_year: Number(e.target.value) })}
                         className="font-mono"
                       />
-                      <span className="text-ink-subtle">s/d</span>
+                      <span className="text-ink-subtle">to</span>
                       <Input
                         type="number"
                         value={edu.end_year || 2022}
@@ -380,17 +380,17 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <SectionLabel>Portofolio ({portfolios.length})</SectionLabel>
+          <SectionLabel>Portfolio ({portfolios.length})</SectionLabel>
           <AddButton onClick={addPortfolio} />
         </div>
         {portfolios.length === 0 ? (
-          <p className="text-ink-subtle italic text-center py-3">Belum ada entri.</p>
+          <p className="text-ink-subtle italic text-center py-3">No entries yet.</p>
         ) : (
           <div className="space-y-2">
             {portfolios.map((p, idx) => (
-              <EntryCard key={idx} label={`Portofolio #${idx + 1}`} onDelete={() => deletePortfolio(idx)}>
+              <EntryCard key={idx} label={`Portfolio #${idx + 1}`} onDelete={() => deletePortfolio(idx)}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Field label="Judul">
+                  <Field label="Title">
                     <Input
                       value={p.title || ''}
                       onChange={(e) => updatePortfolio(idx, { title: e.target.value })}
@@ -412,34 +412,34 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <SectionLabel>Referensi kerja ({references.length})</SectionLabel>
+          <SectionLabel>Work References ({references.length})</SectionLabel>
           <AddButton onClick={addReference} />
         </div>
         {references.length === 0 ? (
-          <p className="text-ink-subtle italic text-center py-3">Belum ada entri.</p>
+          <p className="text-ink-subtle italic text-center py-3">No entries yet.</p>
         ) : (
           <div className="space-y-2">
             {references.map((r, idx) => (
-              <EntryCard key={idx} label={`Referensi #${idx + 1}`} onDelete={() => deleteReference(idx)}>
+              <EntryCard key={idx} label={`Reference #${idx + 1}`} onDelete={() => deleteReference(idx)}>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Field label="Nama">
+                  <Field label="Name">
                     <Input
                       value={r.name || ''}
                       onChange={(e) => updateReference(idx, { name: e.target.value })}
                     />
                   </Field>
-                  <Field label="Jabatan & perusahaan">
+                  <Field label="Role & Company">
                     <Input
                       value={r.role || ''}
                       onChange={(e) =>
                         updateReference(idx, {
                           role: e.target.value,
-                          company: r.company || 'Perusahaan',
+                          company: r.company || 'Company',
                         })
                       }
                     />
                   </Field>
-                  <Field label="Kontak">
+                  <Field label="Contact">
                     <Input
                       value={r.contact_info || ''}
                       onChange={(e) => updateReference(idx, { contact_info: e.target.value })}
@@ -455,10 +455,10 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
 
       <div className="flex items-center justify-end gap-2 pt-3 border-t border-line sticky bottom-0 bg-surface pb-1">
         <Button variant="ghost" size="sm" type="button" onClick={onCancel}>
-          Batal
+          Cancel
         </Button>
         <Button size="sm" type="submit" iconLeft={<Save className="w-4 h-4" />}>
-          Simpan &amp; hitung ulang
+          Save &amp; Recalculate
         </Button>
       </div>
     </form>

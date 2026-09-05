@@ -37,27 +37,27 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       <Stat
-        label="Lowongan Aktif"
+        label="Active Jobs"
         value={activeJobs}
-        hint="Open Position"
+        hint="Open Positions"
         variant="blue"
         onClick={() => router.push('/jobs')}
       />
       <Stat
-        label="Total Kandidat"
+        label="Total Applied"
         value={applications.length}
         hint="All Applications"
         variant="indigo"
         onClick={() => router.push('/candidates')}
       />
       <Stat
-        label="Diproses AI"
+        label="In Progress"
         value={processing}
         variant="amber"
-        hint={processing > 0 ? 'On Process' : 'Ready'}
+        hint={processing > 0 ? 'Processing' : 'Idle'}
       />
       <Stat
-        label="Perlu Review (Zero-Text)"
+        label="Zero-text Layer"
         value={warnings}
         variant="red"
         hint="Needs Review"

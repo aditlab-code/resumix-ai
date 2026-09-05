@@ -15,10 +15,10 @@ interface HeaderProps {
 
 const TITLES: Record<ActiveViewType, string> = {
   dashboard: 'Dashboard Overview',
-  jobs: 'Kelola Lowongan Pekerjaan',
-  candidates: 'Daftar & Evaluasi Kandidat',
-  settings: 'Pengaturan Pipeline ATS',
-  docs: 'Dokumentasi Sistem & API',
+  jobs: 'Manage Job Openings',
+  candidates: 'Candidate List & Evaluation',
+  settings: 'ATS Pipeline Settings',
+  docs: 'System & API Documentation',
 };
 
 export const Header: React.FC<HeaderProps> = ({
@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={onToggleMobileMenu}
               className="md:hidden p-2 rounded-md border border-surface-border text-ink-default hover:bg-surface-hover focus-ring shrink-0"
-              aria-label="Buka Menu Sidebar"
+              aria-label="Open Sidebar Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
               size="sm"
               onClick={() => setIsCreateJobModalOpen(true)}
             >
-              Buat
+              Post
             </Button>
           )}
 
@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
               size="sm"
               onClick={() => setIsUploadModalOpen(true)}
             >
-              Unggah CV
+              Upload CV
             </Button>
           )}
 
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
               size="sm"
               onClick={onSaveSettings}
             >
-              Simpan
+              Save
             </Button>
           )}
         </div>
@@ -129,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
             size="sm"
             onClick={() => setIsCreateJobModalOpen(true)}
           >
-            Buat Lowongan
+            Post Job
           </Button>
         )}
 
@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
             size="sm"
             onClick={() => setIsUploadModalOpen(true)}
           >
-            Unggah CV
+            Upload CV
           </Button>
         )}
 
@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
             size="sm"
             onClick={onSaveSettings}
           >
-            Simpan Pengaturan
+            Save Settings
           </Button>
         )}
       </div>

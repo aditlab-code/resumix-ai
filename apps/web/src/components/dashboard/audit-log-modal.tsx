@@ -49,19 +49,19 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
       size="2xl"
       title={
         <div>
-          <h3 className="text-base font-bold text-foreground">Audit Log & Catatan Keamanan</h3>
+          <h3 className="text-base font-bold text-foreground">Audit Trail & Security Logs</h3>
           <p className="text-xs font-normal text-muted-foreground mt-0.5">
-            Riwayat aktivitas & rekam jejak operasional sistem ATS ({filteredLogs.length} dari {logs.length} catatan)
+            Operational activity history & system log records ({filteredLogs.length} of {logs.length} records)
           </p>
         </div>
       }
       subheader={
         <Tabs
           items={[
-            { key: 'all', label: `Semua (${logs.length})` },
-            { key: 'candidate', label: 'Kandidat' },
-            { key: 'jobs', label: 'Lowongan' },
-            { key: 'taxonomy', label: 'Taksonomi' },
+            { key: 'all', label: `All (${logs.length})` },
+            { key: 'candidate', label: 'Candidates' },
+            { key: 'jobs', label: 'Jobs' },
+            { key: 'taxonomy', label: 'Taxonomy' },
           ]}
           active={activeTab}
           onChange={(k) => setActiveTab(k as any)}
@@ -71,10 +71,10 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
       footer={
         confirming ? (
           <div className="flex items-center justify-between w-full">
-            <span className="text-xs text-muted-foreground font-medium">Hapus seluruh {logs.length} catatan audit log?</span>
+            <span className="text-xs text-muted-foreground font-medium">Clear all {logs.length} audit log records?</span>
             <div className="flex items-center gap-4 sm:gap-4">
               <Button variant="ghost" size="md" onClick={() => setConfirming(false)} className="px-6">
-                Batal
+                Cancel
               </Button>
               <Button
                 variant="danger"
@@ -85,7 +85,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
                   setConfirming(false);
                 }}
               >
-                Hapus semua
+                Clear All
               </Button>
             </div>
           </div>
@@ -98,10 +98,10 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
               disabled={logs.length === 0}
               onClick={() => setConfirming(true)}
             >
-              Bersihkan Log
+              Clear Log
             </Button>
             <Button variant="ghost" size="md" onClick={onClose} className="px-6">
-              Tutup
+              Close
             </Button>
           </div>
         )
@@ -109,11 +109,11 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
     >
       {filteredLogs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground space-y-2">
-          <p className="text-xs font-semibold text-foreground">Tidak Ada Catatan Log</p>
+          <p className="text-xs font-semibold text-foreground">No Log Records Found</p>
           <p className="text-[11px] text-muted-foreground max-w-xs">
             {activeTab === 'all'
-              ? 'Setiap aktivitas sistem, perubahan status, dan pengelolaan taksonomi akan dicatat secara otomatis di sini.'
-              : `Tidak ada riwayat aktivitas pada kategori filter "${activeTab}".`}
+              ? 'System activities, status changes, and taxonomy edits will be automatically recorded here.'
+              : `No activity history found under the "${activeTab}" filter.`}
           </p>
         </div>
       ) : (
@@ -125,13 +125,13 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
                   {log.action}
                 </span>
                 <span className="text-muted-foreground font-mono text-[11px]">
-                  {new Date(log.timestamp).toLocaleString('id-ID')}
+                  {new Date(log.timestamp).toLocaleString('en-US')}
                 </span>
               </div>
               <p className="text-foreground font-semibold leading-relaxed">{log.details}</p>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-muted-foreground pt-2 border-t border-border">
                 <span>
-                  Aktor: <strong className="text-foreground font-semibold">{log.actor}</strong>
+                  Actor: <strong className="text-foreground font-semibold">{log.actor}</strong>
                 </span>
                 <div className="flex items-center gap-1.5 font-mono">
                   <code className="bg-background border border-border px-2 py-0.5 rounded-md text-foreground text-[10px] font-bold">{log.target_entity}</code>

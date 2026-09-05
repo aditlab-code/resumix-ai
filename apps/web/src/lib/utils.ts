@@ -503,7 +503,7 @@ function parseEducationSection(sectionText: string): EducationDTO[] {
       out.push({
         institution,
         degree,
-        major: major || 'Tidak tercantum',
+        major: major || 'Not specified',
         start_year: startYear,
         end_year: endYear,
       });
@@ -632,7 +632,7 @@ const projectEntryToExperience = (p: ProjectEntry): WorkExperienceDTO => ({
   end_date: p.is_current ? 'Present' : p.end_year ? `${p.end_year}-12` : '',
   is_current: p.is_current,
   duration_months: monthsBetween(p.start_year, p.end_year, p.is_current),
-  description: p.description || p.subtitle || `Proyek: ${p.name}.`,
+  description: p.description || p.subtitle || `Project: ${p.name}.`,
   projects: p.tech.length > 0 ? p.tech : [p.name],
   technologies: p.tech,
 });
@@ -725,12 +725,12 @@ export function extractMultipleWorkExperiences(fullText: string): WorkExperience
     if (role || company) {
       results.push({
         company: company || role,
-        role: role || 'Staf',
+        role: role || 'Staff',
         start_date: startDate,
         end_date: endDate,
         is_current: isCurrent,
         duration_months: months,
-        description: descText || `Aktivitas profesional pada ${company || role}.`,
+        description: descText || `Professional activity at ${company || role}.`,
         projects: [],
       });
     }
@@ -773,13 +773,13 @@ export function constructExecutiveSummary(
 ): string {
   const years = Math.floor(totalMonths / 12);
   const months = totalMonths % 12;
-  const expStr = years > 0 ? `${years} tahun ${months > 0 ? `${months} bulan` : ''}`.trim() : `${totalMonths} bulan`;
+  const expStr = years > 0 ? `${years} years ${months > 0 ? `${months} months` : ''}`.trim() : `${totalMonths} months`;
 
   const topSkillsStr = skills.slice(0, 4).join(', ');
-  const companyStr = companies && companies.length > 0 ? ` dengan riwayat pada ${companies.slice(0, 2).join(' & ')}` : '';
-  const targetStr = jobTitle ? ` untuk kualifikasi ${jobTitle}` : '';
+  const companyStr = companies && companies.length > 0 ? ` with work history at ${companies.slice(0, 2).join(' & ')}` : '';
+  const targetStr = jobTitle ? ` for the ${jobTitle} role` : '';
 
-  return `Kandidat ${name} memiliki total pengalaman profesional selama ${expStr}${companyStr}${targetStr}. Menguasai keahlian teknis utama meliputi ${topSkillsStr || 'pengembangan software'} dengan kemampuan integrasi sistem yang baik.`;
+  return `Candidate ${name} has a total of ${expStr} of professional experience${companyStr}${targetStr}. Possesses core technical skills including ${topSkillsStr || 'software development'} with strong system integration abilities.`;
 }
 
 export function constructGroqDecisionSummary(
@@ -789,23 +789,23 @@ export function constructGroqDecisionSummary(
   jobTitle: string,
   extraction?: CVExtractionDTO
 ): string {
-  const matched = breakdown.matched_skills.length > 0 ? breakdown.matched_skills.join(', ') : 'Belum ada skill cocok yang terdeteksi';
-  const missing = breakdown.missing_mandatory_skills.length > 0 ? breakdown.missing_mandatory_skills.join(', ') : 'Tidak ada skill wajib yang terlewat';
+  const matched = breakdown.matched_skills.length > 0 ? breakdown.matched_skills.join(', ') : 'No matching skills detected';
+  const missing = breakdown.missing_mandatory_skills.length > 0 ? breakdown.missing_mandatory_skills.join(', ') : 'No mandatory skills missing';
   
   const totalMonths = extraction?.total_experience_months || 0;
   const eduDegree = extraction?.education && extraction.education.length > 0 ? extraction.education[0].degree || '' : '';
   const eduInst = extraction?.education && extraction.education.length > 0 ? extraction.education[0].institution || '' : '';
-  const eduStr = eduDegree ? ` berlatar belakang ${eduDegree}${eduInst ? ` dari ${eduInst}` : ''}` : '';
+  const eduStr = eduDegree ? ` with background in ${eduDegree}${eduInst ? ` from ${eduInst}` : ''}` : '';
   
   const projectCount = extraction?.projects?.length || 0;
-  const projStr = projectCount > 0 ? ` serta memiliki rekam jejak ${projectCount} proyek portofolio` : '';
+  const projStr = projectCount > 0 ? ` and a track record of ${projectCount} portfolio projects` : '';
 
   if (score >= 80) {
-    return `[Groq Llama 3.1 AI Decision] SANGAT DIREKOMENDASIKAN LULUS SCREENING. Kandidat ${candidateName}${eduStr} mencapai Job-Fit Score ${score}/100 untuk posisi ${jobTitle}. Menguasai kualifikasi teknis utama (${matched})${projStr}. Pertimbangan HR: Lanjutkan ke tahap wawancara teknis utama.`;
+    return `[Groq Llama 3.1 AI Decision] HIGHLY RECOMMENDED - PASSED SCREENING. Candidate ${candidateName}${eduStr} achieved a Job-Fit Score of ${score}/100 for the ${jobTitle} position. Possesses core technical qualifications (${matched})${projStr}. HR Recommendation: Proceed to primary technical interview.`;
   } else if (score >= 60) {
-    return `[Groq Llama 3.1 AI Decision] REKOMENDASI REVIEW KHUSUS (PERTIMBANGKAN). Kandidat ${candidateName}${eduStr} memperoleh skor ${score}/100 dengan total pengalaman ${totalMonths} bulan. Berhasil memenuhi keahlian (${matched}), namun memiliki catatan kriteria wajib (${missing}). Pertimbangan HR: Disarankan tes koding/wawancara eksplorasi singkat.`;
+    return `[Groq Llama 3.1 AI Decision] CONDITIONAL RECOMMENDATION - NEEDS SPECIAL REVIEW. Candidate ${candidateName}${eduStr} scored ${score}/100 with ${totalMonths} months of total experience. Successfully matched skills (${matched}), but has missing mandatory criteria (${missing}). HR Recommendation: Short exploratory interview or coding assessment suggested.`;
   } else {
-    return `[Groq Llama 3.1 AI Decision] REKOMENDASI SCREENING ULANG / PENINJAUAN MANUAL. Kandidat ${candidateName}${eduStr} memperoleh Job-Fit Score ${score}/100 untuk posisi ${jobTitle}. Berhasil menunjukkan potensi pada skill (${matched}), namun belum memenuhi kriteria wajib kritis: (${missing}). Pertimbangan HR: Tinjau portofolio tambahan atau beri opsi posisi yang lebih sesuai.`;
+    return `[Groq Llama 3.1 AI Decision] RE-SCREENING RECOMMENDED / MANUAL REVIEW. Candidate ${candidateName}${eduStr} achieved a Job-Fit Score of ${score}/100 for the ${jobTitle} position. Demonstrated potential in skills (${matched}), but has not met critical mandatory criteria: (${missing}). HR Recommendation: Review additional portfolio or consider alternative suitable positions.`;
   }
 }
 
@@ -925,7 +925,7 @@ export function extractPortfoliosAndReferences(fullText: string): {
     if (seenUrls.has(key)) continue;
     seenUrls.add(key);
 
-    let title = 'Portofolio / Tautan';
+    let title = 'Portfolio / Link';
     if (/github\.com/i.test(url)) title = 'GitHub';
     else if (/gitlab\.com/i.test(url)) title = 'GitLab';
     else if (/linkedin\.com/i.test(url)) title = 'LinkedIn';
@@ -934,13 +934,13 @@ export function extractPortfoliosAndReferences(fullText: string): {
     else if (/dribbble\.com/i.test(url)) title = 'Dribbble';
     else if (/kaggle\.com/i.test(url)) title = 'Kaggle';
     else if (/huggingface\.co/i.test(url)) title = 'Hugging Face';
-    else if (/medium\.com|dev\.to|hashnode|hashnode\.dev/i.test(url)) title = 'Artikel / Blog';
+    else if (/medium\.com|dev\.to|hashnode|hashnode\.dev/i.test(url)) title = 'Article / Blog';
     else if (/drive\.google|colab\.research/i.test(url)) title = 'Google Drive / Colab';
     else if (/(vercel|netlify|web|fly|pages|github\.io|herokuapp|streamlit|onrender)\.(app|dev|io|com)/i.test(url))
       title = 'Live Demo';
     else if (/github\.io/i.test(url)) title = 'Live Demo';
 
-    portfolios.push({ title, url, description: `Tautan dari CV: ${url}` });
+    portfolios.push({ title, url, description: `Link from resume: ${url}` });
   }
 
   // 2. Strict Detect References Section (HANYA jika ada seksi REFERENSI/REFERENCES eksplisit)
@@ -965,9 +965,9 @@ export function extractPortfoliosAndReferences(fullText: string): {
         if (rawName.length >= 3 && rawName.length <= 40 && !references.some((r) => r.name.toLowerCase() === rawName.toLowerCase())) {
           references.push({
             name: rawName,
-            role: 'Professional Referee / Atasan Kerja',
-            company: 'Perusahaan Terkait',
-            contact_info: phoneOrEmail ? phoneOrEmail[0] : 'Tersedia atas permintaan',
+            role: 'Professional Referee / Workplace Manager',
+            company: 'Related Company',
+            contact_info: phoneOrEmail ? phoneOrEmail[0] : 'Available upon request',
           });
         }
       }

@@ -13,10 +13,10 @@ interface SidebarProps {
 
 const NAV = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/jobs', label: 'Lowongan', icon: Briefcase },
-  { href: '/candidates', label: 'Kandidat', icon: Users },
-  { href: '/settings', label: 'Pengaturan', icon: Sliders },
-  { href: '/docs', label: 'Dokumentasi', icon: BookOpen },
+  { href: '/jobs', label: 'Jobs', icon: Briefcase },
+  { href: '/candidates', label: 'Candidates', icon: Users },
+  { href: '/settings', label: 'Settings', icon: Sliders },
+  { href: '/docs', label: 'Documentation', icon: BookOpen },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={onClose}
               className="md:hidden p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-              aria-label="Tutup Menu"
+              aria-label="Close Menu"
             >
               <X className="w-5 h-5" />
             </button>

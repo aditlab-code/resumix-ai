@@ -77,7 +77,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 p-6 space-y-6 w-full min-w-0 max-w-[1440px] mx-auto">
         <Header
           onSaveSettings={() =>
-            addToast('success', 'Pengaturan disimpan', 'Seluruh parameter ATS pipeline berhasil diperbarui.')
+            addToast('success', 'Settings saved', 'All ATS pipeline parameters were successfully updated.')
           }
           onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
         />
@@ -143,9 +143,9 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
           isOpen={!!deletingJob}
           onClose={() => setDeletingJob(null)}
           onConfirm={confirmDeleteJob}
-          title="Hapus lowongan"
-          message={`Hapus lowongan "${deletingJob?.title}"? Tindakan ini tidak dapat dibatalkan.`}
-          confirmLabel="Hapus"
+          title="Delete Job Opening"
+          message={`Delete job opening "${deletingJob?.title}"? This action cannot be undone.`}
+          confirmLabel="Delete"
           tone="danger"
         />
 

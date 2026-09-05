@@ -54,7 +54,7 @@ const DEFAULT_TAXONOMIES: SkillTaxonomyItem[] = [
   { id: 'tax-8', canonical_name: 'Machine Learning', synonyms: ['ml', 'scikit-learn', 'sklearn'], category: 'data_ai' },
 ];
 
-const DEFAULT_DECISION_PROMPT = `Anda adalah Senior HR System Auditor. Analisis kualifikasi kandidat berdasarkan hasil ekstraksi CV, Job-Fit Score, skill wajib yang cocok/kurang, dan total durasi pengalaman kerja. Susun ringkasan keputusan rekrutmen (Summary Decision) dalam 2-3 kalimat yang objektif, transparan, dan berikan rekomendasi aksi screening yang jelas (SANGAT DIREKOMENDASIKAN, REKOMENDASI REVIEW KHUSUS, atau TIDAK DIREKOMENDASIKAN).`;
+const DEFAULT_DECISION_PROMPT = `You are a Senior HR System Auditor. Analyze candidate qualifications based on extracted resume data, Job-Fit Score, matched/missing mandatory skills, and total experience duration. Provide an objective 2-3 sentence Summary Decision with a clear screening recommendation (HIGHLY RECOMMENDED, SPECIAL REVIEW RECOMMENDED, or NOT RECOMMENDED).`;
 const DEFAULT_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY || '';
 
 export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
@@ -179,8 +179,8 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     setIsAddingNewCategory(false);
     setNewCategoryName('');
 
-    if (onAddToast) onAddToast('success', 'Skill Ditambahkan', `Skill "${newItem.canonical_name}" disimpan ke kamus.`);
-    if (onAddAuditLog) onAddAuditLog('taxonomy_created', 'skill_taxonomies', newItem.id, `Tambah skill "${newItem.canonical_name}" ke kamus.`);
+    if (onAddToast) onAddToast('success', 'Skill Added', `Skill "${newItem.canonical_name}" saved to dictionary.`);
+    if (onAddAuditLog) onAddAuditLog('taxonomy_created', 'skill_taxonomies', newItem.id, `Added skill "${newItem.canonical_name}" to dictionary.`);
   };
 
   const handleOpenEditModal = (item: SkillTaxonomyItem) => {
@@ -214,23 +214,23 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     saveTaxonomies(updatedList);
     setEditingItem(null);
 
-    if (onAddToast) onAddToast('success', 'Skill Diperbarui', `Skill "${editCanonicalName.trim()}" berhasil diperbarui.`);
-    if (onAddAuditLog) onAddAuditLog('taxonomy_updated', 'skill_taxonomies', editingItem.id, `Perbarui skill "${editCanonicalName.trim()}" di kamus.`);
+    if (onAddToast) onAddToast('success', 'Skill Updated', `Skill "${editCanonicalName.trim()}" successfully updated.`);
+    if (onAddAuditLog) onAddAuditLog('taxonomy_updated', 'skill_taxonomies', editingItem.id, `Updated skill "${editCanonicalName.trim()}" in dictionary.`);
   };
 
   const handleDeleteSkill = (id: string, name: string) => {
     const updated = taxonomies.filter((t) => t.id !== id);
     saveTaxonomies(updated);
-    if (onAddToast) onAddToast('error', 'Skill Dihapus', `Skill "${name}" dihapus dari kamus.`);
-    if (onAddAuditLog) onAddAuditLog('taxonomy_deleted', 'skill_taxonomies', id, `Hapus skill "${name}" dari kamus.`);
+    if (onAddToast) onAddToast('error', 'Skill Deleted', `Skill "${name}" removed from dictionary.`);
+    if (onAddAuditLog) onAddAuditLog('taxonomy_deleted', 'skill_taxonomies', id, `Deleted skill "${name}" from dictionary.`);
   };
 
   const handleSave = () => {
     if (!weightValid) {
-      if (onAddToast) onAddToast('error', 'Bobot Tidak Valid', 'Total bobot formula scoring harus 100%.');
+      if (onAddToast) onAddToast('error', 'Invalid Weights', 'Total scoring formula weights must equal 100%.');
       return;
     }
-    onSaveSettings('Seluruh parameter ATS pipeline berhasil diperbarui.');
+    onSaveSettings('All ATS pipeline parameters were successfully updated.');
   };
 
   const filteredTaxonomies = taxonomies.filter((item) => {
@@ -248,8 +248,8 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   );
 
   const settingsTabs: TabItem<'dictionary' | 'scoring' | 'llm'>[] = [
-    { id: 'dictionary', label: 'Kamus Taksonomi Skill' },
-    { id: 'scoring', label: 'Bobot Formula Scoring' },
+    { id: 'dictionary', label: 'Skill Taxonomy Dictionary' },
+    { id: 'scoring', label: 'Scoring Formula Weights' },
     { id: 'llm', label: 'LLM Config' },
   ];
 
@@ -268,27 +268,27 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
           <Card className="p-6 space-y-5">
             <CardHeader
               className="p-0 border-none mb-2"
-              title="Tambah Skill & Sinonim Baru"
+              title="Add New Skill & Synonyms"
             />
 
             <form onSubmit={handleAddSkill} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Field label="Nama Skill Resmi (Canonical Name)" required>
+                <Field label="Canonical Skill Name" required>
                   <Input
                     value={canonicalName}
                     onChange={(e) => setCanonicalName(e.target.value)}
-                    placeholder="Contoh: PostgreSQL"
+                    placeholder="Example: PostgreSQL"
                     required
                   />
                 </Field>
 
-                <Field label="Kategori Skill">
+                <Field label="Skill Category">
                   {isAddingNewCategory ? (
                     <div className="flex gap-2">
                       <Input
                         value={newCategoryName}
                         onChange={(e) => setNewCategoryName(e.target.value)}
-                        placeholder="Kategori baru..."
+                        placeholder="New category..."
                       />
                       <Button
                         type="button"
@@ -296,7 +296,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                         size="sm"
                         onClick={() => setIsAddingNewCategory(false)}
                       >
-                        Batal
+                        Cancel
                       </Button>
                     </div>
                   ) : (
@@ -310,7 +310,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                   )}
                 </Field>
 
-                <Field label="Daftar Sinonim (Pisahkan dengan Koma)">
+                <Field label="Synonym List (Comma-separated)">
                   <Input
                     value={synonymsInput}
                     onChange={(e) => setSynonymsInput(e.target.value)}
@@ -327,11 +327,11 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     size="sm"
                     onClick={() => setIsAddingNewCategory(true)}
                   >
-                    + Kategori Baru
+                    + New Category
                   </Button>
                 )}
                 <Button type="submit" variant="primary" size="sm" iconLeft={<Plus className="w-4 h-4 text-white" />}>
-                  Tambah ke Kamus
+                  Add to Dictionary
                 </Button>
               </div>
             </form>
@@ -340,7 +340,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
           <Card className="p-6 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
               <div>
-                <h3 className="text-lg font-bold text-foreground">Daftar Kamus Skill ({filteredTaxonomies.length})</h3>
+                <h3 className="text-lg font-bold text-foreground">Skill Dictionary List ({filteredTaxonomies.length})</h3>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -350,7 +350,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Cari skill atau sinonim..."
+                    placeholder="Search skill or synonym..."
                     className="pl-9 h-9 text-xs"
                   />
                 </div>
@@ -362,7 +362,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                   containerClassName="w-auto"
                   className="font-semibold"
                 >
-                  <option value="all">Semua Kategori</option>
+                  <option value="all">All Categories</option>
                   {categories.map((cat) => (
                     <option key={cat} value={cat}>
                       {formatCategoryLabel(cat)}
@@ -376,7 +376,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
             <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
               {filteredTaxonomies.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground text-sm">
-                  Tidak ada skill yang cocok dengan pencarian.
+                  No skills match your search.
                 </div>
               ) : (
                 paginatedTaxonomies.map((item) => (
@@ -410,7 +410,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                         type="button"
                         onClick={() => handleDeleteSkill(item.id, item.canonical_name)}
                         className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 p-2 rounded-md transition-colors"
-                        title="Hapus Skill"
+                        title="Delete Skill"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -424,8 +424,8 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
             {filteredTaxonomies.length > 0 && (
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-muted/40 border border-border rounded-xl text-xs">
                 <span className="text-muted-foreground font-medium">
-                  Menampilkan {Math.min((dictPage - 1) * itemsPerPage + 1, filteredTaxonomies.length)}–
-                  {Math.min(dictPage * itemsPerPage, filteredTaxonomies.length)} dari {filteredTaxonomies.length} skill
+                  Showing {Math.min((dictPage - 1) * itemsPerPage + 1, filteredTaxonomies.length)}–
+                  {Math.min(dictPage * itemsPerPage, filteredTaxonomies.length)} of {filteredTaxonomies.length} skills
                 </span>
                 <div className="flex items-center gap-1.5">
                   <Button
@@ -435,7 +435,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     onClick={() => setDictPage((prev) => Math.max(1, prev - 1))}
                     iconLeft={<ChevronLeft className="w-4 h-4" />}
                   >
-                    Sebelumnya
+                    Previous
                   </Button>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
@@ -458,7 +458,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     onClick={() => setDictPage((prev) => Math.min(totalPages, prev + 1))}
                     iconRight={<ChevronRight className="w-4 h-4" />}
                   >
-                    Selanjutnya
+                    Next
                   </Button>
                 </div>
               </div>
@@ -472,56 +472,56 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
         <Card className="p-6 space-y-6">
           <CardHeader
             className="p-0 border-none mb-2"
-            title="Pengaturan Bobot Formula Scoring"
+            title="Scoring Formula Weight Settings"
           />
 
           <div className="space-y-5">
             <RangeField
-              label="Relevansi Semantik Teks CV (Vector Similarity)"
+              label="Resume Semantic Relevance (Vector Similarity)"
               value={semanticWeight}
               min={0}
               max={100}
               onChange={(val) => setSemanticWeight(val)}
-              hint="Persentase kemiripan vektor embeddings antara teks CV dengan deskripsi lowongan."
+              hint="Embedding vector similarity percentage between resume text and job description."
             />
 
             <RangeField
-              label="Kesesuaian Skill Wajib (Mandatory Skill Match)"
+              label="Mandatory Skill Match"
               value={mandatoryWeight}
               min={0}
               max={100}
               onChange={(val) => setMandatoryWeight(val)}
-              hint="Persentase kecocokan skill wajib yang ditetapkan pada posisi lowongan."
+              hint="Matching percentage for mandatory skills specified in the job opening."
             />
 
             <RangeField
-              label="Lama Pengalaman Kerja (Experience Score)"
+              label="Work Experience Duration (Experience Score)"
               value={experienceWeight}
               min={0}
               max={100}
               onChange={(val) => setExperienceWeight(val)}
-              hint="Skor berdasarkan total bulan pengalaman kerja kandidat dibanding kualifikasi minimal."
+              hint="Score based on candidate total work experience months relative to minimum requirement."
             />
 
             <RangeField
-              label="Skill Tambahan / Preferred (Bonus Skill Match)"
+              label="Preferred Skills (Bonus Skill Match)"
               value={preferredWeight}
               min={0}
               max={100}
               onChange={(val) => setPreferredWeight(val)}
-              hint="Skor bonus untuk skill preferred opsional."
+              hint="Bonus score for optional preferred skills."
             />
 
             <div className="p-4 rounded-xl border flex items-center justify-between bg-muted/40 border-border">
-              <span className="font-bold text-sm text-foreground">Total Akumulasi Bobot:</span>
+              <span className="font-bold text-sm text-foreground">Total Weight Accumulation:</span>
               <span className={cn('text-xl font-extrabold tabular-nums', weightValid ? 'text-emerald-600' : 'text-destructive')}>
-                {totalWeight}% {weightValid ? '(Sesuai Spec 100%)' : '(Wajib 100%)'}
+                {totalWeight}% {weightValid ? '(Valid 100%)' : '(Must be 100%)'}
               </span>
             </div>
 
             <div className="flex justify-end pt-3 border-t border-border">
               <Button type="button" onClick={handleSave} variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
-                Simpan Bobot Formula
+                Save Formula Weights
               </Button>
             </div>
           </div>
@@ -533,12 +533,12 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
         <Card className="p-6 space-y-6">
           <CardHeader
             className="p-0 border-none mb-2"
-            title="Konfigurasi Model LLM Groq & System Guardrails"
+            title="Groq LLM Model Configuration & System Guardrails"
           />
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Provider LLM">
+              <Field label="LLM Provider">
                 <Select value={llmProvider} onChange={(e) => setLlmProvider(e.target.value)}>
                   <option value="groq">Groq Cloud (Fast Processing)</option>
                   <option value="gemini">Google Gemini 1.5</option>
@@ -548,7 +548,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
               <Field label="Model Name">
                 <Select value={llmModel} onChange={(e) => setLlmModel(e.target.value)}>
-                  <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Sangat Cepat & Presisi)</option>
+                  <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fast & Precise)</option>
                   <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
                   <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
                 </Select>
@@ -576,7 +576,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
           <div className="flex justify-end pt-3 border-t border-border">
             <Button type="button" onClick={handleSave} variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
-              Simpan Konfigurasi LLM
+              Save LLM Configuration
             </Button>
           </div>
         </Card>
@@ -586,20 +586,20 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       <Dialog open={editingItem !== null} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold">Edit Skill & Sinonim</DialogTitle>
+            <DialogTitle className="text-base font-bold">Edit Skill & Synonyms</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSaveEditSkill} className="space-y-4 py-2">
-            <Field label="Nama Skill Resmi (Canonical Name)" required>
+            <Field label="Canonical Skill Name" required>
               <Input
                 value={editCanonicalName}
                 onChange={(e) => setEditCanonicalName(e.target.value)}
-                placeholder="Contoh: PostgreSQL"
+                placeholder="Example: PostgreSQL"
                 required
               />
             </Field>
 
-            <Field label="Kategori Skill">
+            <Field label="Skill Category">
               <Select value={editCategoryInput} onChange={(e) => setEditCategoryInput(e.target.value)}>
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -609,7 +609,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               </Select>
             </Field>
 
-            <Field label="Daftar Sinonim (Pisahkan dengan Koma)">
+            <Field label="Synonym List (Comma-separated)">
               <Input
                 value={editSynonymsInput}
                 onChange={(e) => setEditSynonymsInput(e.target.value)}
@@ -619,10 +619,10 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
             <DialogFooter className="pt-4 gap-4 sm:gap-4">
               <Button type="button" variant="outline" size="md" onClick={() => setEditingItem(null)} className="px-5">
-                Batal
+                Cancel
               </Button>
               <Button type="submit" variant="primary" size="md" className="px-6" iconLeft={<Save className="w-4 h-4 text-white" />}>
-                Simpan Perubahan
+                Save Changes
               </Button>
             </DialogFooter>
           </form>

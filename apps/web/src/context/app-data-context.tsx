@@ -168,7 +168,7 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const handleClearAuditLogs = () => {
     setAuditLogs([]);
     if (typeof window !== 'undefined') localStorage.setItem('cv_ats_audit_logs', '[]');
-    addToast('info', 'Audit log dibersihkan', 'Seluruh catatan aktivitas dihapus.');
+    addToast('info', 'Audit logs cleared', 'All activity records deleted.');
   };
 
   const handleSelectJob = (jobId: string) => setSelectedJobId(jobId);
@@ -190,9 +190,9 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'job_created',
       'job_postings',
       newJob.id,
-      `Menerbitkan lowongan baru "${newJob.title}" dengan skill wajib [${newJob.mandatory_skills.join(', ')}].`
+      `Published new job posting "${newJob.title}" with mandatory skills [${newJob.mandatory_skills.join(', ')}].`
     );
-    addToast('success', 'Lowongan baru diterbitkan', `Posisi ${newJob.title} siap menerima CV.`);
+    addToast('success', 'New job posting published', `Position ${newJob.title} is ready to receive applications.`);
   };
 
   const handleEditJobSuccess = (updatedJob: JobPosting) => {
@@ -201,9 +201,9 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'job_updated',
       'job_postings',
       updatedJob.id,
-      `Memperbarui kriteria lowongan "${updatedJob.title}" (skill wajib: [${updatedJob.mandatory_skills.join(', ')}]).`
+      `Updated job criteria for "${updatedJob.title}" (mandatory skills: [${updatedJob.mandatory_skills.join(', ')}]).`
     );
-    addToast('success', 'Lowongan diperbarui', `Kriteria posisi ${updatedJob.title} disimpan.`);
+    addToast('success', 'Job posting updated', `Criteria for ${updatedJob.title} saved.`);
   };
 
   const confirmDeleteJob = () => {
@@ -222,9 +222,9 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'job_deleted',
       'job_postings',
       jobToDelete.id,
-      `Menghapus lowongan kerja "${jobToDelete.title}".`
+      `Deleted job posting "${jobToDelete.title}".`
     );
-    addToast('error', 'Lowongan dihapus', `Posisi ${jobToDelete.title} telah dihapus.`);
+    addToast('error', 'Job posting deleted', `Position ${jobToDelete.title} has been deleted.`);
   };
 
   const handleUploadSuccess = (newApp: CandidateApplication) => {
@@ -241,12 +241,12 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'cv_uploaded',
       'candidate_documents',
       newApp.document_id,
-      `Berhasil mengunggah CV ${newApp.original_filename} untuk kandidat ${newApp.candidate_name}. Parse status: ${newApp.parse_status}.`
+      `Successfully uploaded resume ${newApp.original_filename} for candidate ${newApp.candidate_name}. Parse status: ${newApp.parse_status}.`
     );
     addToast(
       'success',
-      'CV diunggah & diproses AI',
-      `Kandidat ${newApp.candidate_name} mendapat Job-Fit Score ${newApp.job_fit_score}/100.`
+      'Resume uploaded & AI processed',
+      `Candidate ${newApp.candidate_name} scored Job-Fit Score ${newApp.job_fit_score}/100.`
     );
     setSelectedCandidate(newApp);
   };
@@ -262,14 +262,14 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (selectedCandidate?.id === appId) {
       setSelectedCandidate((prev) => (prev ? { ...prev, status: newStatus } : null));
     }
-    const appName = applications.find((a) => a.id === appId)?.candidate_name || 'Kandidat';
+    const appName = applications.find((a) => a.id === appId)?.candidate_name || 'Candidate';
     addAuditLog(
       'application_status_changed',
       'applications',
       appId,
-      `Mengubah status rekrutmen kandidat ${appName} menjadi "${newStatus}".`
+      `Changed recruitment status of candidate ${appName} to "${newStatus}".`
     );
-    addToast('info', 'Status aplikasi diperbarui', `Status ${appName} kini "${newStatus}".`);
+    addToast('info', 'Application status updated', `Status for ${appName} is now "${newStatus}".`);
   };
 
   const handleSaveEditSuccess = (updatedApp: CandidateApplication) => {
@@ -279,12 +279,12 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'candidate_profile_edited',
       'candidates',
       updatedApp.candidate_id,
-      `HR melakukan koreksi manual data ekstraksi AI untuk ${updatedApp.candidate_name}. Job-Fit score baru: ${updatedApp.job_fit_score}.`
+      `HR performed manual correction of AI extraction data for ${updatedApp.candidate_name}. New Job-Fit score: ${updatedApp.job_fit_score}.`
     );
     addToast(
       'success',
-      'Data ekstraksi diperbarui',
-      `Skor Job-Fit ${updatedApp.candidate_name} dihitung ulang menjadi ${updatedApp.job_fit_score}/100.`
+      'Extraction data updated',
+      `Job-Fit Score for ${updatedApp.candidate_name} recalculated to ${updatedApp.job_fit_score}/100.`
     );
   };
 
@@ -292,7 +292,7 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const app = applications.find((a) => a.id === appId);
     if (!app) return;
 
-    addToast('info', 'Reprocessing diantrekan', `Mulai pemrosesan ulang AI untuk ${app.candidate_name}...`);
+    addToast('info', 'Reprocessing queued', `Started AI reprocessing for ${app.candidate_name}...`);
     setApplications((prev) =>
       prev.map((a) => (a.id === appId ? { ...a, parse_status: 'processing' } : a))
     );
@@ -329,9 +329,9 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'cv_processing_completed',
       'applications',
       appId,
-      `Pekerjaan reprocessing CV selesai untuk ${app.candidate_name}. Status diset ke "processed".`
+      `Resume reprocessing job completed for ${app.candidate_name}. Status set to "processed".`
     );
-    addToast('success', 'Reprocessing selesai', `CV ${app.candidate_name} sukses diproses ulang.`);
+    addToast('success', 'Reprocessing completed', `Resume for ${app.candidate_name} successfully reprocessed.`);
   };
 
   const handleConfirmDeleteCandidate = (appId: string) => {
@@ -353,12 +353,12 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'candidate_data_deleted',
       'candidates',
       targetApp.candidate_id,
-      `Hapus permanen kandidat ${targetApp.candidate_name} (${targetApp.email}) beserta dokumen privat dan Job-Fit score dari database.`
+      `Permanently deleted candidate ${targetApp.candidate_name} (${targetApp.email}) along with private documents and Job-Fit score from database.`
     );
     addToast(
       'error',
-      'Kandidat dihapus permanen',
-      `Data kandidat ${targetApp.candidate_name} telah dihapus total.`
+      'Candidate permanently deleted',
+      `Candidate data for ${targetApp.candidate_name} has been deleted.`
     );
   };
 
@@ -368,7 +368,7 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       'cv_viewed',
       'candidate_documents',
       app.document_id,
-      `HR meninjau detail profil kandidat & CV ${app.candidate_name}.`
+      `HR reviewed profile details & resume for ${app.candidate_name}.`
     );
   };
 

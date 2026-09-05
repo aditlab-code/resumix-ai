@@ -93,13 +93,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             <div className="flex flex-col gap-3 flex-1 overflow-y-auto pr-0.5">
               {columnApps.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-36 rounded-lg border border-dashed border-border text-muted-foreground text-xs bg-background/50">
-                  Tidak ada kandidat
+                  No candidates
                 </div>
               ) : (
                 columnApps.map((app) => {
                   const candidateSkills = app.cv_extraction?.skills?.map((s) => s.name || s.normalized_name || '') || [];
                   const expMonths = app.cv_extraction?.total_experience_months || 0;
-                  const rawDegree = app.cv_extraction?.education?.[0]?.degree || 'S1';
+                  const rawDegree = app.cv_extraction?.education?.[0]?.degree || 'Bachelor';
                   // Format degree compactly to prevent line wrapping & text overlap
                   const degree = rawDegree.includes('/') ? rawDegree.split('/')[0].trim() : rawDegree;
 
@@ -133,7 +133,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2.5 font-mono">
                         <span className="flex items-center gap-1 shrink-0">
                           <Clock className="w-3.5 h-3.5 text-muted-foreground/70" />
-                          {Math.round((expMonths / 12) * 10) / 10} thn
+                          {Math.round((expMonths / 12) * 10) / 10} yrs
                         </span>
                         <span className="flex items-center gap-1 truncate" title={rawDegree}>
                           <GraduationCap className="w-3.5 h-3.5 text-muted-foreground/70 shrink-0" />
@@ -181,7 +181,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                           <button
                             onClick={() => onDeleteCandidate(app)}
                             className="text-muted-foreground hover:text-destructive transition-colors p-1.5 rounded-md hover:bg-destructive/10 focus-ring"
-                            title="Hapus Kandidat"
+                            title="Delete Candidate"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>

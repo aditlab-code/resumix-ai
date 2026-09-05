@@ -65,7 +65,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
   storagePath,
   fileSizeBytes,
   pdfUrl,
-  candidateName = 'Kandidat',
+  candidateName = 'Candidate',
   extraction,
   pageCount = 1,
 }) => {
@@ -195,7 +195,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
             <ChevronLeft className="w-4 h-4" />
           </button>
           <span className="text-muted-foreground font-mono font-bold text-xs px-1">
-            Halaman {currentPage} / {totalPages}
+            Page {currentPage} of {totalPages}
           </span>
           <button
             disabled={currentPage >= totalPages}
@@ -242,7 +242,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
           ) : (
             <div className="flex flex-col items-center justify-center h-[500px] w-full text-muted-foreground text-xs space-y-2">
               <RefreshCw className="w-6 h-6 animate-spin text-primary" />
-              <p>Memuat berkas PDF...</p>
+              <p>Loading PDF file...</p>
             </div>
           )
         ) : (
@@ -281,18 +281,18 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
 
             <div className="space-y-5 text-xs">
               {section(
-                'Ringkasan Profil',
+                'Profile Summary',
                 extraction?.summary ? (
                   <p className="text-muted-foreground font-medium leading-relaxed bg-muted/30 p-3 rounded-lg border border-border/50">
                     &ldquo;{extraction.summary}&rdquo;
                   </p>
                 ) : (
-                  emptyLine('Ringkasan profil belum tersedia.')
+                  emptyLine('Profile summary not available.')
                 )
               )}
 
               {section(
-                'Skill & Kemampuan Teknis',
+                'Skills & Technical Abilities',
                 extraction?.skills && extraction.skills.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
                     {extraction.skills.map((skill, idx) => {
@@ -313,12 +313,12 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     })}
                   </div>
                 ) : (
-                  emptyLine('Tidak ada daftar skill terdeteksi.')
+                  emptyLine('No skills detected.')
                 )
               )}
 
               {section(
-                'Riwayat Pengalaman Kerja',
+                'Work Experience',
                 extraction?.work_experience && extraction.work_experience.length > 0 ? (
                   <div className="space-y-2.5">
                     {extraction.work_experience.map((exp, i) => (
@@ -334,7 +334,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                           </div>
                           <span className="text-[10px] text-blue-700 font-mono font-extrabold bg-blue-500/15 px-2.5 py-0.5 rounded-full border border-blue-500/35 shrink-0 self-start">
                             {exp.start_date || '?'} — {exp.is_current ? 'Present' : exp.end_date || '?'} (
-                            {exp.duration_months || 0} bln)
+                            {exp.duration_months || 0} mos)
                           </span>
                         </div>
 
@@ -345,7 +345,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                         {exp.technologies && exp.technologies.length > 0 && (
                           <div className="flex flex-wrap gap-1 items-center pt-1">
                             <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider mr-1">
-                              Teknologi:
+                              Technologies:
                             </span>
                             {exp.technologies.map((tech, tIdx) => (
                               <span
@@ -361,7 +361,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                         {exp.projects && exp.projects.length > 0 && (
                           <div className="flex flex-wrap gap-1 items-center pt-1 border-t border-border/60">
                             <span className="text-[10px] font-extrabold text-muted-foreground flex items-center gap-1 uppercase tracking-wider mr-1">
-                              <FolderGit2 className="w-3 h-3 text-purple-600" /> Proyek:
+                              <FolderGit2 className="w-3 h-3 text-purple-600" /> Projects:
                             </span>
                             {exp.projects.map((proj, pidx) => (
                               <span
@@ -377,18 +377,18 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     ))}
                   </div>
                 ) : (
-                  emptyLine('Tidak ada riwayat pengalaman kerja.')
+                  emptyLine('No work experience recorded.')
                 )
               )}
 
               {section(
-                'Riwayat Pendidikan',
+                'Education History',
                 extraction?.education && extraction.education.length > 0 ? (
                   <div className="space-y-2">
                     {extraction.education.map((edu, idx) => (
                       <div key={idx} className="p-3.5 bg-muted/20 border border-border rounded-xl flex flex-col sm:flex-row justify-between items-start gap-2">
                         <div>
-                          <p className="font-bold text-sm text-foreground">{edu.institution || 'Institusi'}</p>
+                          <p className="font-bold text-sm text-foreground">{edu.institution || 'Institution'}</p>
                           <p className="text-xs text-primary font-semibold mt-0.5">
                             {[edu.degree, edu.major].filter(Boolean).join(' — ')}
                           </p>
@@ -402,13 +402,13 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     ))}
                   </div>
                 ) : (
-                  emptyLine('Tidak ada riwayat pendidikan formal.')
+                  emptyLine('No formal education history.')
                 )
               )}
 
               {extraction?.certifications && extraction.certifications.length > 0 && (
                 section(
-                  'Sertifikasi & Lisensi',
+                  'Certifications & Licenses',
                   <div className="space-y-1.5">
                     {extraction.certifications.map((c, i) => (
                       <div key={i} className="text-xs text-indigo-950 bg-indigo-500/15 border border-indigo-500/35 p-3 rounded-xl font-extrabold shadow-2xs flex items-center gap-2">
@@ -421,7 +421,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
               )}
 
               {section(
-                'Portofolio & Proyek',
+                'Portfolio & Projects',
                 extraction?.portfolios && extraction.portfolios.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {extraction.portfolios.map((p, idx) => (
@@ -450,13 +450,13 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     ))}
                   </div>
                 ) : (
-                  emptyLine('Tidak ada data proyek portofolio.')
+                  emptyLine('No portfolio project data.')
                 )
               )}
 
               {extraction?.references && extraction.references.length > 0 && (
                 section(
-                  'Referensi Kerja',
+                  'Work References',
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {extraction.references.map((ref, idx) => (
                       <div

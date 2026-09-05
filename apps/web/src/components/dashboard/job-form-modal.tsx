@@ -70,7 +70,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
 
   const handleLinkedInImport = async () => {
     if (!rawLinkedInText.trim()) {
-      setImportError('Harap tempelkan teks deskripsi lowongan dari LinkedIn/Glints.');
+      setImportError('Please paste the job description text from LinkedIn/Glints.');
       return;
     }
 
@@ -91,7 +91,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         preferred: (q.preferred_skills || []).join(', '),
       });
 
-      setImportStatus(`Berhasil mengekstrak kualifikasi (${q.company_name || 'Perusahaan'}) & membuat 384-dim job_embedding! Anda dapat menyesuaikan input di bawah ini.`);
+      setImportStatus(`Successfully extracted qualifications (${q.company_name || 'Company'}) & generated 384-dim job_embedding! You can adjust the inputs below.`);
       setActiveTab('manual');
     } catch (err: any) {
       console.warn('LinkedIn Import fallback:', err);
@@ -108,7 +108,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         mandatory: mandatoryMatch ? mandatoryMatch[1].trim() : 'Python, PyTorch, LLMs, RAG',
         preferred: 'Docker, Kubernetes, GCP, Azure',
       });
-      setImportStatus('Berhasil mengekstrak kualifikasi lowongan! Anda dapat menyesuaikan input di bawah ini.');
+      setImportStatus('Successfully extracted job qualifications! You can adjust the inputs below.');
       setActiveTab('manual');
     } finally {
       setIsImporting(false);
@@ -159,10 +159,10 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
       title={
         <div>
           <h3 className="text-base font-bold text-foreground">
-            {mode === 'edit' ? 'Edit Posisi Lowongan' : 'Tambah Lowongan Baru'}
+            {mode === 'edit' ? 'Edit Job Opening' : 'Create New Job Opening'}
           </h3>
           <p className="text-xs font-normal text-muted-foreground mt-0.5">
-            {mode === 'edit' ? 'Perbarui kualifikasi & kriteria Job-Fit' : 'Terbitkan lowongan kerja dan kriteria Job-Fit score'}
+            {mode === 'edit' ? 'Update qualifications & Job-Fit criteria' : 'Post job opening and set Job-Fit scoring criteria'}
           </p>
         </div>
       }
@@ -170,8 +170,8 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         mode === 'create' ? (
           <Tabs
             items={[
-              { key: 'manual', label: 'Input Manual' },
-              { key: 'linkedin', label: 'Import AI (LinkedIn / Glints)' },
+              { key: 'manual', label: 'Manual Entry' },
+              { key: 'linkedin', label: 'AI Import (LinkedIn / Glints)' },
             ]}
             active={activeTab}
             onChange={(k) => setActiveTab(k as 'manual' | 'linkedin')}
@@ -182,11 +182,11 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
       footer={
         <div className="flex items-center justify-end gap-4 sm:gap-4 w-full">
           <Button variant="ghost" size="md" onClick={onClose} className="px-6">
-            Batal
+            Cancel
           </Button>
           {activeTab === 'manual' ? (
             <Button size="md" type="submit" form="job-form" className="px-6">
-              {mode === 'edit' ? 'Simpan Perubahan' : 'Terbitkan Lowongan'}
+              {mode === 'edit' ? 'Save Changes' : 'Post Job Opening'}
             </Button>
           ) : (
             <Button
@@ -196,7 +196,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               className="px-6"
               iconLeft={isImporting ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
             >
-              {isImporting ? 'Mengekstrak AI...' : 'Auto-Ekstrak & Embedding'}
+              {isImporting ? 'Extracting AI...' : 'Auto-Extract & Embed'}
             </Button>
           )}
         </div>
@@ -218,9 +218,9 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         {activeTab === 'linkedin' && mode === 'create' ? (
           <div className="space-y-4">
             <Field
-              label="Tempelkan Teks Deskripsi Lowongan (LinkedIn / Glints / JobStreet)"
+              label="Paste Job Description Text (LinkedIn / Glints / JobStreet)"
               required
-              hint="Groq LLM akan mengekstrak judul, skill wajib, dan membuat 384-dim job_embedding secara otomatis."
+              hint="Groq LLM will automatically extract title, required skills, and generate 384-dim job_embedding."
             >
               <Textarea
                 rows={8}
@@ -233,7 +233,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
           </div>
         ) : (
           <form id="job-form" onSubmit={handleSubmit} className="space-y-4">
-            <Field label="Judul Posisi Lowongan" required>
+            <Field label="Job Position Title" required>
               <Input
                 required
                 value={form.title}
@@ -243,15 +243,15 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
             </Field>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <Field label="Departemen">
+              <Field label="Department">
                 <Input value={form.department} onChange={(e) => set('department', e.target.value)} />
               </Field>
-              <Field label="Lokasi & Skema Kerja">
+              <Field label="Location & Work Setup">
                 <Input value={form.location} onChange={(e) => set('location', e.target.value)} />
               </Field>
             </div>
 
-            <Field label="Minimum Pengalaman Kerja (Bulan)" required hint="Digunakan untuk scoring pengalaman $S_{exp}$. Contoh: 24 bulan = 2 tahun.">
+            <Field label="Minimum Work Experience (Months)" required hint="Used for experience scoring $S_{exp}$. Example: 24 months = 2 years.">
               <Input
                 type="number"
                 required
@@ -262,7 +262,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               />
             </Field>
 
-            <Field label="Skill Wajib (Mandatory)" required hint="Dipisahkan koma. Memiliki bobot 30% pada formula Job-Fit.">
+            <Field label="Mandatory Skills" required hint="Comma-separated. Has 30% weight in Job-Fit formula.">
               <Input
                 required
                 value={form.mandatory}
@@ -272,7 +272,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               />
             </Field>
 
-            <Field label="Skill Tambahan (Preferred)" hint="Dipisahkan koma. Memiliki bobot 5% pada formula Job-Fit.">
+            <Field label="Preferred Skills" hint="Comma-separated. Has 5% weight in Job-Fit formula.">
               <Input
                 value={form.preferred}
                 onChange={(e) => set('preferred', e.target.value)}

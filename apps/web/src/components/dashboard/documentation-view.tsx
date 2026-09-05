@@ -24,46 +24,46 @@ interface DocCategory {
 
 const DOC_CATEGORIES: DocCategory[] = [
   {
-    title: 'Spesifikasi & Arsitektur',
+    title: 'Specifications & Architecture',
     items: [
       {
         key: 'readme',
-        label: 'README Master',
+        label: 'Master README',
         icon: FileText,
-        description: 'Spesifikasi produk umum, panduan instalasi, dan arsitektur produk Resumix AI.',
+        description: 'General product specification, installation guide, and Resumix AI product architecture.',
         badge: 'Core',
       },
       {
         key: 'architecture',
-        label: 'Spesifikasi Arsitektur',
+        label: 'Architecture Specification',
         icon: Layers,
-        description: 'Spesifikasi mikroservis, batas layanan (boundaries), dan skema pgvector.',
+        description: 'Microservice specifications, service boundaries, and pgvector schema.',
         badge: 'Technical',
       },
       {
         key: 'evaluation',
-        label: 'Laporan Evaluasi & Metrik',
+        label: 'Evaluation & Metrics Report',
         icon: BarChart3,
-        description: 'Hasil pengujian 200 PDF CV sintetis, latensi ingestion, dan akurasi AI.',
+        description: 'Test results of 200 synthetic resume PDFs, ingestion latency, and AI accuracy.',
         badge: 'Metrics',
       },
     ],
   },
   {
-    title: 'Lisensi & Legal',
+    title: 'Licensing & Legal',
     items: [
       {
         key: 'license',
-        label: 'Lisensi Kode (AGPL-3.0)',
+        label: 'Code License (AGPL-3.0)',
         icon: ShieldCheck,
-        description: 'Ketentuan lisensi GNU AGPLv3 untuk perlindungan source code dan larangan komersial tertutup.',
+        description: 'GNU AGPLv3 license terms for source code protection and proprietary commercial restrictions.',
         badge: 'AGPL-3.0',
       },
       {
         key: 'licenseDocs',
-        label: 'Lisensi Dokumen (CC BY-NC-SA)',
+        label: 'Documentation License (CC BY-NC-SA)',
         icon: Scale,
-        description: 'Ketentuan lisensi Creative Commons Attribution-NonCommercial-ShareAlike 4.0 untuk dokumentasi & arsitektur.',
+        description: 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 license terms for documentation & architecture.',
         badge: 'CC BY-NC-SA',
       },
     ],
@@ -170,11 +170,11 @@ export const DocumentationView: React.FC = () => {
       if (data.success) {
         setContent(data.content);
       } else {
-        setError(data.error || 'Gagal memuat dokumen');
+        setError(data.error || 'Failed to load document');
       }
     } catch (err) {
       console.error('Error fetching doc:', err);
-      setError('Gagal menghubungkan ke endpoint dokumentasi.');
+      setError('Failed to connect to documentation endpoint.');
     } finally {
       setIsLoading(false);
     }
@@ -277,7 +277,7 @@ export const DocumentationView: React.FC = () => {
                     className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
                   >
                     {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{isCopied ? 'Tersalin' : 'Salin'}</span>
+                    <span>{isCopied ? 'Copied' : 'Copy'}</span>
                   </button>
                 </div>
                 <pre className="p-4 overflow-x-auto leading-relaxed text-slate-200">
@@ -359,35 +359,35 @@ export const DocumentationView: React.FC = () => {
               bg: 'bg-blue-50/90',
               border: 'border-blue-400',
               text: 'text-blue-950',
-              label: 'Catatan (Note)',
+              label: 'Note',
               icon: <Info className="w-4 h-4 text-blue-600 shrink-0" />,
             },
             TIP: {
               bg: 'bg-emerald-50/90',
               border: 'border-emerald-400',
               text: 'text-emerald-950',
-              label: 'Tips (Tip)',
+              label: 'Tip',
               icon: <Lightbulb className="w-4 h-4 text-emerald-600 shrink-0" />,
             },
             IMPORTANT: {
               bg: 'bg-indigo-50/90',
               border: 'border-indigo-400',
               text: 'text-indigo-950',
-              label: 'Penting (Important)',
+              label: 'Important',
               icon: <AlertCircle className="w-4 h-4 text-indigo-600 shrink-0" />,
             },
             WARNING: {
               bg: 'bg-amber-50/90',
               border: 'border-amber-400',
               text: 'text-amber-950',
-              label: 'Peringatan (Warning)',
+              label: 'Warning',
               icon: <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />,
             },
             CAUTION: {
               bg: 'bg-rose-50/90',
               border: 'border-rose-400',
               text: 'text-rose-950',
-              label: 'Perhatian (Caution)',
+              label: 'Caution',
               icon: <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />,
             },
           };
@@ -450,7 +450,7 @@ export const DocumentationView: React.FC = () => {
         <SearchInput
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Cari kata kunci dalam dokumen..."
+          placeholder="Search keywords in document..."
           className="w-full sm:max-w-md"
         />
         <div className="sm:ml-auto">
@@ -461,7 +461,7 @@ export const DocumentationView: React.FC = () => {
             disabled={isLoading}
             iconLeft={<RefreshCw className={`w-3.5 h-3.5 text-ink-subtle ${isLoading ? 'animate-spin' : ''}`} />}
           >
-            Refresh Dokumentasi
+            Refresh Documentation
           </Button>
         </div>
       </Toolbar>
@@ -471,7 +471,7 @@ export const DocumentationView: React.FC = () => {
         {/* Wiki Sidebar */}
         <Card className="w-full lg:w-72 shrink-0 p-4 space-y-5 sticky top-24">
           <div className="px-1 border-b border-surface-border pb-3">
-            <h3 className="text-h3 font-bold text-ink-default tracking-tight">Dokumentasi</h3>
+            <h3 className="text-h3 font-bold text-ink-default tracking-tight">Documentation</h3>
           </div>
 
           <nav className="space-y-5">
@@ -510,14 +510,14 @@ export const DocumentationView: React.FC = () => {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-28 text-center space-y-3">
               <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
-              <p className="text-caption font-bold text-ink-subtle font-mono">Memuat dokumen wiki...</p>
+              <p className="text-caption font-bold text-ink-subtle font-mono">Loading wiki document...</p>
             </div>
           ) : error ? (
             <div className="p-8 text-center bg-rose-50 border border-rose-200 rounded-md space-y-3">
               <FileText className="w-10 h-10 text-rose-600 mx-auto" />
               <p className="text-body font-bold text-rose-600">{error}</p>
               <Button variant="secondary" size="sm" onClick={() => fetchDocContent(activeDoc)}>
-                Coba Lagi
+                Retry
               </Button>
             </div>
           ) : (

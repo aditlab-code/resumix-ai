@@ -10,7 +10,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <PipelineSettingsView
-        onSaveSettings={(msg) => addToast('success', 'Pengaturan disimpan', msg)}
+        onSaveSettings={(msg) => addToast('success', 'Settings saved', msg)}
         onAddToast={addToast}
         onAddAuditLog={addAuditLog}
       />

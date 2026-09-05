@@ -32,16 +32,16 @@ const STATUS_OPTIONS: ApplicationStatus[] = [
 ];
 
 const TABS = [
-  { key: 'profile', label: 'Profil & Pengalaman' },
-  { key: 'scoring', label: 'Matrix Job-Fit AI' },
-  { key: 'resume', label: 'Preview CV (PDF)' },
+  { key: 'profile', label: 'Profile & Experience' },
+  { key: 'scoring', label: 'AI Job-Fit Matrix' },
+  { key: 'resume', label: 'Resume Preview (PDF)' },
   { key: 'timeline', label: 'Log & Timeline' },
 ];
 
 const getRecommendationText = (score: number) => {
-  if (score >= 80) return 'SANGAT DIREKOMENDASIKAN';
-  if (score >= 60) return 'REKOMENDASI REVIEW KHUSUS';
-  return 'TIDAK DIREKOMENDASIKAN';
+  if (score >= 80) return 'HIGHLY RECOMMENDED';
+  if (score >= 60) return 'SPECIAL REVIEW RECOMMENDED';
+  return 'NOT RECOMMENDED';
 };
 
 const getRecommendationBadgeClass = (score: number) => {
@@ -102,7 +102,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
               <StatusBadge status={application.status} />
             </div>
             <p className="text-xs text-muted-foreground truncate mt-0.5">
-              {job.title} · Melamar {new Date(application.applied_at).toLocaleDateString('id-ID')}
+              {job.title} · Applied {new Date(application.applied_at).toLocaleDateString('en-US')}
             </p>
           </div>
         </div>
@@ -111,7 +111,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
         !isEditing && (
           <div className="mt-3 pt-3 border-t border-border flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-muted-foreground">Ubah Status:</span>
+              <span className="text-xs font-semibold text-muted-foreground">Change Status:</span>
               <Select
                 value={application.status}
                 onChange={(e) => onStatusChange(application.id, e.target.value as ApplicationStatus)}
@@ -137,7 +137,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
                 }}
                 iconLeft={<Edit3 className="w-3.5 h-3.5" />}
               >
-                Edit Data
+                Edit Profile
               </Button>
               <Button
                 variant="secondary"
@@ -153,7 +153,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
                 onClick={() => onDeleteCandidate(application)}
                 iconLeft={<Trash2 className="w-3.5 h-3.5" />}
               >
-                Hapus
+                Delete
               </Button>
             </div>
           </div>
@@ -217,7 +217,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
             {/* Contact Summary Card */}
             <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground border-b border-border pb-2">
-                Kontak & Informasi
+                Contact & Information
               </h4>
               <div className="space-y-2.5 text-xs text-muted-foreground font-medium">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -239,7 +239,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Calendar className="w-4 h-4 text-primary shrink-0" />
                   <span className="text-muted-foreground">
-                    Melamar {new Date(application.applied_at).toLocaleDateString('id-ID')}
+                    Applied {new Date(application.applied_at).toLocaleDateString('en-US')}
                   </span>
                 </div>
               </div>

@@ -40,16 +40,16 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border pb-4">
         <h2 className="text-base font-bold text-foreground">
-          Matriks Perbandingan Kandidat
+          Candidate Comparison Matrix
         </h2>
         <Button variant="outline" size="sm" onClick={onClose}>
-          Tutup
+          Close
         </Button>
       </div>
 
       {/* Candidate Selector Toolbar */}
       <div className="flex flex-wrap items-center gap-2 bg-muted/40 p-3 rounded-lg border border-border text-xs">
-        <span className="font-semibold text-muted-foreground mr-1">Pilih Kandidat (Maks 3):</span>
+        <span className="font-semibold text-muted-foreground mr-1">Select Candidates (Max 3):</span>
         {applications.map((app) => {
           const isSelected = selectedIds.includes(app.id);
           return (
@@ -109,7 +109,7 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
                   <StatusBadge status={app.status} />
                   <span className="text-xs text-muted-foreground flex items-center gap-1 font-mono">
                     <Calendar className="w-3 h-3" />
-                    {app.applied_at?.slice(0, 10) || 'Baru'}
+                    {app.applied_at?.slice(0, 10) || 'New'}
                   </span>
                 </div>
               </div>
@@ -130,7 +130,7 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
 
               {/* Sub-Score Breakdown Matrix */}
               <div className="flex flex-col gap-2 text-xs font-mono border-t border-border pt-3">
-                <h4 className="font-bold text-foreground font-sans">Breakdown Skor:</h4>
+                <h4 className="font-bold text-foreground font-sans">Score Breakdown:</h4>
 
                 <div className="flex items-center justify-between bg-muted/20 p-2 rounded border border-border">
                   <span className="text-muted-foreground">Semantic Fit (45%)</span>
@@ -195,15 +195,15 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
               {/* Work Experience & Education */}
               <div className="flex flex-col gap-1.5 text-xs border-t border-border pt-3 mt-auto">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Total Pengalaman:</span>
+                  <span className="text-muted-foreground">Total Experience:</span>
                   <span className="font-mono text-foreground font-bold">
-                    {Math.round((expMonths / 12) * 10) / 10} Tahun
+                    {Math.round((expMonths / 12) * 10) / 10} Years
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Pendidikan:</span>
+                  <span className="text-muted-foreground">Education:</span>
                   <span className="text-foreground font-medium truncate max-w-[180px]" title={education?.institution || ''}>
-                    {education?.degree || 'S1'} - {education?.major || 'Teknik'}
+                    {education?.degree || 'Bachelor'} - {education?.major || 'Engineering'}
                   </span>
                 </div>
               </div>

@@ -26,7 +26,7 @@ export function buildCandidateColumns({
   const columns: Column<CandidateApplication>[] = [
     {
       key: 'candidate',
-      header: 'Kandidat',
+      header: 'Candidate',
       render: (app) => (
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-pill bg-surface-sunken border border-surface-border flex items-center justify-center font-bold text-ink-default text-caption shrink-0">
@@ -46,7 +46,7 @@ export function buildCandidateColumns({
   if (jobs) {
     columns.push({
       key: 'job',
-      header: 'Lowongan',
+      header: 'Job Opening',
       render: (app) => (
         <span className="text-caption font-semibold text-brand-accent">
           {jobs.find((j) => j.id === app.job_id)?.title || '—'}
@@ -65,17 +65,17 @@ export function buildCandidateColumns({
             {app.job_fit_score}%
           </span>
           <span className="text-caption text-ink-subtle font-mono">
-            {app.score_breakdown.matched_skills.length} skill
+            {app.score_breakdown.matched_skills.length} skills
           </span>
         </div>
       ),
     },
     {
       key: 'experience',
-      header: 'Pengalaman',
+      header: 'Experience',
       render: (app) => (
         <span className="text-caption font-semibold text-ink-muted">
-          {app.cv_extraction.total_experience_months || 0} bln
+          {app.cv_extraction.total_experience_months || 0} mos
         </span>
       ),
     },
@@ -108,7 +108,7 @@ export function buildCandidateColumns({
               onClick={() => onSelect(app)}
               className="inline-flex items-center gap-1 text-caption font-semibold text-ink-subtle bg-surface-sunken border border-surface-border px-3 py-1.5 rounded-md hover:text-ink-default hover:bg-surface-border transition-colors focus-ring"
             >
-              Detail
+              Details
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           )}

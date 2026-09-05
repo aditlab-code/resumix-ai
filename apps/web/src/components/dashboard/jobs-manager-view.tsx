@@ -35,7 +35,7 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
         <SearchInput
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Cari posisi, divisi, atau kriteria skill..."
+          placeholder="Search position, division, or skill criteria..."
           className="w-full sm:max-w-md"
         />
       </Toolbar>
@@ -43,13 +43,13 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
       {filtered.length === 0 ? (
         <EmptyState
           icon={<Briefcase className="w-8 h-8 text-brand-accent" />}
-          title={jobs.length === 0 ? 'Belum Ada Lowongan Kerja Diterbitkan' : 'Lowongan Tidak Ditemukan'}
+          title={jobs.length === 0 ? 'No Job Openings Posted Yet' : 'No Jobs Found'}
           description={
             jobs.length === 0
-              ? 'Terbitkan lowongan kerja baru atau impor deskripsi pekerjaan dari LinkedIn/Glints untuk mulai menyaring CV.'
-              : 'Tidak ada lowongan yang sesuai dengan kriteria kata kunci pencarian.'
+              ? 'Post a new job opening or import job descriptions from LinkedIn/Glints to start screening resumes.'
+              : 'No jobs matched your search criteria.'
           }
-          actionLabel="Buat Lowongan Kerja Baru"
+          actionLabel="Create New Job Opening"
           onAction={onOpenCreateJobModal}
         />
       ) : (
@@ -68,14 +68,14 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                     <button
                       onClick={() => onEditJob(job)}
                       className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors focus-ring"
-                      aria-label="Edit lowongan"
+                      aria-label="Edit job"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => onDeleteJob(job.id)}
                       className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors focus-ring"
-                      aria-label="Hapus lowongan"
+                      aria-label="Delete job"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -89,11 +89,11 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-muted-foreground/70 shrink-0" />
-                    <span>Min. <strong className="text-foreground font-semibold">{job.minimum_experience_months} bln</strong></span>
+                    <span>Min. <strong className="text-foreground font-semibold">{job.minimum_experience_months} mos</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-muted-foreground/70 shrink-0" />
-                    <span><strong className="text-foreground font-semibold">{job.applications_count}</strong> pelamar</span>
+                    <span><strong className="text-foreground font-semibold">{job.applications_count}</strong> applicants</span>
                   </div>
                 </div>
 
@@ -115,7 +115,7 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                 onClick={() => onSelectJobForCandidates(job.id)}
                 className="w-full mt-2"
               >
-                Lihat pelamar ({job.applications_count})
+                View applicants ({job.applications_count})
               </Button>
             </Card>
           ))}

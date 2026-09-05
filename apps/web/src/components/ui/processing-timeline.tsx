@@ -12,10 +12,10 @@ interface ProcessingTimelineProps {
 }
 
 const STEPS: { key: ParseStatus; label: string; description: string }[] = [
-  { key: 'uploaded', label: 'CV Uploaded', description: 'Berkas PDF tersimpan di storage privat.' },
-  { key: 'queued', label: 'Worker Queue', description: 'Pekerjaan antrean dipasang ke worker.' },
-  { key: 'processing', label: 'Ekstraksi PDF & LLM', description: 'Ekstrak teks PDF & skema data.' },
-  { key: 'processed', label: 'Normalized & Scored', description: 'Embedding & Job-Fit Score selesai.' },
+  { key: 'uploaded', label: 'CV Uploaded', description: 'PDF file stored in private storage.' },
+  { key: 'queued', label: 'Worker Queue', description: 'Job queued for background worker.' },
+  { key: 'processing', label: 'PDF & LLM Extraction', description: 'Extract PDF text & structured schema.' },
+  { key: 'processed', label: 'Normalized & Scored', description: 'Embedding & Job-Fit Scoring completed.' },
 ];
 
 const stepIndex = (status: ParseStatus) =>
@@ -31,7 +31,7 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
   return (
     <div className="bg-canvas rounded p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="uppercase tracking-wider text-ink-subtle">Alur Pemrosesan Dokumen</h4>
+        <h4 className="uppercase tracking-wider text-ink-subtle">Document Processing Pipeline</h4>
         <span className="text-xs font-mono text-ink-muted">
           Status: <strong className="text-ink">{currentStatus}</strong>
         </span>
@@ -93,7 +93,7 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
         <div className="p-3 rounded bg-danger-soft text-danger text-xs flex items-start gap-2">
           <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
-            <strong className="block font-semibold">Kegagalan Parsing CV</strong>
+            <strong className="block font-semibold">Resume Parsing Failed</strong>
             <p className="text-[11px]">{errorMessage}</p>
           </div>
         </div>
@@ -103,7 +103,7 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
         <div className="p-3 rounded bg-warn-soft text-warn text-xs space-y-1">
           <div className="flex items-center gap-1.5 font-semibold">
             <AlertTriangle className="w-4 h-4 shrink-0" />
-            Catatan AI Parsing ({warnings.length})
+            AI Parsing Notes ({warnings.length})
           </div>
           <ul className="list-disc list-inside text-[11px] space-y-0.5 pl-1">
             {warnings.map((w, i) => (

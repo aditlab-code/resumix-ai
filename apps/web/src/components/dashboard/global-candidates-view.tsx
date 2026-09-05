@@ -66,9 +66,9 @@ export const GlobalCandidatesView: React.FC<GlobalCandidatesViewProps> = ({
   );
 
   const subTabs: TabItem<ViewMode>[] = [
-    { id: 'table', label: 'Tabel Kandidat', icon: Table, count: rows.length },
+    { id: 'table', label: 'Candidates Table', icon: Table, count: rows.length },
     { id: 'kanban', label: 'Kanban Board', icon: Kanban },
-    { id: 'compare', label: 'Komparasi Matriks', icon: Scale },
+    { id: 'compare', label: 'Matrix Comparison', icon: Scale },
   ];
 
   return (
@@ -85,12 +85,12 @@ export const GlobalCandidatesView: React.FC<GlobalCandidatesViewProps> = ({
         <SearchInput
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Cari nama kandidat, email, atau skill..."
+          placeholder="Search candidate name, email, or skill..."
           className="w-full sm:max-w-md"
         />
         <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
           <FilterSelect value={jobFilter} onChange={(e) => setJobFilter(e.target.value)}>
-            <option value="all">Semua Lowongan Pekerjaan</option>
+            <option value="all">All Job Openings</option>
             {jobs.map((j) => (
               <option key={j.id} value={j.id}>
                 {j.title}
@@ -98,7 +98,7 @@ export const GlobalCandidatesView: React.FC<GlobalCandidatesViewProps> = ({
             ))}
           </FilterSelect>
           <FilterSelect value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="all">Semua Status Rekrutmen</option>
+            <option value="all">All Recruitment Statuses</option>
             <option value="screening">Screening</option>
             <option value="applied">Applied</option>
             <option value="interview">Interview</option>
@@ -129,9 +129,9 @@ export const GlobalCandidatesView: React.FC<GlobalCandidatesViewProps> = ({
           onRowClick={onSelectCandidate}
           empty={
             <EmptyState
-              title="Tidak ada kandidat ditemukan"
-              description="Sesuaikan kriteria pencarian kata kunci atau filter posisi pekerjaan."
-              actionLabel="Unggah CV Kandidat Baru"
+              title="No candidates found"
+              description="Adjust keyword search or job position filter."
+              actionLabel="Upload New Candidate Resume"
               onAction={onOpenUploadModal}
             />
           }

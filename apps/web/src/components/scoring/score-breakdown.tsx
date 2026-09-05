@@ -22,10 +22,10 @@ const matchTone = (s: number) =>
 
 export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, className = '' }) => {
   const meters = [
-    { label: 'Relevansi semantik teks', percent: score.semantic_similarity * 100, weight: 45, tone: 'accent' as const },
-    { label: 'Kesesuaian skill wajib', percent: score.mandatory_skill_score * 100, weight: 30, tone: 'ok' as const },
-    { label: 'Lama pengalaman kerja', percent: score.experience_score * 100, weight: 20, tone: 'accent' as const },
-    { label: 'Skill tambahan (preferred)', percent: score.preferred_skill_score * 100, weight: 5, tone: 'ink' as const },
+    { label: 'Semantic text relevance', percent: score.semantic_similarity * 100, weight: 45, tone: 'accent' as const },
+    { label: 'Mandatory skill match', percent: score.mandatory_skill_score * 100, weight: 30, tone: 'ok' as const },
+    { label: 'Years of work experience', percent: score.experience_score * 100, weight: 20, tone: 'accent' as const },
+    { label: 'Preferred skill match', percent: score.preferred_skill_score * 100, weight: 5, tone: 'ink' as const },
   ];
 
   return (
@@ -57,7 +57,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
         <div>
           <SectionLabel className="mb-2.5 flex items-center gap-1.5 normal-case tracking-normal text-foreground font-extrabold text-xs">
             <Check className="w-4 h-4 text-emerald-600" />
-            Skill cocok ({score.matched_skills.length})
+            Matched skills ({score.matched_skills.length})
           </SectionLabel>
           <div className="flex flex-wrap gap-1.5">
             {score.matched_skills.length > 0 ? (
@@ -70,7 +70,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
                 </span>
               ))
             ) : (
-              <span className="text-muted-foreground text-xs italic">Tidak ada skill yang cocok</span>
+              <span className="text-muted-foreground text-xs italic">No matching skills</span>
             )}
           </div>
         </div>
@@ -79,7 +79,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
           <div>
             <SectionLabel className="mb-2.5 flex items-center gap-1.5 normal-case tracking-normal text-destructive font-extrabold text-xs">
               <AlertCircle className="w-4 h-4 text-destructive" />
-              Skill wajib belum ditemukan ({score.missing_mandatory_skills.length})
+              Missing mandatory skills ({score.missing_mandatory_skills.length})
             </SectionLabel>
             <div className="flex flex-wrap gap-1.5">
               {score.missing_mandatory_skills.map((skill) => (
@@ -98,8 +98,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
       <div className="p-3.5 bg-muted/40 border border-border rounded-lg text-xs text-muted-foreground flex items-start gap-2.5">
         <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
         <p className="leading-relaxed">
-          Skor AI adalah <strong className="text-foreground font-semibold">alat bantu keputusan HR</strong>, tidak menolak kandidat secara
-          otomatis. HR berwenang meninjau ulang CV secara manual.
+          AI scores serve as an <strong className="text-foreground font-semibold">HR decision support tool</strong> and do not automatically reject candidates. HR retains full authority to review resumes manually.
         </p>
       </div>
     </Card>
