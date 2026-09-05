@@ -51,10 +51,12 @@ export function useCVProcessingStatus(
         }
       }
     } catch (err: any) {
-      console.warn('[useCVProcessingStatus] Polling error fallback:', err);
-      // In dev fallback, assume processed if server endpoint simulation is active
+      console.error('[useCVProcessingStatus] Polling error:', err);
+      const pollingError = err instanceof Error ? err : new Error('Gagal terhubung ke server untuk memeriksa status pemrosesan CV.');
+      setError(pollingError);
+      setStatus('failed');
       setIsFinished(true);
-      setStatus('processed');
+      onErrorRef.current?.(pollingError);
     }
   }, [processingJobId]);
 

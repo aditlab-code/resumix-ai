@@ -45,6 +45,8 @@ async def extract_job_qualifications_via_groq(
     pruned_text = prune_raw_text(raw_job_text)
 
     key = api_key or DEFAULT_GROQ_API_KEY
+    if not key or not key.strip():
+        raise ValueError("GROQ_API_KEY atau LLM_API_KEY belum dikonfigurasi di environment variables.")
     selected_model = model or DEFAULT_GROQ_MODEL
 
     headers = {

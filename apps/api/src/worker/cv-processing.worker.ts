@@ -69,7 +69,8 @@ export function startCVProcessingWorker(): Worker<CVProcessingJobPayload> {
       } catch (error: any) {
         console.error(`[Worker] Error processing CV job ${job.id}:`, error);
 
-        const isZeroTextLayer = error.message && error.message.includes('NO_TEXT_LAYER');
+        const errMessage = String(error?.message || error || 'Unknown processing error');
+        const isZeroTextLayer = errMessage.includes('NO_TEXT_LAYER');
         const status = isZeroTextLayer ? 'needs_review' : 'failed';
         const errorCode = isZeroTextLayer ? 'NO_TEXT_LAYER' : 'PROCESSING_ERROR';
 
@@ -77,7 +78,7 @@ export function startCVProcessingWorker(): Worker<CVProcessingJobPayload> {
           processing_job_id,
           status,
           errorCode,
-          error.message || 'Unknown processing error'
+          errMessage
         );
 
         throw error;

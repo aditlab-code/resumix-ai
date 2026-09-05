@@ -1,5 +1,41 @@
 import { Pool } from 'pg';
 import { env } from '../config/env';
+import { ApplicationStatus, ParseStatus, ScoreBreakdown, CVExtractionDTO } from '@cv-ats/contracts';
+
+export interface ApplicationRecord {
+  application_id: string;
+  status: ApplicationStatus;
+  job_fit_score: number;
+  score_breakdown: ScoreBreakdown;
+  applied_at: string;
+  candidate_id: string;
+  full_name?: string;
+  email?: string;
+  phone_number?: string;
+  total_experience_months?: number;
+  parsed_cv_json?: CVExtractionDTO;
+}
+
+export interface ProcessingJobRecord {
+  id: string;
+  document_id: string;
+  job_type: string;
+  status: ParseStatus;
+  attempt_count: number;
+  error_code?: string;
+  error_message?: string;
+  started_at: string;
+  completed_at?: string;
+}
+
+export interface JobPostingRecord {
+  id: string;
+  title: string;
+  description: string;
+  minimum_experience_months: number;
+  status: string;
+  created_at: string;
+}
 
 export class DBService {
   private pool: Pool;
@@ -208,7 +244,7 @@ export class DBService {
     await this.pool.query(query, [status, applicationId]);
   }
 
-  async getApplicationsByJobId(jobId: string): Promise<any[]> {
+  async getApplicationsByJobId(jobId: string): Promise<ApplicationRecord[]> {
     const query = `
       SELECT 
         a.id as application_id,
@@ -227,27 +263,27 @@ export class DBService {
       WHERE a.job_id = $1
       ORDER BY a.job_fit_score DESC;
     `;
-    const result = await this.pool.query(query, [jobId]);
+    const result = await this.pool.query<ApplicationRecord>(query, [jobId]);
     return result.rows;
   }
 
-  async getProcessingJob(processingJobId: string): Promise<any | null> {
+  async getProcessingJob(processingJobId: string): Promise<ProcessingJobRecord | null> {
     const query = `
       SELECT id, document_id, job_type, status, attempt_count, error_code, error_message, started_at, completed_at
       FROM processing_jobs
       WHERE id = $1;
     `;
-    const result = await this.pool.query(query, [processingJobId]);
+    const result = await this.pool.query<ProcessingJobRecord>(query, [processingJobId]);
     return result.rows[0] || null;
   }
 
-  async getJobs(): Promise<any[]> {
+  async getJobs(): Promise<JobPostingRecord[]> {
     const query = `
       SELECT id, title, description, minimum_experience_months, status, created_at
       FROM job_postings
       ORDER BY created_at DESC;
     `;
-    const result = await this.pool.query(query);
+    const result = await this.pool.query<JobPostingRecord>(query);
     return result.rows;
   }
 

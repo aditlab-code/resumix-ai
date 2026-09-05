@@ -54,12 +54,8 @@ const router = express.Router();
 
 router.get('/jobs', async (req, res, next) => {
   try {
-    try {
-      const jobs = await dbService.getJobs();
-      return res.json({ data: jobs });
-    } catch {
-      return res.json({ data: [] });
-    }
+    const jobs = await dbService.getJobs();
+    return res.json({ data: jobs });
   } catch (error) {
     return next(error);
   }
@@ -68,11 +64,7 @@ router.get('/jobs', async (req, res, next) => {
 router.delete('/jobs/:jobId', async (req, res, next) => {
   try {
     const { jobId } = req.params;
-    try {
-      await dbService.deleteJob(jobId);
-    } catch (err) {
-      console.warn(`[Core API] Note: DB delete fallback for job ${jobId}:`, err);
-    }
+    await dbService.deleteJob(jobId);
     return res.json({
       job_id: jobId,
       message: `Lowongan kerja '${jobId}' berhasil dihapus permanen.`,
@@ -167,8 +159,6 @@ router.post('/jobs/:jobId/applications', async (req, res, next) => {
         filename,
         file_base64,
         job_criteria,
-      }).catch((queueErr) => {
-        console.warn(`[Core API] Warning: Failed to enqueue to BullMQ:`, queueErr.message);
       });
     }
 
@@ -238,13 +228,8 @@ router.get('/jobs/:jobId/candidates/match', async (req, res, next) => {
 router.get('/jobs/:jobId/applications', async (req, res, next) => {
   try {
     const { jobId } = req.params;
-    // Attempt DB query if postgres is connected, else return mock structure
-    try {
-      const apps = await dbService.getApplicationsByJobId(jobId);
-      return res.json({ job_id: jobId, data: apps });
-    } catch {
-      return res.json({ job_id: jobId, data: [] });
-    }
+    const apps = await dbService.getApplicationsByJobId(jobId);
+    return res.json({ job_id: jobId, data: apps });
   } catch (error) {
     return next(error);
   }
@@ -265,11 +250,7 @@ router.patch('/applications/:applicationId/status', async (req, res, next) => {
       });
     }
 
-    try {
-      await dbService.updateApplicationStatus(applicationId, status);
-    } catch (err) {
-      console.warn(`[Core API] Note: DB update fallback for status:`, err);
-    }
+    await dbService.updateApplicationStatus(applicationId, status);
 
     return res.json({
       application_id: applicationId,
@@ -288,23 +269,13 @@ router.patch('/applications/:applicationId/status', async (req, res, next) => {
 router.get('/processing-jobs/:processingJobId', async (req, res, next) => {
   try {
     const { processingJobId } = req.params;
-    try {
-      const jobStatus = await dbService.getProcessingJob(processingJobId);
-      if (jobStatus) {
-        return res.json({ data: jobStatus });
-      }
-    } catch {
-      // Fallback response for dev / simulation
+    const jobStatus = await dbService.getProcessingJob(processingJobId);
+    if (!jobStatus) {
+      return res.status(404).json({
+        error: { message: `Processing job '${processingJobId}' tidak ditemukan.` },
+      });
     }
-
-    return res.json({
-      data: {
-        id: processingJobId,
-        status: 'processed', // processed, processing, queued, needs_review, failed
-        attempt_count: 1,
-        completed_at: new Date().toISOString(),
-      },
-    });
+    return res.json({ data: jobStatus });
   } catch (error) {
     return next(error);
   }
@@ -313,7 +284,24 @@ router.get('/processing-jobs/:processingJobId', async (req, res, next) => {
 app.use('/api/v1', router);
 app.use(errorHandler);
 
-app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, () => {
   console.log(`[Core API] Server running on http://localhost:${env.PORT}`);
 });
+
+const gracefulShutdown = async (signal: string) => {
+  console.log(`[Core API] Received ${signal}. Shutting down gracefully...`);
+  server.close(async () => {
+    try {
+      await dbService.close();
+      console.log('[Core API] Database connections closed.');
+      process.exit(0);
+    } catch (err) {
+      console.error('[Core API] Error closing connections:', err);
+      process.exit(1);
+    }
+  });
+};
+
+process.on('SIGINT', () => void gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => void gracefulShutdown('SIGTERM'));
 

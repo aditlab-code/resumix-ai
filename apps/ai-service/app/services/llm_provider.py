@@ -4,7 +4,7 @@ import httpx
 from typing import Any, Dict, Optional
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-DEFAULT_GROQ_API_KEY = os.getenv("LLM_API_KEY", "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")
+DEFAULT_GROQ_API_KEY = os.getenv("GROQ_API_KEY") or os.getenv("LLM_API_KEY", "")
 DEFAULT_GROQ_MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
 
 SYSTEM_PROMPT = """You are an expert AI ATS System parser. Analyze the provided CV raw text and extract ALL structured facts without skipping any entry.
@@ -78,7 +78,9 @@ async def function_extract_via_groq(
   from app.services.text_pruner import prune_raw_text
   pruned_text = prune_raw_text(raw_text)
 
-  key = api_key or DEFAULT_GROQ_API_KEY
+  key = api_key or DEFAULT_GROQ_API_KEY or os.getenv("GROQ_API_KEY") or os.getenv("LLM_API_KEY", "")
+  if not key or not key.strip():
+    raise ValueError("GROQ_API_KEY atau LLM_API_KEY belum dikonfigurasi di environment variables.")
   selected_model = model or DEFAULT_GROQ_MODEL
 
   headers = {

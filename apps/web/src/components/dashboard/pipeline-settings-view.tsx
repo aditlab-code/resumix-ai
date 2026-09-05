@@ -55,7 +55,7 @@ const DEFAULT_TAXONOMIES: SkillTaxonomyItem[] = [
 ];
 
 const DEFAULT_DECISION_PROMPT = `Anda adalah Senior HR System Auditor. Analisis kualifikasi kandidat berdasarkan hasil ekstraksi CV, Job-Fit Score, skill wajib yang cocok/kurang, dan total durasi pengalaman kerja. Susun ringkasan keputusan rekrutmen (Summary Decision) dalam 2-3 kalimat yang objektif, transparan, dan berikan rekomendasi aksi screening yang jelas (SANGAT DIREKOMENDASIKAN, REKOMENDASI REVIEW KHUSUS, atau TIDAK DIREKOMENDASIKAN).`;
-const DEFAULT_API_KEY = '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';
+const DEFAULT_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY || '';
 
 export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   onSaveSettings,
