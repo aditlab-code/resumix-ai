@@ -105,8 +105,8 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
     <div className="my-6 border border-line bg-surface rounded-xl overflow-hidden shadow-xs select-none">
       {/* Interactive Controls Bar */}
       <div className="px-4 py-2 bg-canvas/80 border-b border-line flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-xs text-ink font-bold">
-          <Move className="w-3.5 h-3.5 text-accent" />
+        <div className="flex items-center gap-1.5 text-xs text-ink-default font-bold">
+          <Move className="w-3.5 h-3.5 text-brand-accent" />
           <span>Diagram Alur (Klik & Geser untuk Navigasi)</span>
         </div>
 
@@ -119,7 +119,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
-            <span className="text-[10px] font-mono text-ink-muted px-2 font-bold select-none min-w-[36px] text-center">
+            <span className="text-[10px] font-mono text-ink-default px-2 font-bold select-none min-w-[36px] text-center">
               {Math.round(zoom * 100)}%
             </span>
             <button

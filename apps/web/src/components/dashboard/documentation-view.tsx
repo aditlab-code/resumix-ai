@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button, Card, Toolbar, SearchInput } from '@/components/ui';
-import { RefreshCw, FileText, Check, Copy, Layers, BarChart3, ShieldCheck, Scale } from 'lucide-react';
+import { RefreshCw, FileText, Check, Copy, Layers, BarChart3, ShieldCheck, Scale, Info, AlertTriangle, Lightbulb, AlertCircle } from 'lucide-react';
 import { MermaidDiagram } from './mermaid-diagram';
 import { MathFormula } from './math-formula';
 import { cn } from '@/lib/utils';
@@ -77,12 +77,14 @@ const stripMarkdownAsterisks = (str: string) => {
 const renderInlineContent = (text: string): React.ReactNode => {
   if (!text) return null;
 
-  const tokenRegex = /(!\[[^\]]*\]\([^\)]+\)|\$[^\$]+\$)/g;
+  // Split by: images ![], math $...$, backtick code `...`, links [...]()
+  const tokenRegex = /(!\[[^\]]*\]\([^\)]+\)|\$[^\$]+\$|`[^`]+`|\[[^\]]+\]\([^\)]+\))/g;
   const parts = text.split(tokenRegex);
 
   return parts.map((part, i) => {
     if (!part) return null;
 
+    // Image / Color swatch: ![alt](url)
     if (part.startsWith('![') && part.includes('](') && part.endsWith(')')) {
       const match = part.match(/^!\[([^\]]*)\]\(([^\)]+)\)$/);
       if (match) {
@@ -98,7 +100,7 @@ const renderInlineContent = (text: string): React.ReactNode => {
                 style={{ backgroundColor: hexColor }}
                 title={hexColor}
               />
-              <span className="font-mono text-[11px] font-semibold text-ink-default">{hexColor}</span>
+              <span className="font-mono text-[11px] font-bold text-ink-default">{hexColor}</span>
             </span>
           );
         }
@@ -108,9 +110,43 @@ const renderInlineContent = (text: string): React.ReactNode => {
       }
     }
 
+    // Inline KaTeX math: $...$
     if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
       const rawMath = part.slice(1, -1);
       return <MathFormula key={i} math={rawMath} block={false} />;
+    }
+
+    // Inline code backticks: `...`
+    if (part.startsWith('`') && part.endsWith('`') && part.length >= 2) {
+      const codeContent = part.slice(1, -1);
+      return (
+        <code
+          key={i}
+          className="font-mono text-[12px] font-bold text-brand-accent bg-blue-50/90 text-blue-900 border border-blue-200/80 px-1.5 py-0.5 rounded shadow-2xs mx-0.5"
+        >
+          {codeContent}
+        </code>
+      );
+    }
+
+    // Inline link: [text](url)
+    if (part.startsWith('[') && part.includes('](') && part.endsWith(')')) {
+      const linkMatch = part.match(/^\[([^\]]+)\]\(([^\)]+)\)$/);
+      if (linkMatch) {
+        const label = linkMatch[1];
+        const targetUrl = linkMatch[2];
+        return (
+          <a
+            key={i}
+            href={targetUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-accent font-bold underline underline-offset-2 hover:text-brand-accent_hover transition-colors"
+          >
+            {label}
+          </a>
+        );
+      }
     }
 
     return part;
@@ -185,7 +221,7 @@ export const DocumentationView: React.FC = () => {
       elements.push(
         <div key={`table-${keyIndex}`} className="my-6 overflow-x-auto rounded-md border border-surface-border bg-white shadow-2xs">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-surface-sunken border-b border-surface-border text-ink-default font-bold uppercase tracking-wider text-[11px]">
+            <thead className="bg-slate-100 border-b border-surface-border text-ink-default font-bold uppercase tracking-wider text-[11px]">
               <tr>
                 {headers.map((h, i) => (
                   <th key={i} className="px-4 py-3 border-r border-surface-border last:border-r-0">
@@ -194,13 +230,13 @@ export const DocumentationView: React.FC = () => {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border text-ink-muted">
+            <tbody className="divide-y divide-surface-border text-ink-default">
               {dataRows.map((r, ri) => {
                 const cells = parseCells(r);
                 return (
                   <tr key={ri} className="hover:bg-surface-hover transition-colors">
                     {cells.map((c, ci) => (
-                      <td key={ci} className="px-4 py-2.5 border-r border-surface-border last:border-r-0 leading-relaxed font-mono text-[11px]">
+                      <td key={ci} className="px-4 py-2.5 border-r border-surface-border last:border-r-0 leading-relaxed font-mono text-[11px] text-ink-default font-medium">
                         {renderInlineContent(c)}
                       </td>
                     ))}
@@ -233,7 +269,7 @@ export const DocumentationView: React.FC = () => {
           } else {
             elements.push(
               <div key={`code-${idx}`} className="my-5 rounded-md bg-ink-default text-white overflow-hidden border border-slate-800 shadow-2xs font-mono text-xs">
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-slate-200 font-bold uppercase tracking-wider text-[10px]">
                   <span>{codeBlockLang || 'code'}</span>
                   <button
                     type="button"
@@ -311,16 +347,81 @@ export const DocumentationView: React.FC = () => {
           </h1>
         );
       } else if (line.startsWith('> ')) {
-        const quoteText = cleanLineText.replace('> ', '');
-        elements.push(
-          <blockquote key={idx} className="my-4 p-4 border-l-4 border-brand-accent bg-brand-accent_soft/40 text-ink-default text-body font-medium rounded-r-md">
-            {renderInlineContent(quoteText)}
-          </blockquote>
-        );
+        const rawQuoteText = cleanLineText.replace('> ', '');
+        const alertMatch = rawQuoteText.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i);
+
+        if (alertMatch) {
+          const type = alertMatch[1].toUpperCase();
+          const bodyText = rawQuoteText.replace(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i, '').trim();
+
+          const alertStyles: Record<string, { bg: string; border: string; text: string; label: string; icon: React.ReactNode }> = {
+            NOTE: {
+              bg: 'bg-blue-50/90',
+              border: 'border-blue-400',
+              text: 'text-blue-950',
+              label: 'Catatan (Note)',
+              icon: <Info className="w-4 h-4 text-blue-600 shrink-0" />,
+            },
+            TIP: {
+              bg: 'bg-emerald-50/90',
+              border: 'border-emerald-400',
+              text: 'text-emerald-950',
+              label: 'Tips (Tip)',
+              icon: <Lightbulb className="w-4 h-4 text-emerald-600 shrink-0" />,
+            },
+            IMPORTANT: {
+              bg: 'bg-indigo-50/90',
+              border: 'border-indigo-400',
+              text: 'text-indigo-950',
+              label: 'Penting (Important)',
+              icon: <AlertCircle className="w-4 h-4 text-indigo-600 shrink-0" />,
+            },
+            WARNING: {
+              bg: 'bg-amber-50/90',
+              border: 'border-amber-400',
+              text: 'text-amber-950',
+              label: 'Peringatan (Warning)',
+              icon: <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />,
+            },
+            CAUTION: {
+              bg: 'bg-rose-50/90',
+              border: 'border-rose-400',
+              text: 'text-rose-950',
+              label: 'Perhatian (Caution)',
+              icon: <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />,
+            },
+          };
+
+          const style = alertStyles[type] || alertStyles.NOTE;
+
+          elements.push(
+            <div
+              key={`alert-${idx}`}
+              className={cn(
+                'my-4 p-4 border-l-4 rounded-r-md shadow-2xs flex flex-col gap-1.5',
+                style.bg,
+                style.border,
+                style.text
+              )}
+            >
+              <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                {style.icon}
+                <span>{style.label}</span>
+              </div>
+              {bodyText && <div className="text-body font-medium leading-relaxed">{renderInlineContent(bodyText)}</div>}
+            </div>
+          );
+        } else {
+          elements.push(
+            <blockquote key={idx} className="my-4 p-4 border-l-4 border-brand-accent bg-blue-50/50 text-ink-default text-body font-medium rounded-r-md">
+              {renderInlineContent(rawQuoteText)}
+            </blockquote>
+          );
+        }
       } else if (line.startsWith('- ') || line.startsWith('* ')) {
         const listItemText = stripMarkdownAsterisks(line.substring(2));
         elements.push(
-          <li key={idx} className="ml-5 list-disc text-body text-ink-muted leading-relaxed my-1 font-medium">
+          <li key={idx} className="ml-5 list-disc text-body text-ink-default leading-relaxed my-1 font-medium">
             {renderInlineContent(listItemText)}
           </li>
         );
@@ -328,7 +429,7 @@ export const DocumentationView: React.FC = () => {
         elements.push(<hr key={idx} className="my-6 border-surface-border" />);
       } else if (line.trim() !== '') {
         elements.push(
-          <p key={idx} className="text-body text-ink-muted leading-relaxed my-2.5 font-medium">
+          <p key={idx} className="text-body text-ink-default leading-relaxed my-2.5 font-medium">
             {renderInlineContent(cleanLineText)}
           </p>
         );

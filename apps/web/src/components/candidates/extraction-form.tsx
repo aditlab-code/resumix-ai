@@ -237,7 +237,7 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
               <button
                 type="button"
                 onClick={handleRegenerateSummary}
-                className="text-[11px] font-bold text-accent hover:underline flex items-center gap-1"
+                className="text-[11px] font-bold text-brand-accent hover:underline flex items-center gap-1"
               >
                 <Sparkles className="w-3 h-3" /> Regenerasi AI
               </button>

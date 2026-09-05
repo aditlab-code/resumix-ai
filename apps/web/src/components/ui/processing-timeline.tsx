@@ -55,7 +55,7 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
                 {isDone ? (
                   <CheckCircle2 className="w-4 h-4 text-ok" />
                 ) : isCurrent ? (
-                  <Loader2 className="w-4 h-4 text-accent animate-spin" />
+                  <Loader2 className="w-4 h-4 text-brand-accent animate-spin" />
                 ) : isFailed ? (
                   <XCircle className="w-4 h-4 text-danger" />
                 ) : isWarning ? (
@@ -72,7 +72,7 @@ export const ProcessingTimeline: React.FC<ProcessingTimelineProps> = ({
                     isDone
                       ? 'text-ink'
                       : isCurrent
-                        ? 'text-accent font-bold'
+                        ? 'text-brand-accent font-bold'
                         : isFailed
                           ? 'text-danger'
                           : isWarning
