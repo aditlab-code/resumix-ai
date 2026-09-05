@@ -24,36 +24,62 @@ export function parseAndNormalizePhoneNumber(text: string): string {
   if (!text) return '';
 
   const normalize = (raw: string): string => {
-    let digits = raw.replace(/[^\d+]/g, '');
-    if (digits.startsWith('62')) digits = '+' + digits;
-    if (digits.startsWith('0')) digits = '+62' + digits.slice(1);
-    if (!digits.startsWith('+62')) return '';
+    const cleaned = raw.trim();
 
-    // Indonesian mobile numbers: +62 8xx xxxx xxxx (11-13 digits after +62 prefix removed)
-    const local = digits.slice(3);
-    if (!/^8\d{8,11}$/.test(local)) return '';
+    const digitsOnly = cleaned.replace(/\D/g, '');
 
-    const provider = local.slice(0, 3);
-    const middle = local.slice(3, 7);
-    const rest = local.slice(7);
-    return rest ? `+62 ${provider}-${middle}-${rest}` : `+62 ${provider}-${middle}`;
+    if (digitsOnly.length < 7 || digitsOnly.length > 15) return '';
+
+    // Indonesian Landlines with area code e.g. (021) 8852574 or 021-xxxxxx
+    if (cleaned.startsWith('(') || /^02\d{1,2}/.test(cleaned) || /^\+62\s*2\d/.test(cleaned)) {
+      return cleaned;
+    }
+
+    // Indonesian Mobile: 08xx or +62 8xx or 628xx
+    if (digitsOnly.startsWith('628')) {
+      const local = digitsOnly.slice(2);
+      const prov = local.slice(0, 3);
+      const mid = local.slice(3, 7);
+      const rest = local.slice(7);
+      return rest ? `+62 ${prov}-${mid}-${rest}` : `+62 ${prov}-${mid}`;
+    } else if (digitsOnly.startsWith('08')) {
+      const local = digitsOnly.slice(1);
+      const prov = local.slice(0, 3);
+      const mid = local.slice(3, 7);
+      const rest = local.slice(7);
+      return rest ? `+62 ${prov}-${mid}-${rest}` : `+62 ${prov}-${mid}`;
+    }
+
+    return cleaned;
   };
 
-  // 1. Labeled: "Phone: +62 812...", "HP 0812...", "WhatsApp: 62812..."
+  // 1. Labeled: "Phone: +62 812...", "HP 0812...", "WhatsApp: 62812...", "Hub: (021) 8852574", "Contact: 08..."
   const labeled = text.match(
-    /(?:phone|telepon|telp|tel|hp|handphone|mobile|cell|wa|whatsapp|kontak|no\.?\s*(?:hp|telp|telepon))\s*[:.\-]?\s*(\+?\(?(?:62|0)\)?[\d\s\-.()]{7,18}\d)/i
+    /(?:phone|telepon|telp|tel|t|hp|handphone|mobile|cell|mob|wa|whatsapp|kontak|contact|hub|hubungi|no\.?\s*(?:hp|telp|telepon|tel|wa))\s*[:.\-]?\s*(\+?\(?\d{2,4}\)?[\d\s\-.()]{5,18}\d)/i
   );
   if (labeled && labeled[1]) {
     const n = normalize(labeled[1]);
     if (n) return n;
   }
 
-  // 2. Unlabeled Indonesian mobile: +62 8.., 62 8.., 08.. (not preceded by a digit)
-  const generic = text.match(
-    /(?<![\d/.])(\+?62|0)8[\d\s\-.()]{7,14}\d(?![\d/])/
-  );
+  // 2. Landline e.g. (021) 8852574 or 021-xxxxxx
+  const landline = text.match(/(?:\(\d{2,4}\)|\b02\d{1,2}[-\s]?)\s*[\d\s\-]{5,10}\d/);
+  if (landline && landline[0]) {
+    const n = normalize(landline[0]);
+    if (n) return n;
+  }
+
+  // 3. Unlabeled Mobile: +62 8.., 62 8.., 08.. (not preceded by a digit)
+  const generic = text.match(/(?<![\d/.])(?:\+?62\s*|0)8[\d\s\-.()]{6,16}\d(?![\d/])/);
   if (generic && generic[0]) {
     const n = normalize(generic[0]);
+    if (n) return n;
+  }
+
+  // 4. General International Format: +XX XXXXXXX...
+  const intl = text.match(/(?<![\d/.])\+\d{1,4}[\s\-.()]{5,16}\d(?![\d/])/);
+  if (intl && intl[0]) {
+    const n = normalize(intl[0]);
     if (n) return n;
   }
 

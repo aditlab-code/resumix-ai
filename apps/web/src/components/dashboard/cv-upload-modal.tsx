@@ -68,22 +68,24 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
   const parsePdfMetadataWithPdfJs = async (uploadedFile: File, targetJob: JobPosting) => {
     let fullText = '';
     let extractedTextLines: string[] = [];
+    let rawPdfTokensList: string[] = [];
 
     try {
       const arrayBuffer = await uploadedFile.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
 
       const pageTexts: string[] = [];
+
       for (let i = 1; i <= Math.min(pdf.numPages, 6); i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
         const viewport = page.getViewport({ scale: 1 });
 
+        const items = textContent.items as any[];
+        rawPdfTokensList.push(items.map((it) => it.str).join(' '));
+
         // Rebuild real lines from item geometry (pdf.js join(' ') loses line breaks).
-        const pageText = reconstructPdfLines(
-          textContent.items as any[],
-          viewport.width
-        );
+        const pageText = reconstructPdfLines(items, viewport.width);
         pageTexts.push(pageText);
       }
       fullText = pageTexts.join('\n');
@@ -114,6 +116,12 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     let email = emailMatch ? emailMatch[0].replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '') : '';
 
     let phoneNumber = parseAndNormalizePhoneNumber(fullText);
+    if (!phoneNumber && rawPdfTokensList.length > 0) {
+      phoneNumber = parseAndNormalizePhoneNumber(rawPdfTokensList.join(' '));
+    }
+    if (!phoneNumber && extractedTextLines.length > 0) {
+      phoneNumber = parseAndNormalizePhoneNumber(extractedTextLines.join(' '));
+    }
 
     let candidateName = '';
     for (const line of extractedTextLines) {
@@ -148,6 +156,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       const slug = candidateName.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
       email = slug ? `${slug}@example.com` : '';
     }
+
 
     const detectedSkills: { name: string; normalized_name: string; category: string }[] = [];
     const sections = extractCVSections(fullText);
@@ -287,8 +296,9 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const parsed = await parsePdfMetadataWithPdfJs(selectedFile, activeJob);
     setCandidateNameInput(parsed.candidateName);
     setEmailInput(parsed.email);
-    setPhoneInput(parsed.phoneNumber);
+    setPhoneInput(parsed.phoneNumber || 'Not Available');
   };
+
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();

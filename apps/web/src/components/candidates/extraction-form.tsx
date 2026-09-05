@@ -79,8 +79,9 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     setPhone(
       parseAndNormalizePhoneNumber(
         application.cv_extraction.contact.phone_number || application.phone_number || ''
-      )
+      ) || 'Not Available'
     );
+
     setSummary(application.cv_extraction.summary || '');
     setSkillsText(
       (application.cv_extraction.skills || [])

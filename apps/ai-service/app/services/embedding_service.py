@@ -49,11 +49,18 @@ def prepare_candidate_profile_text(cv_input: Union[Dict[str, Any], str]) -> str:
 
     parts = []
 
-    # Full Name / Executive Summary
+    # Full Name / Contact / Executive Summary
     full_name = cv_input.get("full_name") or ""
     summary = cv_input.get("summary") or ""
-    if full_name or summary:
-        parts.append(f"Candidate Profile: {full_name}. {summary}".strip())
+    contact = cv_input.get("contact") or {}
+    email = contact.get("email") if isinstance(contact, dict) else ""
+    phone = contact.get("phone_number") if isinstance(contact, dict) else ""
+    location = contact.get("location") if isinstance(contact, dict) else ""
+
+    contact_str = " | ".join(filter(None, [email, phone, location]))
+    if full_name or summary or contact_str:
+        parts.append(f"Candidate Profile: {full_name} ({contact_str}). {summary}".strip())
+
 
     # Skills
     skills = cv_input.get("skills") or []

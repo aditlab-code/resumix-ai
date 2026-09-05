@@ -387,12 +387,11 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                     {extraction.contact.email}
                   </span>
                 )}
-                {extraction?.contact?.phone_number && (
-                  <span className="flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-primary shrink-0" />
-                    {extraction.contact.phone_number}
-                  </span>
-                )}
+                <span className="flex items-center gap-1">
+                  <Phone className="w-3.5 h-3.5 text-primary shrink-0" />
+                  {extraction?.contact?.phone_number || 'Not Available'}
+                </span>
+
                 {extraction?.contact?.location && (
                   <span className="flex items-center gap-1 font-mono text-[11px]">
                     <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />

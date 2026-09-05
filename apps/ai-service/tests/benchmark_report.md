@@ -14,9 +14,9 @@ Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pad
 | **Dokumen Ber-Layer Teks (Processed)** | `192 Dokumen` | Passed | Berhasil diekstrak PyMuPDF |
 | **Scanned PDFs Rejection (HTTP 400)** | `8 Dokumen` | 100% Zero-Text Rejection | Menolak dokumen tanpa layer teks |
 | **Kandidat Outlier Non-IT Detected** | `40 Dokumen` | Correct Mismatch Penalty | Guru, Chef, Nurse, Akuntan, Sipil, Sales |
-| **Rata-rata Latensi Pemrosesan** | `3.51 ms / document` | High Performance | Kecepatan pipeline ultra-fast |
-| **Rata-rata Skor Populasi (All 200 CVs)** | `24.4 / 100` | Consistent Distribution | Rata-rata dari seluruh 200 CV heterogen |
-| **Skor Tertinggi / Terendah** | `89.9 / 4.6` | Range [0.0 - 100.0] | Selektivitas tinggi tanpa inflasi skor |
+| **Rata-rata Latensi Pemrosesan** | `10.6 ms / document` | High Performance | Kecepatan pipeline ultra-fast |
+| **Rata-rata Skor Populasi (All 200 CVs)** | `24.6 / 100` | Consistent Distribution | Rata-rata dari seluruh 200 CV heterogen |
+| **Skor Tertinggi / Terendah** | `89.9 / 4.8` | Range [0.0 - 100.0] | Selektivitas tinggi tanpa inflasi skor |
 
 ---
 
@@ -29,8 +29,8 @@ Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pad
 | Tier Relevansi Kandidat | Jumlah CV | Rentang Skor Final | Rata-rata Skor | Evaluasi Sistem |
 |---|---|---|---|---|
 | **Tier 1: High Target Fit (Python/Backend)** | 6 CVs | `71.8 - 89.9` | **`83.2`** | **Sangat Tinggi (Lolos Screening Utama)** |
-| **Tier 2: Other Tech Roles (UI/UX, Mobile, PM)** | 146 CVs | `6.6 - 55.3` | **`26.1`** | **Sedang-Rendah (Dikenakan Penalti Mandatory)** |
-| **Tier 3: Non-IT Outliers (Guru, Chef, Perawat)** | 40 CVs | `4.6 - 28.7` | **`9.6`** | **Sangat Rendah (Domain Mismatch Warning)** |
+| **Tier 2: Other Tech Roles (UI/UX, Mobile, PM)** | 146 CVs | `7.2 - 56.0` | **`26.3`** | **Sedang-Rendah (Dikenakan Penalti Mandatory)** |
+| **Tier 3: Non-IT Outliers (Guru, Chef, Perawat)** | 40 CVs | `4.8 - 28.7` | **`9.8`** | **Sangat Rendah (Domain Mismatch Warning)** |
 | **Tier 4: Scanned Image PDFs (Zero-Text)** | 8 CVs | `0.0` | **`0.0`** | **Ditolak Otomatis (HTTP 400 NO_TEXT_LAYER)** |
 
 ---
@@ -41,8 +41,8 @@ Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pad
 |---|---|---|---|---|
 | **ATS Layout** | 60 PDFs | N/A (Text Layer) | 24.7 | PASSED (Full Parsing) |
 | **HARVARD Layout** | 40 PDFs | N/A (Text Layer) | 23.0 | PASSED (Full Parsing) |
-| **TWO_COL Layout** | 35 PDFs | N/A (Text Layer) | 24.8 | PASSED (Full Parsing) |
-| **THREE_COL Layout** | 25 PDFs | N/A (Text Layer) | 19.6 | PASSED (Full Parsing) |
+| **TWO_COL Layout** | 35 PDFs | N/A (Text Layer) | 25.3 | PASSED (Full Parsing) |
+| **THREE_COL Layout** | 25 PDFs | N/A (Text Layer) | 20.4 | PASSED (Full Parsing) |
 | **FUNCTIONAL Layout** | 12 PDFs | N/A (Text Layer) | 33.6 | PASSED (Full Parsing) |
 | **ACADEMIC Layout** | 10 PDFs | N/A (Text Layer) | 25.4 | PASSED (Full Parsing) |
 | **MESSY_EDGE Layout** | 10 PDFs | N/A (Text Layer) | 27.3 | PASSED (Full Parsing) |
@@ -58,7 +58,7 @@ Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pad
 | `Perawat Medis Rawat Inap` (cv_007_ats.pdf) | `None` | `Python, PostgreSQL, Docker` | `0.25` | **`5.8`** | `YES (Mismatch Detected)` |
 | `Insinyur Sipil Lapangan` (cv_009_ats.pdf) | `Kubernetes` | `Python, PostgreSQL, Docker` | `0.25` | **`6.8`** | `YES (Mismatch Detected)` |
 | `Akuntan Pajak` (cv_010_ats.pdf) | `Kubernetes` | `Python, PostgreSQL, Docker` | `0.25` | **`6.3`** | `YES (Mismatch Detected)` |
-| `Executive Chef & Pastry Specialist` (cv_014_ats.pdf) | `None` | `Python, PostgreSQL, Docker` | `0.25` | **`10.7`** | `YES (Mismatch Detected)` |
+| `Executive Chef & Pastry Specialist` (cv_014_ats.pdf) | `None` | `Python, PostgreSQL, Docker` | `0.25` | **`10.6`** | `YES (Mismatch Detected)` |
 | `Akuntan Pajak` (cv_019_ats.pdf) | `None` | `Python, PostgreSQL, Docker` | `0.25` | **`5.2`** | `YES (Mismatch Detected)` |
 | `Guru Matematika & Fisika SMA` (cv_032_ats.pdf) | `Kubernetes` | `Python, PostgreSQL, Docker` | `0.25` | **`6.5`** | `YES (Mismatch Detected)` |
 | `Akuntan Pajak` (cv_036_ats.pdf) | `Kubernetes` | `Python, PostgreSQL, Docker` | `0.25` | **`6.5`** | `YES (Mismatch Detected)` |

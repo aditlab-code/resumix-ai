@@ -224,12 +224,11 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
                   <Mail className="w-4 h-4 text-primary shrink-0" />
                   <span className="truncate text-foreground font-semibold">{application.email}</span>
                 </div>
-                {application.phone_number && (
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <Phone className="w-4 h-4 text-primary shrink-0" />
-                    <span className="text-foreground">{application.phone_number}</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Phone className="w-4 h-4 text-primary shrink-0" />
+                  <span className="text-foreground">{application.phone_number || 'Not Available'}</span>
+                </div>
+
                 {application.cv_extraction?.contact?.location && (
                   <div className="flex items-center gap-2.5 min-w-0">
                     <MapPin className="w-4 h-4 text-primary shrink-0" />

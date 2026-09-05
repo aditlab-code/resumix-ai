@@ -5,10 +5,10 @@
     "successfully_processed": 192,
     "scanned_rejected_http400": 8,
     "outlier_candidates": 40,
-    "avg_latency_ms": 3.51,
-    "avg_final_score": 24.4,
+    "avg_latency_ms": 10.6,
+    "avg_final_score": 24.6,
     "max_final_score": 89.9,
-    "min_final_score": 4.6
+    "min_final_score": 4.8
   },
   "results": [
     {
@@ -19,7 +19,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.65,
+      "latency_ms": 8.72,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -66,7 +66,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 5.94,
+      "latency_ms": 10.45,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -109,7 +109,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.59,
+      "latency_ms": 9.76,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -156,7 +156,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.76,
+      "latency_ms": 8.98,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -203,7 +203,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.77,
+      "latency_ms": 10.21,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -246,7 +246,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.18,
+      "latency_ms": 7.74,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -293,7 +293,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.41,
+      "latency_ms": 11.05,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -336,7 +336,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.22,
+      "latency_ms": 9.31,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -379,7 +379,7 @@
       "role": "Insinyur Sipil Lapangan",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.5,
+      "latency_ms": 7.54,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -426,7 +426,7 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.82,
+      "latency_ms": 12.15,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -473,7 +473,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.42,
+      "latency_ms": 12.69,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -520,7 +520,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.52,
+      "latency_ms": 12.58,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.67,
@@ -569,7 +569,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.72,
+      "latency_ms": 12.12,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -616,7 +616,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 6.09,
+      "latency_ms": 13.28,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -633,7 +633,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 10.7,
+        "final_score": 10.6,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -641,7 +641,7 @@
           "Docker"
         ]
       },
-      "final_score": 10.7,
+      "final_score": 10.6,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -659,7 +659,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.24,
+      "latency_ms": 8.79,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -702,7 +702,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.46,
+      "latency_ms": 14.46,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -747,7 +747,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.14,
+      "latency_ms": 13.65,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -794,7 +794,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.24,
+      "latency_ms": 8.78,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -837,7 +837,7 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.57,
+      "latency_ms": 14.18,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.46,
@@ -880,7 +880,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.72,
+      "latency_ms": 17.3,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -927,14 +927,14 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.57,
+      "latency_ms": 11.14,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.67,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.33,
+        "role_semantic_similarity": 0.34,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -944,7 +944,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 19.9,
+        "final_score": 20.1,
         "matched_skills": [
           "PostgreSQL"
         ],
@@ -953,7 +953,7 @@
           "Docker"
         ]
       },
-      "final_score": 19.9,
+      "final_score": 20.1,
       "matched_skills": [
         "PostgreSQL"
       ],
@@ -972,14 +972,14 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.16,
+      "latency_ms": 9.96,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.62,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.35,
+        "role_semantic_similarity": 0.34,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -989,7 +989,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 9.0,
+        "final_score": 8.9,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -997,7 +997,7 @@
           "Docker"
         ]
       },
-      "final_score": 9.0,
+      "final_score": 8.9,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -1015,7 +1015,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.75,
+      "latency_ms": 10.25,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -1060,7 +1060,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.02,
+      "latency_ms": 15.52,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -1109,7 +1109,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.02,
+      "latency_ms": 16.55,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -1156,7 +1156,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.53,
+      "latency_ms": 15.01,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -1199,7 +1199,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.11,
+      "latency_ms": 7.85,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -1244,7 +1244,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.57,
+      "latency_ms": 13.73,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.69,
@@ -1291,7 +1291,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.88,
+      "latency_ms": 15.17,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -1334,7 +1334,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.03,
+      "latency_ms": 8.93,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -1383,7 +1383,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.81,
+      "latency_ms": 10.9,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -1430,7 +1430,7 @@
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.2,
+      "latency_ms": 11.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -1477,7 +1477,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.51,
+      "latency_ms": 7.97,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -1524,7 +1524,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.54,
+      "latency_ms": 20.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -1567,7 +1567,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.88,
+      "latency_ms": 18.01,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -1612,14 +1612,14 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.09,
+      "latency_ms": 20.1,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.73,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.31,
+        "role_semantic_similarity": 0.3,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -1659,7 +1659,7 @@
       "role": "System Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.92,
+      "latency_ms": 10.74,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -1704,7 +1704,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.82,
+      "latency_ms": 10.87,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -1753,7 +1753,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.82,
+      "latency_ms": 10.73,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -1796,7 +1796,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.1,
+      "latency_ms": 5.97,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -1843,7 +1843,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.96,
+      "latency_ms": 9.76,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -1888,7 +1888,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.72,
+      "latency_ms": 14.36,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -1931,7 +1931,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.47,
+      "latency_ms": 9.89,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -1976,7 +1976,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.06,
+      "latency_ms": 11.76,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -2023,7 +2023,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.96,
+      "latency_ms": 11.48,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -2068,7 +2068,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.57,
+      "latency_ms": 12.53,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -2115,7 +2115,7 @@
       "role": "Sales Manager Properti",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.14,
+      "latency_ms": 11.87,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -2162,7 +2162,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.38,
+      "latency_ms": 11.16,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -2207,7 +2207,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.04,
+      "latency_ms": 12.19,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -2254,7 +2254,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.91,
+      "latency_ms": 10.83,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -2301,7 +2301,7 @@
       "role": "Machine Learning Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.58,
+      "latency_ms": 7.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -2348,7 +2348,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.71,
+      "latency_ms": 15.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -2397,14 +2397,14 @@
       "role": "HR Generalist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.41,
+      "latency_ms": 19.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.47,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.6,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.31,
+        "role_semantic_similarity": 0.32,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -2440,7 +2440,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.58,
+      "latency_ms": 13.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -2483,7 +2483,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.57,
+      "latency_ms": 22.92,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -2526,14 +2526,14 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.65,
+      "latency_ms": 20.4,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.61,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.38,
+        "role_semantic_similarity": 0.39,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -2543,7 +2543,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 10.7,
+        "final_score": 10.8,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -2551,7 +2551,7 @@
           "Docker"
         ]
       },
-      "final_score": 10.7,
+      "final_score": 10.8,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -2569,7 +2569,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.68,
+      "latency_ms": 22.27,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.67,
@@ -2618,7 +2618,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.12,
+      "latency_ms": 22.02,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -2663,7 +2663,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.92,
+      "latency_ms": 16.72,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -2712,7 +2712,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.85,
+      "latency_ms": 16.02,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -2759,7 +2759,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.51,
+      "latency_ms": 8.09,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -2802,7 +2802,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.79,
+      "latency_ms": 10.33,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -2849,7 +2849,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.89,
+      "latency_ms": 7.59,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -2892,7 +2892,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.08,
+      "latency_ms": 9.52,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.78,
@@ -2939,7 +2939,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.27,
+      "latency_ms": 12.2,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -2982,7 +2982,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.25,
+      "latency_ms": 14.0,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -3029,7 +3029,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.4,
+      "latency_ms": 7.13,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -3072,7 +3072,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.15,
+      "latency_ms": 11.23,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -3115,7 +3115,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.42,
+      "latency_ms": 6.79,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -3160,7 +3160,7 @@
       "role": "Marketing Communication Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.14,
+      "latency_ms": 11.7,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.43,
@@ -3203,7 +3203,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.14,
+      "latency_ms": 10.54,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -3246,7 +3246,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.4,
+      "latency_ms": 7.23,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -3293,7 +3293,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 5.66,
+      "latency_ms": 10.64,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -3340,7 +3340,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.61,
+      "latency_ms": 8.76,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -3383,7 +3383,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.37,
+      "latency_ms": 12.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -3430,7 +3430,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.47,
+      "latency_ms": 6.98,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -3475,7 +3475,7 @@
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.62,
+      "latency_ms": 7.95,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -3518,7 +3518,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.68,
+      "latency_ms": 14.4,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -3561,7 +3561,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.58,
+      "latency_ms": 8.73,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -3608,7 +3608,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.26,
+      "latency_ms": 12.01,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -3651,7 +3651,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.36,
+      "latency_ms": 7.25,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -3694,7 +3694,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.44,
+      "latency_ms": 6.92,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -3737,7 +3737,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.97,
+      "latency_ms": 11.58,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -3784,7 +3784,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.5,
+      "latency_ms": 6.72,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -3833,7 +3833,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.58,
+      "latency_ms": 13.75,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -3876,7 +3876,7 @@
       "role": "Sales Manager Properti",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.48,
+      "latency_ms": 6.77,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -3923,7 +3923,7 @@
       "role": "Apoteker Klinis",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.08,
+      "latency_ms": 9.42,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.45,
@@ -3966,7 +3966,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.57,
+      "latency_ms": 8.37,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -4009,7 +4009,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.51,
+      "latency_ms": 14.35,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -4052,7 +4052,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.71,
+      "latency_ms": 14.68,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -4099,7 +4099,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.05,
+      "latency_ms": 11.37,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -4146,7 +4146,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.69,
+      "latency_ms": 7.96,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -4189,7 +4189,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.57,
+      "latency_ms": 14.22,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -4234,7 +4234,7 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.9,
+      "latency_ms": 9.57,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.47,
@@ -4277,7 +4277,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.12,
+      "latency_ms": 16.33,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -4320,7 +4320,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.51,
+      "latency_ms": 13.45,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -4367,7 +4367,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 5.14,
+      "latency_ms": 14.64,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -4410,7 +4410,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.03,
+      "latency_ms": 11.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -4457,7 +4457,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.58,
+      "latency_ms": 6.62,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -4500,7 +4500,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.55,
+      "latency_ms": 13.17,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -4547,14 +4547,14 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.7,
+      "latency_ms": 13.08,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.62,
+        "semantic_similarity": 0.63,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.77,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.43,
+        "role_semantic_similarity": 0.46,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -4564,7 +4564,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 28.9,
+        "final_score": 29.1,
         "matched_skills": [
           "PostgreSQL"
         ],
@@ -4573,7 +4573,7 @@
           "Docker"
         ]
       },
-      "final_score": 28.9,
+      "final_score": 29.1,
       "matched_skills": [
         "PostgreSQL"
       ],
@@ -4592,14 +4592,14 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.83,
+      "latency_ms": 13.38,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.55,
+        "semantic_similarity": 0.56,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.64,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.44,
+        "role_semantic_similarity": 0.46,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -4609,7 +4609,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 11.2,
+        "final_score": 11.3,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -4617,7 +4617,7 @@
           "Docker"
         ]
       },
-      "final_score": 11.2,
+      "final_score": 11.3,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -4635,14 +4635,14 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.29,
+      "latency_ms": 9.5,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.41,
+        "semantic_similarity": 0.44,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.53,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.26,
+        "role_semantic_similarity": 0.33,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -4652,7 +4652,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 4.6,
+        "final_score": 5.0,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -4660,7 +4660,7 @@
           "Docker"
         ]
       },
-      "final_score": 4.6,
+      "final_score": 5.0,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -4678,14 +4678,14 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.92,
+      "latency_ms": 7.0,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.53,
+        "semantic_similarity": 0.58,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.68,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.34,
+        "role_semantic_similarity": 0.45,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -4695,7 +4695,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 7.6,
+        "final_score": 8.2,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -4703,7 +4703,7 @@
           "Docker"
         ]
       },
-      "final_score": 7.6,
+      "final_score": 8.2,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -4721,14 +4721,14 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.45,
+      "latency_ms": 10.83,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.6,
+        "semantic_similarity": 0.63,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.74,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.42,
+        "role_semantic_similarity": 0.48,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -4738,7 +4738,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 29.3,
+        "final_score": 29.9,
         "matched_skills": [
           "Docker",
           "Kubernetes"
@@ -4748,7 +4748,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 29.3,
+      "final_score": 29.9,
       "matched_skills": [
         "Docker",
         "Kubernetes"
@@ -4768,14 +4768,14 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.56,
+      "latency_ms": 11.68,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.63,
+        "semantic_similarity": 0.66,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.77,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.46,
+        "role_semantic_similarity": 0.52,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -4785,7 +4785,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 29.2,
+        "final_score": 29.8,
         "matched_skills": [
           "PostgreSQL"
         ],
@@ -4794,7 +4794,7 @@
           "Docker"
         ]
       },
-      "final_score": 29.2,
+      "final_score": 29.8,
       "matched_skills": [
         "PostgreSQL"
       ],
@@ -4813,14 +4813,14 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.87,
+      "latency_ms": 11.17,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.52,
+        "semantic_similarity": 0.54,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.67,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.34,
+        "role_semantic_similarity": 0.39,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -4830,7 +4830,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 26.7,
+        "final_score": 27.2,
         "matched_skills": [
           "PostgreSQL"
         ],
@@ -4839,7 +4839,7 @@
           "Docker"
         ]
       },
-      "final_score": 26.7,
+      "final_score": 27.2,
       "matched_skills": [
         "PostgreSQL"
       ],
@@ -4858,14 +4858,14 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.02,
+      "latency_ms": 10.78,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.51,
+        "semantic_similarity": 0.53,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.64,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.36,
+        "role_semantic_similarity": 0.4,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -4875,7 +4875,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 10.8,
+        "final_score": 11.0,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -4883,7 +4883,7 @@
           "Docker"
         ]
       },
-      "final_score": 10.8,
+      "final_score": 11.0,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -4901,14 +4901,14 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.35,
+      "latency_ms": 9.98,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.62,
+        "semantic_similarity": 0.64,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.78,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.42,
+        "role_semantic_similarity": 0.48,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.67,
         "mandatory_skill_weight": 0.3,
@@ -4918,7 +4918,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.75,
-        "final_score": 46.0,
+        "final_score": 46.8,
         "matched_skills": [
           "PostgreSQL",
           "Docker"
@@ -4927,7 +4927,7 @@
           "Python"
         ]
       },
-      "final_score": 46.0,
+      "final_score": 46.8,
       "matched_skills": [
         "PostgreSQL",
         "Docker"
@@ -4946,14 +4946,14 @@
       "role": "HR Generalist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.42,
+      "latency_ms": 17.2,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.46,
+        "semantic_similarity": 0.48,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.59,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.3,
+        "role_semantic_similarity": 0.34,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -4963,7 +4963,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 5.2,
+        "final_score": 5.4,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -4971,7 +4971,7 @@
           "Docker"
         ]
       },
-      "final_score": 5.2,
+      "final_score": 5.4,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -4989,14 +4989,14 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.55,
+      "latency_ms": 11.38,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.62,
+        "semantic_similarity": 0.68,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.79,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.41,
+        "role_semantic_similarity": 0.55,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.67,
         "mandatory_skill_weight": 0.3,
@@ -5006,7 +5006,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.75,
-        "final_score": 52.4,
+        "final_score": 54.5,
         "matched_skills": [
           "Python",
           "PostgreSQL",
@@ -5016,7 +5016,7 @@
           "Docker"
         ]
       },
-      "final_score": 52.4,
+      "final_score": 54.5,
       "matched_skills": [
         "Python",
         "PostgreSQL",
@@ -5036,14 +5036,14 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.4,
+      "latency_ms": 10.34,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.69,
+        "semantic_similarity": 0.73,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.87,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.47,
+        "role_semantic_similarity": 0.56,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.67,
         "mandatory_skill_weight": 0.3,
@@ -5053,7 +5053,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.75,
-        "final_score": 54.6,
+        "final_score": 55.9,
         "matched_skills": [
           "Python",
           "PostgreSQL",
@@ -5063,7 +5063,7 @@
           "Docker"
         ]
       },
-      "final_score": 54.6,
+      "final_score": 55.9,
       "matched_skills": [
         "Python",
         "PostgreSQL",
@@ -5083,14 +5083,14 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.08,
+      "latency_ms": 12.26,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.64,
+        "semantic_similarity": 0.67,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.76,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.5,
+        "role_semantic_similarity": 0.56,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -5100,7 +5100,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 30.3,
+        "final_score": 30.9,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -5110,7 +5110,7 @@
           "Docker"
         ]
       },
-      "final_score": 30.3,
+      "final_score": 30.9,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -5130,14 +5130,14 @@
       "role": "Apoteker Klinis",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.01,
+      "latency_ms": 6.48,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.57,
+        "semantic_similarity": 0.59,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.8,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.29,
+        "role_semantic_similarity": 0.34,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -5147,7 +5147,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 18.7,
+        "final_score": 19.2,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -5157,7 +5157,7 @@
           "Docker"
         ]
       },
-      "final_score": 18.7,
+      "final_score": 19.2,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -5177,14 +5177,14 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.52,
+      "latency_ms": 12.12,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.65,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.55,
+        "role_semantic_similarity": 0.56,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -5194,7 +5194,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 28.6,
+        "final_score": 28.7,
         "matched_skills": [
           "Docker"
         ],
@@ -5203,7 +5203,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 28.6,
+      "final_score": 28.7,
       "matched_skills": [
         "Docker"
       ],
@@ -5222,14 +5222,14 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.86,
+      "latency_ms": 9.41,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.61,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.38,
+        "role_semantic_similarity": 0.39,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -5265,10 +5265,10 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.47,
+      "latency_ms": 9.69,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.59,
+        "semantic_similarity": 0.6,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.66,
         "skill_semantic_weight": 0.25,
@@ -5310,433 +5310,14 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.6,
+      "latency_ms": 12.8,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.65,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.29,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.0,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.0,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 0,
-        "preferred_skill_score": 0.0,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.25,
-        "final_score": 5.5,
-        "matched_skills": [],
-        "missing_mandatory_skills": [
-          "Python",
-          "PostgreSQL",
-          "Docker"
-        ]
-      },
-      "final_score": 5.5,
-      "matched_skills": [],
-      "missing_mandatory_skills": [
-        "Python",
-        "PostgreSQL",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.25,
-      "relevant_experience_months": 0
-    },
-    {
-      "filename": "cv_119_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "nontech",
-      "role": "Staff Front Desk & Guest Relations",
-      "is_outlier": true,
-      "domain_warning": true,
-      "latency_ms": 3.3,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.55,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.77,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.27,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.0,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 0,
-        "preferred_skill_score": 0.33,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 18.1,
-        "matched_skills": [
-          "Python",
-          "FastAPI"
-        ],
-        "missing_mandatory_skills": [
-          "PostgreSQL",
-          "Docker"
-        ]
-      },
-      "final_score": 18.1,
-      "matched_skills": [
-        "Python",
-        "FastAPI"
-      ],
-      "missing_mandatory_skills": [
-        "PostgreSQL",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 0
-    },
-    {
-      "filename": "cv_120_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Site Reliability Engineer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.17,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.67,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.84,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.47,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 1.0,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 48,
-        "preferred_skill_score": 0.67,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 31.8,
-        "matched_skills": [
-          "Python",
-          "Kubernetes",
-          "FastAPI"
-        ],
-        "missing_mandatory_skills": [
-          "PostgreSQL",
-          "Docker"
-        ]
-      },
-      "final_score": 31.8,
-      "matched_skills": [
-        "Python",
-        "Kubernetes",
-        "FastAPI"
-      ],
-      "missing_mandatory_skills": [
-        "PostgreSQL",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 48
-    },
-    {
-      "filename": "cv_121_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Site Reliability Engineer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.39,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.69,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.85,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.49,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.67,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 24,
-        "preferred_skill_score": 0.67,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 28.8,
-        "matched_skills": [
-          "Python",
-          "Kubernetes",
-          "FastAPI"
-        ],
-        "missing_mandatory_skills": [
-          "PostgreSQL",
-          "Docker"
-        ]
-      },
-      "final_score": 28.8,
-      "matched_skills": [
-        "Python",
-        "Kubernetes",
-        "FastAPI"
-      ],
-      "missing_mandatory_skills": [
-        "PostgreSQL",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 24
-    },
-    {
-      "filename": "cv_122_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Machine Learning Engineer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.51,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.71,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.83,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.56,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.67,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 1.0,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 36,
-        "preferred_skill_score": 0.33,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.75,
-        "final_score": 55.3,
-        "matched_skills": [
-          "Python",
-          "Docker",
-          "FastAPI"
-        ],
-        "missing_mandatory_skills": [
-          "PostgreSQL"
-        ]
-      },
-      "final_score": 55.3,
-      "matched_skills": [
-        "Python",
-        "Docker",
-        "FastAPI"
-      ],
-      "missing_mandatory_skills": [
-        "PostgreSQL"
-      ],
-      "mandatory_penalty_factor": 0.75,
-      "relevant_experience_months": 36
-    },
-    {
-      "filename": "cv_123_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Android Developer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.23,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.51,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.69,
-        "skill_semantic_weight": 0.25,
         "role_semantic_similarity": 0.3,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.67,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 24,
-        "preferred_skill_score": 0.0,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 23.2,
-        "matched_skills": [
-          "PostgreSQL"
-        ],
-        "missing_mandatory_skills": [
-          "Python",
-          "Docker"
-        ]
-      },
-      "final_score": 23.2,
-      "matched_skills": [
-        "PostgreSQL"
-      ],
-      "missing_mandatory_skills": [
-        "Python",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 24
-    },
-    {
-      "filename": "cv_124_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Backend Go Engineer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.0,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.6,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.82,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.33,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.67,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.67,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 24,
-        "preferred_skill_score": 0.33,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.75,
-        "final_score": 46.6,
-        "matched_skills": [
-          "PostgreSQL",
-          "Docker",
-          "Redis"
-        ],
-        "missing_mandatory_skills": [
-          "Python"
-        ]
-      },
-      "final_score": 46.6,
-      "matched_skills": [
-        "PostgreSQL",
-        "Docker",
-        "Redis"
-      ],
-      "missing_mandatory_skills": [
-        "Python"
-      ],
-      "mandatory_penalty_factor": 0.75,
-      "relevant_experience_months": 24
-    },
-    {
-      "filename": "cv_125_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Database Administrator",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.01,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.61,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.76,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.42,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.33,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 12,
-        "preferred_skill_score": 0.0,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 22.0,
-        "matched_skills": [
-          "PostgreSQL"
-        ],
-        "missing_mandatory_skills": [
-          "Python",
-          "Docker"
-        ]
-      },
-      "final_score": 22.0,
-      "matched_skills": [
-        "PostgreSQL"
-      ],
-      "missing_mandatory_skills": [
-        "Python",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 12
-    },
-    {
-      "filename": "cv_126_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Cyber Security Specialist",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 4.32,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.64,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.79,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.45,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 1.0,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 48,
-        "preferred_skill_score": 0.33,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 30.2,
-        "matched_skills": [
-          "Python",
-          "FastAPI"
-        ],
-        "missing_mandatory_skills": [
-          "PostgreSQL",
-          "Docker"
-        ]
-      },
-      "final_score": 30.2,
-      "matched_skills": [
-        "Python",
-        "FastAPI"
-      ],
-      "missing_mandatory_skills": [
-        "PostgreSQL",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 48
-    },
-    {
-      "filename": "cv_127_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "nontech",
-      "role": "Guru Matematika & Fisika SMA",
-      "is_outlier": true,
-      "domain_warning": true,
-      "latency_ms": 3.34,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.5,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.63,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.34,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -5765,117 +5346,176 @@
       "relevant_experience_months": 0
     },
     {
-      "filename": "cv_128_two_col.pdf",
+      "filename": "cv_119_two_col.pdf",
       "status": "processed",
       "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Technical Writer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.79,
+      "domain": "nontech",
+      "role": "Staff Front Desk & Guest Relations",
+      "is_outlier": true,
+      "domain_warning": true,
+      "latency_ms": 12.7,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.51,
+        "semantic_similarity": 0.57,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.61,
+        "skill_semantic_similarity": 0.77,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.39,
+        "role_semantic_similarity": 0.32,
         "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.0,
+        "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
-        "experience_score": 1.0,
+        "experience_score": 0.0,
         "experience_weight": 0.2,
-        "relevant_experience_months": 36,
-        "preferred_skill_score": 0.0,
+        "relevant_experience_months": 0,
+        "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.25,
-        "final_score": 10.8,
-        "matched_skills": [],
-        "missing_mandatory_skills": [
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 18.6,
+        "matched_skills": [
           "Python",
+          "FastAPI"
+        ],
+        "missing_mandatory_skills": [
           "PostgreSQL",
           "Docker"
         ]
       },
-      "final_score": 10.8,
-      "matched_skills": [],
-      "missing_mandatory_skills": [
+      "final_score": 18.6,
+      "matched_skills": [
         "Python",
+        "FastAPI"
+      ],
+      "missing_mandatory_skills": [
         "PostgreSQL",
         "Docker"
       ],
-      "mandatory_penalty_factor": 0.25,
-      "relevant_experience_months": 36
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 0
     },
     {
-      "filename": "cv_129_two_col.pdf",
+      "filename": "cv_120_two_col.pdf",
       "status": "processed",
       "layout_type": "two_col",
       "domain": "tech",
-      "role": "UI/UX Designer",
+      "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.31,
+      "latency_ms": 12.5,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.48,
+        "semantic_similarity": 0.7,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.61,
+        "skill_semantic_similarity": 0.84,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.33,
+        "role_semantic_similarity": 0.53,
         "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.0,
+        "mandatory_skill_score": 0.33,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 1.0,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 48,
+        "preferred_skill_score": 0.67,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 32.4,
+        "matched_skills": [
+          "Python",
+          "Kubernetes",
+          "FastAPI"
+        ],
+        "missing_mandatory_skills": [
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 32.4,
+      "matched_skills": [
+        "Python",
+        "Kubernetes",
+        "FastAPI"
+      ],
+      "missing_mandatory_skills": [
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 48
+    },
+    {
+      "filename": "cv_121_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Site Reliability Engineer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 9.76,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.7,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.85,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.52,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
         "experience_score": 0.67,
         "experience_weight": 0.2,
         "relevant_experience_months": 24,
-        "preferred_skill_score": 0.0,
+        "preferred_skill_score": 0.67,
         "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.25,
-        "final_score": 8.8,
-        "matched_skills": [],
-        "missing_mandatory_skills": [
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 29.1,
+        "matched_skills": [
           "Python",
+          "Kubernetes",
+          "FastAPI"
+        ],
+        "missing_mandatory_skills": [
           "PostgreSQL",
           "Docker"
         ]
       },
-      "final_score": 8.8,
-      "matched_skills": [],
-      "missing_mandatory_skills": [
+      "final_score": 29.1,
+      "matched_skills": [
         "Python",
+        "Kubernetes",
+        "FastAPI"
+      ],
+      "missing_mandatory_skills": [
         "PostgreSQL",
         "Docker"
       ],
-      "mandatory_penalty_factor": 0.25,
+      "mandatory_penalty_factor": 0.5,
       "relevant_experience_months": 24
     },
     {
-      "filename": "cv_130_two_col.pdf",
+      "filename": "cv_122_two_col.pdf",
       "status": "processed",
       "layout_type": "two_col",
       "domain": "tech",
       "role": "Machine Learning Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.26,
+      "latency_ms": 11.32,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.7,
+        "semantic_similarity": 0.73,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.83,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.55,
+        "role_semantic_similarity": 0.61,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.67,
         "mandatory_skill_weight": 0.3,
-        "experience_score": 0.67,
+        "experience_score": 1.0,
         "experience_weight": 0.2,
-        "relevant_experience_months": 24,
+        "relevant_experience_months": 36,
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.75,
-        "final_score": 50.1,
+        "final_score": 56.0,
         "matched_skills": [
           "Python",
           "Docker",
@@ -5885,7 +5525,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 50.1,
+      "final_score": 56.0,
       "matched_skills": [
         "Python",
         "Docker",
@@ -5895,212 +5535,171 @@
         "PostgreSQL"
       ],
       "mandatory_penalty_factor": 0.75,
-      "relevant_experience_months": 24
+      "relevant_experience_months": 36
     },
     {
-      "filename": "cv_131_two_col.pdf",
+      "filename": "cv_123_two_col.pdf",
       "status": "processed",
       "layout_type": "two_col",
       "domain": "tech",
-      "role": "Mobile Flutter Engineer",
+      "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.35,
+      "latency_ms": 8.81,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.53,
+        "semantic_similarity": 0.56,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.65,
+        "skill_semantic_similarity": 0.69,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.38,
+        "role_semantic_similarity": 0.4,
         "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.0,
+        "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
         "experience_score": 0.67,
         "experience_weight": 0.2,
         "relevant_experience_months": 24,
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.25,
-        "final_score": 9.3,
-        "matched_skills": [],
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 24.3,
+        "matched_skills": [
+          "PostgreSQL"
+        ],
         "missing_mandatory_skills": [
           "Python",
-          "PostgreSQL",
           "Docker"
         ]
       },
-      "final_score": 9.3,
-      "matched_skills": [],
+      "final_score": 24.3,
+      "matched_skills": [
+        "PostgreSQL"
+      ],
       "missing_mandatory_skills": [
         "Python",
-        "PostgreSQL",
         "Docker"
       ],
-      "mandatory_penalty_factor": 0.25,
+      "mandatory_penalty_factor": 0.5,
       "relevant_experience_months": 24
     },
     {
-      "filename": "cv_132_two_col.pdf",
+      "filename": "cv_124_two_col.pdf",
       "status": "processed",
       "layout_type": "two_col",
       "domain": "tech",
-      "role": "Embedded Systems Developer",
+      "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.88,
+      "latency_ms": 9.46,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.6,
+        "semantic_similarity": 0.66,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.66,
+        "skill_semantic_similarity": 0.82,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.52,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 1.0,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 48,
-        "preferred_skill_score": 0.0,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 28.5,
-        "matched_skills": [
-          "Docker"
-        ],
-        "missing_mandatory_skills": [
-          "Python",
-          "PostgreSQL"
-        ]
-      },
-      "final_score": 28.5,
-      "matched_skills": [
-        "Docker"
-      ],
-      "missing_mandatory_skills": [
-        "Python",
-        "PostgreSQL"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 48
-    },
-    {
-      "filename": "cv_133_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Data Engineer",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 2.98,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.71,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.87,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.51,
+        "role_semantic_similarity": 0.46,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.67,
         "mandatory_skill_weight": 0.3,
-        "experience_score": 0.33,
+        "experience_score": 0.67,
         "experience_weight": 0.2,
-        "relevant_experience_months": 12,
+        "relevant_experience_months": 24,
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.75,
-        "final_score": 45.3,
+        "final_score": 48.5,
         "matched_skills": [
-          "Python",
           "PostgreSQL",
-          "FastAPI"
+          "Docker",
+          "Redis"
         ],
         "missing_mandatory_skills": [
-          "Docker"
+          "Python"
         ]
       },
-      "final_score": 45.3,
+      "final_score": 48.5,
       "matched_skills": [
-        "Python",
         "PostgreSQL",
-        "FastAPI"
+        "Docker",
+        "Redis"
       ],
       "missing_mandatory_skills": [
-        "Docker"
+        "Python"
       ],
       "mandatory_penalty_factor": 0.75,
-      "relevant_experience_months": 12
+      "relevant_experience_months": 24
     },
     {
-      "filename": "cv_134_two_col.pdf",
+      "filename": "cv_125_two_col.pdf",
       "status": "processed",
       "layout_type": "two_col",
       "domain": "tech",
-      "role": "Scrum Master",
+      "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.22,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.52,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.67,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.33,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.0,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.33,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 12,
-        "preferred_skill_score": 0.0,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.25,
-        "final_score": 7.5,
-        "matched_skills": [],
-        "missing_mandatory_skills": [
-          "Python",
-          "PostgreSQL",
-          "Docker"
-        ]
-      },
-      "final_score": 7.5,
-      "matched_skills": [],
-      "missing_mandatory_skills": [
-        "Python",
-        "PostgreSQL",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.25,
-      "relevant_experience_months": 12
-    },
-    {
-      "filename": "cv_135_two_col.pdf",
-      "status": "processed",
-      "layout_type": "two_col",
-      "domain": "tech",
-      "role": "Cyber Security Specialist",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.41,
+      "latency_ms": 5.92,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.76,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.44,
+        "role_semantic_similarity": 0.45,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
         "experience_score": 0.33,
         "experience_weight": 0.2,
         "relevant_experience_months": 12,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 22.3,
+        "matched_skills": [
+          "PostgreSQL"
+        ],
+        "missing_mandatory_skills": [
+          "Python",
+          "Docker"
+        ]
+      },
+      "final_score": 22.3,
+      "matched_skills": [
+        "PostgreSQL"
+      ],
+      "missing_mandatory_skills": [
+        "Python",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 12
+    },
+    {
+      "filename": "cv_126_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Cyber Security Specialist",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 14.92,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.65,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.79,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.48,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.33,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 1.0,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 48,
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 23.0,
+        "final_score": 30.5,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -6110,7 +5709,7 @@
           "Docker"
         ]
       },
-      "final_score": 23.0,
+      "final_score": 30.5,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -6120,24 +5719,24 @@
         "Docker"
       ],
       "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 12
+      "relevant_experience_months": 48
     },
     {
-      "filename": "cv_136_three_col.pdf",
+      "filename": "cv_127_two_col.pdf",
       "status": "processed",
-      "layout_type": "three_col",
+      "layout_type": "two_col",
       "domain": "nontech",
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.9,
+      "latency_ms": 10.57,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.47,
+        "semantic_similarity": 0.52,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.61,
+        "skill_semantic_similarity": 0.63,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.3,
+        "role_semantic_similarity": 0.38,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6147,7 +5746,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 5.3,
+        "final_score": 5.9,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6155,7 +5754,7 @@
           "Docker"
         ]
       },
-      "final_score": 5.3,
+      "final_score": 5.9,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6166,113 +5765,21 @@
       "relevant_experience_months": 0
     },
     {
-      "filename": "cv_137_three_col.pdf",
+      "filename": "cv_128_two_col.pdf",
       "status": "processed",
-      "layout_type": "three_col",
+      "layout_type": "two_col",
       "domain": "tech",
-      "role": "Android Developer",
+      "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.43,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.51,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.69,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.29,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.67,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 24,
-        "preferred_skill_score": 0.0,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 23.1,
-        "matched_skills": [
-          "PostgreSQL"
-        ],
-        "missing_mandatory_skills": [
-          "Python",
-          "Docker"
-        ]
-      },
-      "final_score": 23.1,
-      "matched_skills": [
-        "PostgreSQL"
-      ],
-      "missing_mandatory_skills": [
-        "Python",
-        "Docker"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 24
-    },
-    {
-      "filename": "cv_138_three_col.pdf",
-      "status": "processed",
-      "layout_type": "three_col",
-      "domain": "tech",
-      "role": "Cloud Architect",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.11,
-      "breakdown": {
-        "score_version": "v2",
-        "semantic_similarity": 0.59,
-        "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.77,
-        "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.37,
-        "role_semantic_weight": 0.2,
-        "mandatory_skill_score": 0.33,
-        "mandatory_skill_weight": 0.3,
-        "experience_score": 0.33,
-        "experience_weight": 0.2,
-        "relevant_experience_months": 12,
-        "preferred_skill_score": 0.33,
-        "preferred_skill_weight": 0.05,
-        "mandatory_penalty_factor": 0.5,
-        "final_score": 22.3,
-        "matched_skills": [
-          "Docker",
-          "Kubernetes"
-        ],
-        "missing_mandatory_skills": [
-          "Python",
-          "PostgreSQL"
-        ]
-      },
-      "final_score": 22.3,
-      "matched_skills": [
-        "Docker",
-        "Kubernetes"
-      ],
-      "missing_mandatory_skills": [
-        "Python",
-        "PostgreSQL"
-      ],
-      "mandatory_penalty_factor": 0.5,
-      "relevant_experience_months": 12
-    },
-    {
-      "filename": "cv_139_three_col.pdf",
-      "status": "processed",
-      "layout_type": "three_col",
-      "domain": "tech",
-      "role": "Scrum Master",
-      "is_outlier": false,
-      "domain_warning": false,
-      "latency_ms": 3.24,
+      "latency_ms": 11.66,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.65,
+        "skill_semantic_similarity": 0.61,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.37,
+        "role_semantic_similarity": 0.43,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6301,21 +5808,199 @@
       "relevant_experience_months": 36
     },
     {
-      "filename": "cv_140_three_col.pdf",
+      "filename": "cv_129_two_col.pdf",
       "status": "processed",
-      "layout_type": "three_col",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "UI/UX Designer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 9.6,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.51,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.61,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.4,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.0,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.67,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 24,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.25,
+        "final_score": 9.1,
+        "matched_skills": [],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 9.1,
+      "matched_skills": [],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.25,
+      "relevant_experience_months": 24
+    },
+    {
+      "filename": "cv_130_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Machine Learning Engineer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 9.51,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.71,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.83,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.56,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.67,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.67,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 24,
+        "preferred_skill_score": 0.33,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.75,
+        "final_score": 50.2,
+        "matched_skills": [
+          "Python",
+          "Docker",
+          "FastAPI"
+        ],
+        "missing_mandatory_skills": [
+          "PostgreSQL"
+        ]
+      },
+      "final_score": 50.2,
+      "matched_skills": [
+        "Python",
+        "Docker",
+        "FastAPI"
+      ],
+      "missing_mandatory_skills": [
+        "PostgreSQL"
+      ],
+      "mandatory_penalty_factor": 0.75,
+      "relevant_experience_months": 24
+    },
+    {
+      "filename": "cv_131_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Mobile Flutter Engineer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 9.15,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.54,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.65,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.41,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.0,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.67,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 24,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.25,
+        "final_score": 9.4,
+        "matched_skills": [],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 9.4,
+      "matched_skills": [],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.25,
+      "relevant_experience_months": 24
+    },
+    {
+      "filename": "cv_132_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Embedded Systems Developer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 11.42,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.61,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.66,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.55,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.33,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 1.0,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 48,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 28.8,
+        "matched_skills": [
+          "Docker"
+        ],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL"
+        ]
+      },
+      "final_score": 28.8,
+      "matched_skills": [
+        "Docker"
+      ],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL"
+      ],
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 48
+    },
+    {
+      "filename": "cv_133_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
       "domain": "tech",
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.65,
+      "latency_ms": 6.32,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.7,
+        "semantic_similarity": 0.75,
         "semantic_weight": 0.45,
-        "skill_semantic_similarity": 0.88,
+        "skill_semantic_similarity": 0.87,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.47,
+        "role_semantic_similarity": 0.6,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.67,
         "mandatory_skill_weight": 0.3,
@@ -6325,7 +6010,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.75,
-        "final_score": 44.8,
+        "final_score": 46.6,
         "matched_skills": [
           "Python",
           "PostgreSQL",
@@ -6335,7 +6020,322 @@
           "Docker"
         ]
       },
-      "final_score": 44.8,
+      "final_score": 46.6,
+      "matched_skills": [
+        "Python",
+        "PostgreSQL",
+        "FastAPI"
+      ],
+      "missing_mandatory_skills": [
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.75,
+      "relevant_experience_months": 12
+    },
+    {
+      "filename": "cv_134_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Scrum Master",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 7.04,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.54,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.67,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.37,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.0,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.33,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 12,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.25,
+        "final_score": 7.7,
+        "matched_skills": [],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 7.7,
+      "matched_skills": [],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.25,
+      "relevant_experience_months": 12
+    },
+    {
+      "filename": "cv_135_two_col.pdf",
+      "status": "processed",
+      "layout_type": "two_col",
+      "domain": "tech",
+      "role": "Cyber Security Specialist",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 7.58,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.61,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.76,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.44,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.33,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.33,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 12,
+        "preferred_skill_score": 0.33,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 22.9,
+        "matched_skills": [
+          "Python",
+          "FastAPI"
+        ],
+        "missing_mandatory_skills": [
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 22.9,
+      "matched_skills": [
+        "Python",
+        "FastAPI"
+      ],
+      "missing_mandatory_skills": [
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 12
+    },
+    {
+      "filename": "cv_136_three_col.pdf",
+      "status": "processed",
+      "layout_type": "three_col",
+      "domain": "nontech",
+      "role": "Guru Matematika & Fisika SMA",
+      "is_outlier": true,
+      "domain_warning": true,
+      "latency_ms": 6.91,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.51,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.61,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.39,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.0,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.0,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 0,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.25,
+        "final_score": 5.8,
+        "matched_skills": [],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 5.8,
+      "matched_skills": [],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.25,
+      "relevant_experience_months": 0
+    },
+    {
+      "filename": "cv_137_three_col.pdf",
+      "status": "processed",
+      "layout_type": "three_col",
+      "domain": "tech",
+      "role": "Android Developer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 9.18,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.57,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.69,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.43,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.33,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.67,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 24,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 24.5,
+        "matched_skills": [
+          "PostgreSQL"
+        ],
+        "missing_mandatory_skills": [
+          "Python",
+          "Docker"
+        ]
+      },
+      "final_score": 24.5,
+      "matched_skills": [
+        "PostgreSQL"
+      ],
+      "missing_mandatory_skills": [
+        "Python",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 24
+    },
+    {
+      "filename": "cv_138_three_col.pdf",
+      "status": "processed",
+      "layout_type": "three_col",
+      "domain": "tech",
+      "role": "Cloud Architect",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 7.04,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.65,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.77,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.51,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.33,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.33,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 12,
+        "preferred_skill_score": 0.33,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.5,
+        "final_score": 23.8,
+        "matched_skills": [
+          "Docker",
+          "Kubernetes"
+        ],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL"
+        ]
+      },
+      "final_score": 23.8,
+      "matched_skills": [
+        "Docker",
+        "Kubernetes"
+      ],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL"
+      ],
+      "mandatory_penalty_factor": 0.5,
+      "relevant_experience_months": 12
+    },
+    {
+      "filename": "cv_139_three_col.pdf",
+      "status": "processed",
+      "layout_type": "three_col",
+      "domain": "tech",
+      "role": "Scrum Master",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 10.45,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.55,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.65,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.43,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.0,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 1.0,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 36,
+        "preferred_skill_score": 0.0,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.25,
+        "final_score": 11.2,
+        "matched_skills": [],
+        "missing_mandatory_skills": [
+          "Python",
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      "final_score": 11.2,
+      "matched_skills": [],
+      "missing_mandatory_skills": [
+        "Python",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "mandatory_penalty_factor": 0.25,
+      "relevant_experience_months": 36
+    },
+    {
+      "filename": "cv_140_three_col.pdf",
+      "status": "processed",
+      "layout_type": "three_col",
+      "domain": "tech",
+      "role": "Data Engineer",
+      "is_outlier": false,
+      "domain_warning": false,
+      "latency_ms": 5.41,
+      "breakdown": {
+        "score_version": "v2",
+        "semantic_similarity": 0.74,
+        "semantic_weight": 0.45,
+        "skill_semantic_similarity": 0.88,
+        "skill_semantic_weight": 0.25,
+        "role_semantic_similarity": 0.56,
+        "role_semantic_weight": 0.2,
+        "mandatory_skill_score": 0.67,
+        "mandatory_skill_weight": 0.3,
+        "experience_score": 0.33,
+        "experience_weight": 0.2,
+        "relevant_experience_months": 12,
+        "preferred_skill_score": 0.33,
+        "preferred_skill_weight": 0.05,
+        "mandatory_penalty_factor": 0.75,
+        "final_score": 46.2,
+        "matched_skills": [
+          "Python",
+          "PostgreSQL",
+          "FastAPI"
+        ],
+        "missing_mandatory_skills": [
+          "Docker"
+        ]
+      },
+      "final_score": 46.2,
       "matched_skills": [
         "Python",
         "PostgreSQL",
@@ -6355,14 +6355,14 @@
       "role": "System Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.01,
+      "latency_ms": 14.68,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.54,
+        "semantic_similarity": 0.6,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.71,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.34,
+        "role_semantic_similarity": 0.46,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6372,7 +6372,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 27.2,
+        "final_score": 28.4,
         "matched_skills": [
           "Docker"
         ],
@@ -6381,7 +6381,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 27.2,
+      "final_score": 28.4,
       "matched_skills": [
         "Docker"
       ],
@@ -6400,14 +6400,14 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.35,
+      "latency_ms": 9.16,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.56,
+        "semantic_similarity": 0.61,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.66,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.44,
+        "role_semantic_similarity": 0.53,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6417,7 +6417,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 11.3,
+        "final_score": 11.8,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6425,7 +6425,7 @@
           "Docker"
         ]
       },
-      "final_score": 11.3,
+      "final_score": 11.8,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6443,14 +6443,14 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.91,
+      "latency_ms": 13.87,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.57,
+        "semantic_similarity": 0.59,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.72,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.38,
+        "role_semantic_similarity": 0.43,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6460,7 +6460,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 27.8,
+        "final_score": 28.2,
         "matched_skills": [
           "PostgreSQL"
         ],
@@ -6469,7 +6469,7 @@
           "Docker"
         ]
       },
-      "final_score": 27.8,
+      "final_score": 28.2,
       "matched_skills": [
         "PostgreSQL"
       ],
@@ -6488,14 +6488,14 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.12,
+      "latency_ms": 6.76,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.62,
+        "semantic_similarity": 0.71,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.81,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.38,
+        "role_semantic_similarity": 0.58,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6505,7 +6505,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 23.1,
+        "final_score": 25.0,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -6515,7 +6515,7 @@
           "Docker"
         ]
       },
-      "final_score": 23.1,
+      "final_score": 25.0,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -6535,14 +6535,14 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.46,
+      "latency_ms": 9.59,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.66,
+        "semantic_similarity": 0.65,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.76,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.52,
+        "role_semantic_similarity": 0.51,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6552,7 +6552,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 27.2,
+        "final_score": 27.0,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -6562,7 +6562,7 @@
           "Docker"
         ]
       },
-      "final_score": 27.2,
+      "final_score": 27.0,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -6582,14 +6582,14 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.14,
+      "latency_ms": 7.63,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.43,
+        "semantic_similarity": 0.49,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.53,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.31,
+        "role_semantic_similarity": 0.44,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6599,7 +6599,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 6.6,
+        "final_score": 7.2,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6607,7 +6607,7 @@
           "Docker"
         ]
       },
-      "final_score": 6.6,
+      "final_score": 7.2,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6625,14 +6625,14 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.03,
+      "latency_ms": 6.58,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.63,
+        "semantic_similarity": 0.66,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.77,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.45,
+        "role_semantic_similarity": 0.52,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6642,7 +6642,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 23.3,
+        "final_score": 24.0,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -6652,7 +6652,7 @@
           "Docker"
         ]
       },
-      "final_score": 23.3,
+      "final_score": 24.0,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -6672,14 +6672,14 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.19,
+      "latency_ms": 15.53,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.48,
+        "semantic_similarity": 0.55,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.61,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.32,
+        "role_semantic_similarity": 0.46,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6689,7 +6689,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 5.4,
+        "final_score": 6.2,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6697,7 +6697,7 @@
           "Docker"
         ]
       },
-      "final_score": 5.4,
+      "final_score": 6.2,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6715,14 +6715,14 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.26,
+      "latency_ms": 11.7,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.52,
+        "semantic_similarity": 0.58,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.67,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.35,
+        "role_semantic_similarity": 0.48,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6732,7 +6732,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 10.9,
+        "final_score": 11.6,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6740,7 +6740,7 @@
           "Docker"
         ]
       },
-      "final_score": 10.9,
+      "final_score": 11.6,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6758,14 +6758,14 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.64,
+      "latency_ms": 6.21,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.53,
+        "semantic_similarity": 0.6,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.64,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.4,
+        "role_semantic_similarity": 0.55,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6775,7 +6775,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 7.7,
+        "final_score": 8.4,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6783,7 +6783,7 @@
           "Docker"
         ]
       },
-      "final_score": 7.7,
+      "final_score": 8.4,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6801,14 +6801,14 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.56,
+      "latency_ms": 10.84,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.59,
+        "semantic_similarity": 0.64,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.74,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.4,
+        "role_semantic_similarity": 0.51,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6818,7 +6818,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 29.1,
+        "final_score": 30.1,
         "matched_skills": [
           "Docker",
           "Kubernetes"
@@ -6828,7 +6828,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 29.1,
+      "final_score": 30.1,
       "matched_skills": [
         "Docker",
         "Kubernetes"
@@ -6848,14 +6848,14 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.76,
+      "latency_ms": 12.93,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.59,
+        "semantic_similarity": 0.62,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.74,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.41,
+        "role_semantic_similarity": 0.48,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6865,7 +6865,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 29.2,
+        "final_score": 29.8,
         "matched_skills": [
           "Docker",
           "Kubernetes"
@@ -6875,7 +6875,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 29.2,
+      "final_score": 29.8,
       "matched_skills": [
         "Docker",
         "Kubernetes"
@@ -6895,14 +6895,14 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.47,
+      "latency_ms": 9.52,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.55,
+        "semantic_similarity": 0.57,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.67,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.42,
+        "role_semantic_similarity": 0.45,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6912,7 +6912,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 9.6,
+        "final_score": 9.8,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6920,7 +6920,7 @@
           "Docker"
         ]
       },
-      "final_score": 9.6,
+      "final_score": 9.8,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6938,14 +6938,14 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.56,
+      "latency_ms": 6.0,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.54,
+        "semantic_similarity": 0.58,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.65,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.4,
+        "role_semantic_similarity": 0.5,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -6955,7 +6955,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 7.7,
+        "final_score": 8.2,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -6963,7 +6963,7 @@
           "Docker"
         ]
       },
-      "final_score": 7.7,
+      "final_score": 8.2,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -6981,14 +6981,14 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.84,
+      "latency_ms": 13.42,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.69,
+        "semantic_similarity": 0.7,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.85,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.5,
+        "role_semantic_similarity": 0.53,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -6998,7 +6998,7 @@
         "preferred_skill_score": 0.67,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 32.3,
+        "final_score": 32.5,
         "matched_skills": [
           "Python",
           "Kubernetes",
@@ -7009,7 +7009,7 @@
           "Docker"
         ]
       },
-      "final_score": 32.3,
+      "final_score": 32.5,
       "matched_skills": [
         "Python",
         "Kubernetes",
@@ -7030,14 +7030,14 @@
       "role": "Insinyur Sipil Lapangan",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.18,
+      "latency_ms": 15.2,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.6,
+        "semantic_similarity": 0.72,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.8,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.36,
+        "role_semantic_similarity": 0.62,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -7047,7 +7047,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 19.3,
+        "final_score": 21.9,
         "matched_skills": [
           "Python",
           "FastAPI"
@@ -7057,7 +7057,7 @@
           "Docker"
         ]
       },
-      "final_score": 19.3,
+      "final_score": 21.9,
       "matched_skills": [
         "Python",
         "FastAPI"
@@ -7077,14 +7077,14 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.78,
+      "latency_ms": 6.87,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.6,
+        "semantic_similarity": 0.63,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.74,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.42,
+        "role_semantic_similarity": 0.5,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -7094,7 +7094,7 @@
         "preferred_skill_score": 0.33,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 22.6,
+        "final_score": 23.4,
         "matched_skills": [
           "Docker",
           "Kubernetes"
@@ -7104,7 +7104,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 22.6,
+      "final_score": 23.4,
       "matched_skills": [
         "Docker",
         "Kubernetes"
@@ -7124,14 +7124,14 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.13,
+      "latency_ms": 9.86,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.57,
+        "semantic_similarity": 0.62,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.65,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.47,
+        "role_semantic_similarity": 0.57,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -7141,7 +7141,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 24.5,
+        "final_score": 25.5,
         "matched_skills": [
           "Docker"
         ],
@@ -7150,7 +7150,7 @@
           "PostgreSQL"
         ]
       },
-      "final_score": 24.5,
+      "final_score": 25.5,
       "matched_skills": [
         "Docker"
       ],
@@ -7169,14 +7169,14 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.19,
+      "latency_ms": 14.23,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.6,
+        "semantic_similarity": 0.65,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.77,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.4,
+        "role_semantic_similarity": 0.5,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.33,
         "mandatory_skill_weight": 0.3,
@@ -7186,7 +7186,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.5,
-        "final_score": 28.5,
+        "final_score": 29.5,
         "matched_skills": [
           "PostgreSQL"
         ],
@@ -7195,7 +7195,7 @@
           "Docker"
         ]
       },
-      "final_score": 28.5,
+      "final_score": 29.5,
       "matched_skills": [
         "PostgreSQL"
       ],
@@ -7214,14 +7214,14 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.18,
+      "latency_ms": 9.28,
       "breakdown": {
         "score_version": "v2",
-        "semantic_similarity": 0.53,
+        "semantic_similarity": 0.56,
         "semantic_weight": 0.45,
         "skill_semantic_similarity": 0.65,
         "skill_semantic_weight": 0.25,
-        "role_semantic_similarity": 0.37,
+        "role_semantic_similarity": 0.46,
         "role_semantic_weight": 0.2,
         "mandatory_skill_score": 0.0,
         "mandatory_skill_weight": 0.3,
@@ -7231,7 +7231,7 @@
         "preferred_skill_score": 0.0,
         "preferred_skill_weight": 0.05,
         "mandatory_penalty_factor": 0.25,
-        "final_score": 9.3,
+        "final_score": 9.7,
         "matched_skills": [],
         "missing_mandatory_skills": [
           "Python",
@@ -7239,7 +7239,7 @@
           "Docker"
         ]
       },
-      "final_score": 9.3,
+      "final_score": 9.7,
       "matched_skills": [],
       "missing_mandatory_skills": [
         "Python",
@@ -7257,7 +7257,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.91,
+      "latency_ms": 7.59,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -7302,7 +7302,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.46,
+      "latency_ms": 6.89,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -7349,7 +7349,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.55,
+      "latency_ms": 6.13,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -7394,7 +7394,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.69,
+      "latency_ms": 7.2,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -7437,7 +7437,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.64,
+      "latency_ms": 6.52,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -7480,7 +7480,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.43,
+      "latency_ms": 9.43,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -7527,7 +7527,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.06,
+      "latency_ms": 6.33,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -7570,7 +7570,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 2.62,
+      "latency_ms": 7.56,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -7617,7 +7617,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.0,
+      "latency_ms": 7.22,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.81,
@@ -7664,7 +7664,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.16,
+      "latency_ms": 7.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.82,
@@ -7711,7 +7711,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.46,
+      "latency_ms": 9.12,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -7758,7 +7758,7 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.97,
+      "latency_ms": 5.93,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.42,
@@ -7801,7 +7801,7 @@
       "role": "Apoteker Klinis",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.99,
+      "latency_ms": 17.85,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -7848,7 +7848,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.82,
+      "latency_ms": 15.36,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -7891,7 +7891,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.38,
+      "latency_ms": 8.68,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -7934,7 +7934,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.65,
+      "latency_ms": 15.49,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -7981,7 +7981,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 5.39,
+      "latency_ms": 14.01,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -8028,7 +8028,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.62,
+      "latency_ms": 10.31,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -8077,7 +8077,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 5.0,
+      "latency_ms": 13.26,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.77,
@@ -8124,7 +8124,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.77,
+      "latency_ms": 12.66,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -8171,7 +8171,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.33,
+      "latency_ms": 15.77,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -8218,7 +8218,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.69,
+      "latency_ms": 8.96,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -8265,7 +8265,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.13,
+      "latency_ms": 10.77,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -8310,7 +8310,7 @@
       "role": "HR Generalist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 4.56,
+      "latency_ms": 10.77,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -8357,7 +8357,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.94,
+      "latency_ms": 12.15,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -8400,7 +8400,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 4.05,
+      "latency_ms": 10.99,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -8447,7 +8447,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.33,
+      "latency_ms": 8.35,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -8494,7 +8494,7 @@
       "role": "Insinyur Sipil Lapangan",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 2.76,
+      "latency_ms": 7.54,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -8537,7 +8537,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.97,
+      "latency_ms": 12.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -8580,7 +8580,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.58,
+      "latency_ms": 8.95,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -8629,7 +8629,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 3.67,
+      "latency_ms": 7.9,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -8672,7 +8672,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 3.18,
+      "latency_ms": 8.71,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.83,
@@ -8716,7 +8716,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.92,
+      "latency_ms": 0.52,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8727,7 +8727,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.66,
+      "latency_ms": 0.31,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8738,7 +8738,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.55,
+      "latency_ms": 0.25,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8749,7 +8749,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.44,
+      "latency_ms": 0.25,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8760,7 +8760,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.47,
+      "latency_ms": 0.24,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8771,7 +8771,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.47,
+      "latency_ms": 0.23,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8782,7 +8782,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.42,
+      "latency_ms": 0.23,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8793,7 +8793,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.57,
+      "latency_ms": 0.24,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",

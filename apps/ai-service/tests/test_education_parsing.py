@@ -4,7 +4,10 @@ import pytest
 from app.schemas.cv_schema import Education, CVExtraction
 from app.services.pdf_extractor import extract_pdf_text, clean_pdf_text
 
-DATASET_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset_v2"))
+ROOT_DATASET_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "benchmark_dataset"))
+LOCAL_DATASET_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset_v2"))
+DATASET_DIR = ROOT_DATASET_DIR if os.path.exists(ROOT_DATASET_DIR) else LOCAL_DATASET_DIR
+
 
 
 def test_education_schema_supports_gpa():

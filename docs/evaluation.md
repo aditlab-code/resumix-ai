@@ -18,7 +18,8 @@ Dokumen ini berisi pedoman evaluasi, metrik kinerja, dan hasil pengujian **200 P
 
 ## 2. Hasil Benchmark Evaluasi 200 PDF CV Synthetic Dataset (v2)
 
-Pengujian komprehensif dilakukan menggunakan **200 PDF CV sintetis** ([tests/benchmark_dataset_v2](../apps/ai-service/tests/benchmark_dataset_v2)) dengan data ground truth ([metadata_ground_truth.csv](../apps/ai-service/tests/benchmark_dataset_v2/metadata_ground_truth.csv)).
+Pengujian komprehensif dilakukan menggunakan **200 PDF CV sintetis** ([benchmark_dataset](../benchmark_dataset)) dengan data ground truth ([metadata_ground_truth.csv](../benchmark_dataset/metadata_ground_truth.csv)).
+
 
 ### Summary Statistics
 

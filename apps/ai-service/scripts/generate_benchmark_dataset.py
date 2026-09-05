@@ -42,8 +42,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 random.seed(42)
 
-DATASET_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "tests", "benchmark_dataset_v2"))
+DATASET_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "benchmark_dataset"))
 os.makedirs(DATASET_DIR, exist_ok=True)
+
 
 TOTAL_CV = 200
 

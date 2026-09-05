@@ -67,7 +67,7 @@ RULES:
 4. Extract ALL skills mentioned (technical, software, tools, competencies, administration).
 5. Extract ALL projects, portfolio links (GitHub, Figma, Behance, Drive, Dribbble, personal websites), achievements, awards, and certifications.
 6. Extract ALL work references/referees (name, job title, company, contact details).
-7. Format phone numbers accurately into clean standard international format (e.g. "+62 815-8619-5333").
+7. Extract phone numbers with high precision. Support mobile (+62 8xx-xxxx-xxxx / 08xx) and landlines with area codes (e.g. (021) 8852574, (022) 2501234, +62 21-8852574). Do NOT omit area codes or drop numbers.
 8. Do not hallucinate non-existent details. Output ONLY JSON without markdown wrappers.
 """
 
@@ -109,4 +109,14 @@ async def function_extract_via_groq(
     
     # Parse JSON content
     parsed_json = json.loads(content)
+
+    # Post-process contact phone_number fallback using deterministic extractor if missing or null
+    from app.services.phone_extractor import extract_phone_number
+    contact = parsed_json.setdefault("contact", {})
+    if not contact.get("phone_number") or not str(contact.get("phone_number")).strip():
+        extracted_phone = extract_phone_number(raw_text)
+        if extracted_phone:
+            contact["phone_number"] = extracted_phone
+
     return parsed_json
+

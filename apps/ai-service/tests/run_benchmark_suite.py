@@ -10,9 +10,11 @@ from app.services.scoring_service import compute_job_fit_score
 from app.services.skill_normalizer import SYNONYM_DICTIONARY
 from app.main import compute_cosine_similarity
 
-DATASET_DIR_V2 = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset_v2"))
-DATASET_DIR_V1 = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset"))
-DATASET_DIR = DATASET_DIR_V2 if os.path.exists(DATASET_DIR_V2) else DATASET_DIR_V1
+ROOT_DATASET_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "benchmark_dataset"))
+DATASET_DIR_LOCAL_V2 = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset_v2"))
+DATASET_DIR_LOCAL_V1 = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_dataset"))
+DATASET_DIR = ROOT_DATASET_DIR if os.path.exists(ROOT_DATASET_DIR) else (DATASET_DIR_LOCAL_V2 if os.path.exists(DATASET_DIR_LOCAL_V2) else DATASET_DIR_LOCAL_V1)
+
 
 RESULTS_JSON_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_results.json"))
 REPORT_MD_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "benchmark_report.md"))
