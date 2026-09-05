@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Input } from './input';
 
 export const Toolbar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
@@ -10,7 +11,7 @@ export const Toolbar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => (
   <div
-    className={cn('flex flex-col sm:flex-row sm:items-center gap-2', className)}
+    className={cn('flex flex-col sm:flex-row sm:items-center gap-3', className)}
     {...props}
   >
     {children}
@@ -27,13 +28,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   ...props
 }) => (
   <div className={cn('relative w-full sm:w-64', wrapperClassName)}>
-    <Search className="w-4 h-4 text-ink-subtle absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-    <input
+    <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+    <Input
       type="text"
-      className={cn(
-        'w-full rounded bg-surface pl-8 pr-3 py-2 text-xs text-ink placeholder:text-ink-subtle border border-line focus:border-accent transition-colors',
-        className
-      )}
+      className={cn('pl-9 h-9 text-xs', className)}
       {...props}
     />
   </div>
@@ -46,7 +44,7 @@ export const FilterSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement
 }) => (
   <select
     className={cn(
-      'rounded bg-surface px-2.5 py-2 text-xs font-semibold text-ink-muted border border-line focus:border-accent cursor-pointer transition-colors',
+      'flex h-9 rounded-md border border-input bg-background px-3 py-1 text-xs font-semibold text-foreground ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-colors',
       className
     )}
     {...props}
@@ -54,3 +52,4 @@ export const FilterSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement
     {children}
   </select>
 );
+

@@ -29,30 +29,33 @@ export function SubNavTab<T extends string = string>({
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border pb-0 overflow-y-hidden',
+        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1',
         className
       )}
     >
-      <div className="flex items-center gap-6 overflow-x-auto overflow-y-hidden no-scrollbar py-0.5">
+      <div className="inline-flex h-11 items-center justify-center rounded-xl bg-muted/60 p-1 text-muted-foreground self-start sm:self-auto overflow-x-auto no-scrollbar shadow-sm border border-border">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
+          const Icon = tab.icon;
           return (
             <button
               key={tab.id}
+              type="button"
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                'py-2 px-1 text-body font-semibold flex items-center gap-2 transition-all duration-base whitespace-nowrap border-b-2 focus-ring',
+                'inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none gap-2',
                 isActive
-                  ? 'border-brand-accent text-ink-brand font-bold'
-                  : 'border-transparent text-ink-subtle hover:text-ink-default'
+                  ? 'bg-primary text-primary-foreground shadow-sm font-bold'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-background/60'
               )}
             >
+              {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
               <span>{tab.label}</span>
               {typeof tab.count === 'number' && (
                 <span
                   className={cn(
-                    'px-2 py-0.5 rounded-pill text-[11px] font-bold',
-                    isActive ? 'bg-brand-accent_soft text-brand-accent' : 'bg-surface-border text-ink-subtle'
+                    'px-2 py-0.5 rounded-full text-[11px] font-bold tabular-nums',
+                    isActive ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-background/80 text-muted-foreground'
                   )}
                 >
                   {tab.count}
@@ -62,7 +65,7 @@ export function SubNavTab<T extends string = string>({
           );
         })}
       </div>
-      {extraRightContent && <div className="flex items-center gap-2 shrink-0 pb-2">{extraRightContent}</div>}
+      {extraRightContent && <div className="flex items-center gap-2 shrink-0">{extraRightContent}</div>}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from './card';
 
 interface StatProps {
   label: string;
@@ -12,57 +13,31 @@ interface StatProps {
   tone?: 'ink' | 'accent' | 'warn' | 'ok';
 }
 
-const variantStyles: Record<NonNullable<StatProps['variant']>, { bg: string; text: string; hint: string; metric: string }> = {
-  blue: {
-    bg: 'bg-blue-50/90 border-blue-200 shadow-e1',
-    text: 'text-blue-900',
-    hint: 'text-blue-700 font-bold',
-    metric: 'text-blue-700 font-extrabold',
-  },
-  indigo: {
-    bg: 'bg-indigo-50/90 border-indigo-200 shadow-e1',
-    text: 'text-indigo-900',
-    hint: 'text-indigo-700 font-bold',
-    metric: 'text-indigo-700 font-extrabold',
-  },
-  amber: {
-    bg: 'bg-amber-50/90 border-amber-200 shadow-e1',
-    text: 'text-amber-900',
-    hint: 'text-amber-700 font-bold',
-    metric: 'text-amber-700 font-extrabold',
-  },
-  red: {
-    bg: 'bg-red-50/90 border-red-200 shadow-e1',
-    text: 'text-red-900',
-    hint: 'text-red-700 font-bold',
-    metric: 'text-red-700 font-extrabold',
-  },
-  default: {
-    bg: 'bg-surface-raised border-surface-border shadow-e1',
-    text: 'text-ink-subtle',
-    hint: 'text-ink-muted font-semibold',
-    metric: 'text-ink-default font-extrabold',
-  },
-};
-
-export const Stat: React.FC<StatProps> = ({ label, value, hint, onClick, variant = 'default' }) => {
-  const Wrapper = onClick ? 'button' : 'div';
-  const style = variantStyles[variant];
-
+export const Stat: React.FC<StatProps> = ({ label, value, hint, onClick }) => {
   return (
-    <Wrapper
+    <Card
       onClick={onClick}
       className={cn(
-        'border rounded-md p-6 flex flex-col gap-2.5 text-left w-full relative overflow-hidden',
-        style.bg,
-        onClick && 'hover:border-slate-400 cursor-pointer'
+        'transition-all duration-200 shadow-sm hover:shadow-md border-border bg-card text-card-foreground',
+        onClick && 'cursor-pointer hover:border-primary/50'
       )}
     >
-      <span className={cn('text-caption font-bold uppercase tracking-wider', style.text)}>{label}</span>
-      <div className="flex items-baseline justify-between gap-2">
-        <span className={cn('text-metric tracking-tight tabular-nums', style.metric)}>{value}</span>
-        {hint && <span className={cn('text-caption', style.hint)}>{hint}</span>}
-      </div>
-    </Wrapper>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-6">
+        <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {label}
+        </CardTitle>
+        {hint && (
+          <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+            {hint}
+          </span>
+        )}
+      </CardHeader>
+      <CardContent className="p-6 pt-0">
+        <div className="text-3xl font-bold tracking-tight text-foreground tabular-nums">
+          {value}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
+

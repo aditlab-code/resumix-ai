@@ -55,26 +55,26 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((job) => (
-            <Card key={job.id} interactive className="flex flex-col justify-between gap-4">
-              <div className="space-y-3.5">
+            <Card key={job.id} interactive className="p-6 flex flex-col justify-between gap-5">
+              <div className="space-y-4">
                 <div className="flex justify-between items-start gap-2">
                   <div>
-                    <span className="text-caption font-semibold uppercase tracking-wider text-ink-subtle">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
                       {job.department}
                     </span>
-                    <h3 className="text-h3 font-bold text-ink-default mt-0.5">{job.title}</h3>
+                    <h3 className="text-lg font-bold text-foreground leading-snug">{job.title}</h3>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       onClick={() => onEditJob(job)}
-                      className="p-1.5 text-ink-subtle hover:text-brand-accent hover:bg-surface-sunken rounded-md transition-colors focus-ring"
+                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors focus-ring"
                       aria-label="Edit lowongan"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => onDeleteJob(job.id)}
-                      className="p-1.5 text-ink-subtle hover:text-semantic-danger hover:bg-semantic-danger_soft rounded-md transition-colors focus-ring"
+                      className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors focus-ring"
                       aria-label="Hapus lowongan"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -82,26 +82,26 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                   </div>
                 </div>
 
-                <div className="space-y-1.5 text-caption text-ink-muted">
+                <div className="space-y-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-ink-subtle shrink-0" />
-                    {job.location}
+                    <MapPin className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+                    <span>{job.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-ink-subtle shrink-0" />
-                    Min. <strong className="text-ink-default font-semibold">{job.minimum_experience_months} bln</strong>
+                    <Clock className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+                    <span>Min. <strong className="text-foreground font-semibold">{job.minimum_experience_months} bln</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-ink-subtle shrink-0" />
-                    <strong className="text-ink-default font-semibold">{job.applications_count}</strong> pelamar
+                    <Users className="w-4 h-4 text-muted-foreground/70 shrink-0" />
+                    <span><strong className="text-foreground font-semibold">{job.applications_count}</strong> pelamar</span>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-surface-border">
+                <div className="flex flex-wrap gap-1.5 pt-3.5 border-t border-border">
                   {job.mandatory_skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-2 py-0.5 bg-surface-sunken text-ink-default text-caption font-semibold rounded-sm border border-surface-border"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-secondary text-secondary-foreground border border-border"
                     >
                       {skill}
                     </span>
@@ -110,7 +110,7 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
               </div>
 
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={() => onSelectJobForCandidates(job.id)}
                 className="w-full mt-2"

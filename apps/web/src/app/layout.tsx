@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { AppDataProvider } from '@/context/app-data-context';
 import { AppLayoutShell } from '@/components/dashboard/app-layout-shell';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,11 +29,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={`h-full ${inter.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        />
+      </head>
       <body className="bg-surface-canvas text-ink-default min-h-screen antialiased m-0 p-0 font-sans">
         <AppDataProvider>
           <AppLayoutShell>{children}</AppLayoutShell>
+          <Toaster />
         </AppDataProvider>
       </body>
     </html>
   );
 }
+
+

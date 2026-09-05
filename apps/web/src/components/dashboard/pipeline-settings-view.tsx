@@ -218,15 +218,16 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       {/* Tab 1: Kamus Skill */}
       {activeTab === 'dictionary' && (
         <div className="space-y-6">
-          <Card className="space-y-4">
+          <Card className="p-6 space-y-5">
             <CardHeader
+              className="p-0 border-none mb-2"
               title="Tambah Skill & Sinonim Baru"
               subtitle="Kamus deterministik ini digunakan untuk mencocokkan variasi penulisan skill pada CV pelamar."
             />
 
             <form onSubmit={handleAddSkill} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Field label="Nama Skill Resmi (Canonical Name)">
+                <Field label="Nama Skill Resmi (Canonical Name)" required>
                   <Input
                     value={canonicalName}
                     onChange={(e) => setCanonicalName(e.target.value)}
@@ -272,11 +273,11 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 </Field>
               </div>
 
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end items-center gap-2 pt-2 border-t border-border">
                 {!isAddingNewCategory && (
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => setIsAddingNewCategory(true)}
                   >
@@ -290,31 +291,31 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
             </form>
           </Card>
 
-          <Card className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-surface-border pb-3">
+          <Card className="p-6 space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
               <div>
-                <h3 className="text-h2 font-bold text-ink-default">Daftar Kamus Skill ({filteredTaxonomies.length})</h3>
-                <p className="text-caption text-ink-subtle">
+                <h3 className="text-lg font-bold text-foreground">Daftar Kamus Skill ({filteredTaxonomies.length})</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Ringkasan 5 skill per halaman. Gunakan navigasi pagination di bawah.
                 </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative min-w-[200px]">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-subtle" />
-                  <input
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10" />
+                  <Input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Cari skill atau sinonim..."
-                    className="w-full pl-9 pr-3 py-1.5 text-caption bg-surface-sunken border border-surface-border rounded-md text-ink-default focus-ring"
+                    className="pl-9 h-9 text-xs"
                   />
                 </div>
 
-                <select
+                <Select
                   value={activeCategoryFilter}
                   onChange={(e) => setActiveCategoryFilter(e.target.value)}
-                  className="px-3 py-1.5 text-caption bg-surface-sunken border border-surface-border rounded-md text-ink-default font-semibold focus-ring"
+                  className="h-9 text-xs font-semibold w-auto"
                 >
                   <option value="all">Semua Kategori</option>
                   {categories.map((cat) => (
@@ -322,29 +323,29 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                       {formatCategoryLabel(cat)}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
 
             {/* Dictionary Items List (Paginated 5 per page) */}
-            <div className="divide-y divide-surface-border border border-surface-border rounded-md overflow-hidden bg-surface-raised">
+            <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
               {filteredTaxonomies.length === 0 ? (
-                <div className="p-8 text-center text-ink-subtle text-body">
+                <div className="p-8 text-center text-muted-foreground text-sm">
                   Tidak ada skill yang cocok dengan pencarian.
                 </div>
               ) : (
                 paginatedTaxonomies.map((item) => (
-                  <div key={item.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-surface-hover">
-                    <div className="space-y-1.5 min-w-0">
+                  <div key={item.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-muted/40 transition-colors">
+                    <div className="space-y-2 min-w-0">
                       <div className="flex items-center gap-2.5">
-                        <span className="font-bold text-body text-ink-default">{item.canonical_name}</span>
-                        <span className="px-2 py-0.5 rounded-pill bg-surface-sunken border border-surface-border text-caption font-bold text-ink-subtle uppercase">
+                        <span className="font-bold text-sm text-foreground">{item.canonical_name}</span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border text-[11px] font-bold uppercase">
                           {formatCategoryLabel(item.category)}
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {item.synonyms.map((syn) => (
-                          <span key={syn} className="px-2 py-0.5 rounded-sm bg-brand-accent_soft text-brand-accent border border-blue-200 text-caption font-semibold">
+                          <span key={syn} className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 text-xs font-medium">
                             {syn}
                           </span>
                         ))}
@@ -354,7 +355,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     <button
                       type="button"
                       onClick={() => handleDeleteSkill(item.id, item.canonical_name)}
-                      className="text-ink-faint hover:text-rose-600 p-2 rounded-md hover:bg-rose-50 focus-ring shrink-0 transition-colors"
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 p-2 rounded-md transition-colors shrink-0"
                       title="Hapus Skill"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -366,14 +367,14 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
             {/* Pagination Controls */}
             {filteredTaxonomies.length > 0 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-surface-sunken border border-surface-border rounded-md text-caption">
-                <span className="text-ink-subtle font-medium">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-muted/40 border border-border rounded-xl text-xs">
+                <span className="text-muted-foreground font-medium">
                   Menampilkan {Math.min((dictPage - 1) * itemsPerPage + 1, filteredTaxonomies.length)}–
                   {Math.min(dictPage * itemsPerPage, filteredTaxonomies.length)} dari {filteredTaxonomies.length} skill
                 </span>
                 <div className="flex items-center gap-1.5">
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     disabled={dictPage === 1}
                     onClick={() => setDictPage((prev) => Math.max(1, prev - 1))}
@@ -386,17 +387,17 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                       key={page}
                       onClick={() => setDictPage(page)}
                       className={cn(
-                        'w-8 h-8 rounded-md text-caption font-bold transition-colors focus-ring',
+                        'w-8 h-8 rounded-lg text-xs font-bold transition-colors focus:outline-none',
                         dictPage === page
-                          ? 'bg-blue-600 text-white shadow-e1'
-                          : 'bg-surface-raised border border-surface-border text-ink-default hover:bg-surface-hover'
+                          ? 'bg-primary text-primary-foreground shadow-sm'
+                          : 'bg-card border border-border text-foreground hover:bg-muted'
                       )}
                     >
                       {page}
                     </button>
                   ))}
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     disabled={dictPage >= totalPages}
                     onClick={() => setDictPage((prev) => Math.min(totalPages, prev + 1))}
@@ -413,8 +414,9 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
       {/* Tab 2: Formula Scoring */}
       {activeTab === 'scoring' && (
-        <Card className="space-y-5">
+        <Card className="p-6 space-y-6">
           <CardHeader
+            className="p-0 border-none mb-2"
             title="Pengaturan Bobot Formula Scoring"
             subtitle="Bobot penilaian otomatis kandidat (Total bobot harus bernilai 100%)."
           />
@@ -456,15 +458,15 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               hint="Skor bonus untuk skill preferred opsional."
             />
 
-            <div className="p-4 rounded-md border flex items-center justify-between bg-surface-sunken border-surface-border">
-              <span className="font-bold text-body text-ink-default">Total Akumulasi Bobot:</span>
-              <span className={cn('text-h2 font-extrabold tabular-nums', weightValid ? 'text-emerald-600' : 'text-rose-600')}>
+            <div className="p-4 rounded-xl border flex items-center justify-between bg-muted/40 border-border">
+              <span className="font-bold text-sm text-foreground">Total Akumulasi Bobot:</span>
+              <span className={cn('text-xl font-extrabold tabular-nums', weightValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive')}>
                 {totalWeight}% {weightValid ? '(Sesuai Spec 100%)' : '(Wajib 100%)'}
               </span>
             </div>
 
-            <div className="flex justify-end pt-2">
-              <Button type="button" onClick={handleSave} variant="primary" size="md" iconLeft={<Save className="w-4 h-4 text-white" />}>
+            <div className="flex justify-end pt-3 border-t border-border">
+              <Button type="button" onClick={handleSave} variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
                 Simpan Bobot Formula
               </Button>
             </div>
@@ -474,45 +476,53 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
       {/* Tab 3: Aturan LLM & Guardrails */}
       {activeTab === 'llm' && (
-        <Card className="space-y-5">
-          <CardHeader title="Konfigurasi Model LLM Groq & System Guardrails" />
+        <Card className="p-6 space-y-6">
+          <CardHeader
+            className="p-0 border-none mb-2"
+            title="Konfigurasi Model LLM Groq & System Guardrails"
+            subtitle="Atur provider LLM, model name, API key, dan instruksi keputusan HR."
+          />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Provider LLM">
-              <Select value={llmProvider} onChange={(e) => setLlmProvider(e.target.value)}>
-                <option value="groq">Groq Cloud (Fast Processing)</option>
-                <option value="gemini">Google Gemini 1.5</option>
-                <option value="openai">OpenAI GPT-4o Mini</option>
-              </Select>
-            </Field>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Provider LLM">
+                <Select value={llmProvider} onChange={(e) => setLlmProvider(e.target.value)}>
+                  <option value="groq">Groq Cloud (Fast Processing)</option>
+                  <option value="gemini">Google Gemini 1.5</option>
+                  <option value="openai">OpenAI GPT-4o Mini</option>
+                </Select>
+              </Field>
 
-            <Field label="Model Name">
-              <Select value={llmModel} onChange={(e) => setLlmModel(e.target.value)}>
-                <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Sangat Cepat & Presisi)</option>
-                <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
-                <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
-              </Select>
-            </Field>
+              <Field label="Model Name">
+                <Select value={llmModel} onChange={(e) => setLlmModel(e.target.value)}>
+                  <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Sangat Cepat & Presisi)</option>
+                  <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
+                  <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+                </Select>
+              </Field>
+            </div>
 
             <Field label="API Key">
               <Input
                 type="password"
                 value={llmApiKey}
                 onChange={(e) => setLlmApiKey(e.target.value)}
+                placeholder="gsk_..."
               />
             </Field>
 
             <Field label="System Prompt Decision Guardrails">
               <Textarea
-                rows={3}
+                rows={4}
                 value={promptDecision}
                 onChange={(e) => setPromptDecision(e.target.value)}
+                className="w-full text-xs font-mono"
               />
             </Field>
           </div>
 
-          <div className="flex justify-end pt-2">
-            <Button type="button" onClick={handleSave} variant="primary" size="md" iconLeft={<Save className="w-4 h-4 text-white" />}>
+          <div className="flex justify-end pt-3 border-t border-border">
+            <Button type="button" onClick={handleSave} variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
               Simpan Konfigurasi LLM
             </Button>
           </div>

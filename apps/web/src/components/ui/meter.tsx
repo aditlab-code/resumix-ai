@@ -1,15 +1,16 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Progress } from './progress';
 
 type MeterTone = 'accent' | 'ok' | 'warn' | 'ink';
 
 const barTone: Record<MeterTone, string> = {
-  accent: 'bg-accent',
-  ok: 'bg-ok',
-  warn: 'bg-warn',
-  ink: 'bg-ink',
+  accent: 'bg-primary',
+  ok: 'bg-emerald-500',
+  warn: 'bg-amber-500',
+  ink: 'bg-foreground',
 };
 
 interface MeterProps {
@@ -23,20 +24,16 @@ interface MeterProps {
 export const Meter: React.FC<MeterProps> = ({ label, percent, weight, tone = 'accent' }) => {
   const clamped = Math.min(100, Math.max(0, percent));
   return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-xs">
-        <span className="text-ink-muted font-medium">{label}</span>
-        <span className="font-mono font-bold text-ink">
+    <div className="space-y-1.5 w-full">
+      <div className="flex justify-between items-center text-xs gap-2">
+        <span className="text-muted-foreground font-medium truncate">{label}</span>
+        <span className="font-mono font-bold text-foreground shrink-0">
           {Math.round(clamped)}%
-          {weight != null && <span className="text-ink-subtle"> ({weight}%)</span>}
+          {weight != null && <span className="text-muted-foreground font-normal"> ({weight}%)</span>}
         </span>
       </div>
-      <div className="w-full bg-canvas h-1.5 rounded-full overflow-hidden">
-        <div
-          className={cn('h-full transition-all duration-500', barTone[tone])}
-          style={{ width: `${clamped}%` }}
-        />
-      </div>
+      <Progress value={clamped} className="h-2 w-full" indicatorClassName={barTone[tone]} />
     </div>
   );
 };
+

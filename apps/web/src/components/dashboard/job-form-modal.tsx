@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { JobPosting } from '@/lib/types';
-import { Overlay, Field, Input, Button } from '@/components/ui';
+import { Overlay, Field, Input, Textarea, Button } from '@/components/ui';
+
 import { importLinkedInJob } from '@/lib/api-client';
 import { Sparkles, Loader2, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 
@@ -228,13 +229,14 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
             required
             hint="Groq LLM akan mengekstrak judul, skill wajib, dan membuat 384-dim job_embedding secara otomatis."
           >
-            <textarea
+            <Textarea
               rows={8}
               value={rawLinkedInText}
               onChange={(e) => setRawLinkedInText(e.target.value)}
               placeholder="We are looking for a Senior Backend Engineer. Minimum 3 years of experience. Must master Python, PostgreSQL, and Docker..."
-              className="w-full p-3 bg-canvas border border-line rounded text-xs text-ink focus:outline-none focus:border-accent font-mono"
+              className="font-mono text-xs"
             />
+
           </Field>
         </div>
       ) : (

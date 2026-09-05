@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
 import { Button } from './button';
 
 interface EmptyStateProps {
@@ -18,10 +18,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   actionLabel,
   onAction,
 }) => (
-  <div className="flex flex-col items-center justify-center gap-3 bg-surface border border-line rounded-xl py-12 px-6 text-center shadow-2xs">
-    {icon && <div className="p-3 bg-accent-soft rounded-full text-accent">{icon}</div>}
-    <h3 className="text-sm font-bold text-ink">{title}</h3>
-    {description && <p className="text-xs text-ink-muted max-w-md leading-relaxed">{description}</p>}
+  <div className="flex flex-col items-center justify-center gap-3 bg-card border border-border rounded-xl py-12 px-6 text-center shadow-sm">
+    {icon && <div className="p-3.5 bg-primary/10 rounded-full text-primary">{icon}</div>}
+    <h3 className="text-sm font-bold text-foreground">{title}</h3>
+    {description && <p className="text-xs text-muted-foreground max-w-md leading-relaxed">{description}</p>}
     {actionLabel && onAction && (
       <Button size="sm" onClick={onAction} className="mt-1">
         {actionLabel}
@@ -29,3 +29,4 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     )}
   </div>
 );
+

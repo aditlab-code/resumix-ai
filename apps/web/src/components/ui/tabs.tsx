@@ -1,35 +1,100 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
+import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { cn } from '@/lib/utils';
+
+const TabsRoot = TabsPrimitive.Root;
+
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      'inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground',
+      className
+    )}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
+
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm',
+      className
+    )}
+    {...props}
+  />
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      className
+    )}
+    {...props}
+  />
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 export interface TabItem {
   key: string;
   label: React.ReactNode;
 }
 
-interface TabsProps {
-  items: TabItem[];
-  active: string;
-  onChange: (key: string) => void;
+interface LegacyTabsProps {
+  items?: TabItem[];
+  active?: string;
+  onChange?: (key: string) => void;
   className?: string;
 }
 
-export const Tabs: React.FC<TabsProps> = ({ items, active, onChange, className }) => (
-  <div className={cn('flex gap-4 border-b border-line', className)}>
-    {items.map((item) => (
-      <button
-        key={item.key}
-        onClick={() => onChange(item.key)}
-        className={cn(
-          'py-2.5 text-xs font-bold border-b-2 -mb-px transition-colors',
-          active === item.key
-            ? 'border-accent text-accent'
-            : 'border-transparent text-ink-muted hover:text-ink'
-        )}
-      >
-        {item.label}
-      </button>
-    ))}
-  </div>
-);
+export type TabsProps = Omit<React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>, 'onChange'> & LegacyTabsProps;
+
+const Tabs: React.FC<TabsProps> = ({ items, active, onChange, className, value, onValueChange, children, ...props }) => {
+  if (items && active && onChange) {
+    return (
+      <div className={cn('inline-flex h-11 items-center justify-center rounded-xl bg-muted/60 p-1 text-muted-foreground shadow-sm border border-border', className)}>
+        {items.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => onChange(item.key)}
+            className={cn(
+              'inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none',
+              active === item.key
+                ? 'bg-primary text-primary-foreground shadow-sm font-bold'
+                : 'text-muted-foreground hover:text-foreground hover:bg-background/60'
+            )}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <TabsRoot value={value} onValueChange={onValueChange} className={className} {...props}>
+      {children}
+    </TabsRoot>
+  );
+};
+
+export { Tabs, TabsList, TabsTrigger, TabsContent };
+
+

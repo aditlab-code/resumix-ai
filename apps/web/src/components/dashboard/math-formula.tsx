@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import 'katex/dist/katex.min.css';
+
 
 interface MathFormulaProps {
   math: string;
