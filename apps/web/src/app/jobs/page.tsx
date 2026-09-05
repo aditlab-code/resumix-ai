@@ -67,9 +67,9 @@ export default function JobsPage() {
             {/* Global Underline Button Tabs */}
             <SubNavTab
               tabs={[
-                { id: 'table', label: 'Applicants Table', count: jobApplications.length },
-                { id: 'kanban', label: 'Kanban Board' },
-                { id: 'compare', label: 'Matrix Comparison' },
+                { id: 'table', label: 'Table', count: jobApplications.length },
+                { id: 'kanban', label: 'Board' },
+                { id: 'compare', label: 'Comparison' },
               ]}
               activeTab={candidateViewMode}
               onTabChange={setCandidateViewMode}
