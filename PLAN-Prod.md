@@ -14,9 +14,10 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
   - Bucket: `resumix-cv-bucket` (Private Access, 10GB Free, $0 Egress).
   - Berkas PDF CV fisik 100% disimpan di Cloudflare R2 (Supabase Storage di-bypass penuh).
   - Credentials & S3 Endpoint (`https://e90fa646d35177b22219f9a246ff6f95.r2.cloudflarestorage.com`) tersimpan di `.env`.
-- [x] **3. Queue (`Upstash Redis`)**: ✅ **TERKONFIGURASI**
+- [x] **3. Queue (`Upstash Redis`)**: ✅ **TERKONFIGURASI (KODE & SERVER)**
   - Shared Instance Host: `real-macaw-187505.upstash.io`
-  - Co-existence policy: Standard Prefix `rag_cv` dipasang untuk mengisolasi queue RAG Pipeline dari key `lectura` (`bull:*`) yang sudah ada.
+  - Co-existence policy: Standard Prefix `rag_cv` dipasang di `apps/api/src/config/queue.config.ts` untuk mengisolasi queue RAG Pipeline dari 7 key `lectura` (`bull:*`) yang ada.
+  - Dukungan `REDIS_PASSWORD`, `REDIS_PREFIX`, dan Auto-TLS (`rediss://`) sudah terpasang di `env.ts`.
 - [x] **4. GitHub Repository Sync**: ✅ **TERHUBUNG**
   - URL Repo: `https://github.com/aditwicaksonodinus/resumix-ai.git` (Branch `main` & `dev`).
 - [ ] **5. AI Microservice (`apps/ai-service`)**: ⏳ **NEXT STEP**
