@@ -45,6 +45,11 @@ yarn-error.log*
 # Agent & Tooling artifacts
 .omo/
 .codegraph/
+.claude/
+.github/workflows/
+AGENTS.md
+docs/Desperated-AGENTS.md
+
 
 # Test & Coverage
 coverage/
