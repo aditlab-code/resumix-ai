@@ -156,4 +156,61 @@ chmod +x /opt/backup.sh
 
 ## ☁️ OPSI A: Managed Cloud Free-Tier Split (100% FREE / Rp 0 per bulan)
 
-*(Dokumentasi Opsi Gratis Opsi A dapat ditinjau lengkap pada versi sebelumnya: Vercel + Supabase + Upstash + Hugging Face Spaces + Render).*
+### 🧩 1. Pemetaan Layanan Free Tier
+
+| Service / Komponen | Stack | Platform | Limit & Spesifikasi Free Tier |
+| :--- | :--- | :--- | :--- |
+| **Frontend** (`apps/web`) | Next.js 14 | **Vercel** (Hobby Plan) | Edge Network, Unlimited GitHub CI/CD, SSL Otomatis. |
+| **Core API** (`apps/api`) | Node.js / Express | **Koyeb** / **Render.com** | 512MB RAM, Free Web Service. |
+| **Queue Worker** (`apps/api/src/worker`) | BullMQ Worker | **Koyeb** / **Render.com** | Background Worker Process. |
+| **AI Microservice** (`apps/ai-service`) | FastAPI (Python) | **Hugging Face Spaces** / **Koyeb** | Docker/FastAPI container (16GB RAM CPU gratis di HF Spaces). |
+| **Database** (`database`) | PostgreSQL 15+ + `pgvector` | **Supabase** | 500MB DB, `pgvector` extension pre-installed. |
+| **Queue Database** | Redis | **Upstash Redis** (Serverless) | 10.000 req/day, SSL Enabled. |
+| **Storage CV** | Private Object Storage | **Cloudflare R2** | 10GB Storage gratis + **Zero Egress Fees** (Bebas Biaya Transfer). |
+| **LLM Provider** | Llama 3 / Mixtral | **Groq Cloud API** | Free Tier Rate Limit tinggi. |
+
+---
+
+### 🔐 2. Catatan Khusus Upstash Redis (Shared Instance / Lectura Co-existence)
+
+> ⚠️ **PENTING**: Instance Upstash Redis (`real-macaw-187505.upstash.io`) saat ini **sudah digunakan** oleh proyek lain (`lectura`) yang menyimpan key BullMQ default:
+> - `bull:generation-queue:meta`
+> - `bull:ingestion-queue:1`
+> - `bull:ingestion-queue:events`
+> - `bull:ingestion-queue:failed`
+> - `bull:ingestion-queue:id`
+> - `bull:ingestion-queue:meta`
+> - `bull:quiz-generation-queue:meta`
+
+#### Policy Berdampingan (Co-existence Rule):
+1. **Key `lectura` TETAP DISIMPAN** dan **TIDAK BOLEH DIHAPUS**.
+2. Proyek RAG Pipeline ini **WAJIB menggunakan `prefix` khusus** pada konfigurasi BullMQ `apps/api`:
+   ```typescript
+   // Konfigurasi Queue di apps/api
+   export const cvQueue = new Queue('cv-parsing-queue', {
+     connection: {
+       host: process.env.REDIS_HOST, // real-macaw-187505.upstash.io
+       port: 6379,
+       password: process.env.REDIS_PASSWORD,
+       tls: {},
+     },
+     prefix: 'rag_cv', // Awalan unik agar terisolasi dari 'bull:*' milik lectura
+   });
+   ```
+3. Key RAG Pipeline di Redis akan otomatis berformat `rag_cv:cv-parsing-queue:...` sehingga 100% aman dan tidak saling mengganggu.
+
+---
+
+### 📦 3. Konfigurasi Cloudflare R2 (Private Storage)
+
+1. Buat Bucket Baru di Dashboard Cloudflare: `resumix-cv-bucket` (Set sebagai **Private**).
+2. Buat API Token S3-compatible di Cloudflare R2 dengan izin `Admin Read & Write`.
+3. Pasang Environment Variables di Core API (`apps/api`):
+   ```env
+   R2_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+   R2_ACCESS_KEY_ID=your_access_key_id
+   R2_SECRET_ACCESS_KEY=your_secret_access_key
+   R2_BUCKET_NAME=resumix-cv-bucket
+   ```
+4. Akses berkas PDF CV di UI/UX wajib menggunakan **Presigned URL** (`@aws-sdk/s3-request-presigner`) dengan `expiresIn: 900` (15 menit).
+
