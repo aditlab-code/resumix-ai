@@ -297,8 +297,6 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       prev.map((a) => (a.id === appId ? { ...a, parse_status: 'processing' } : a))
     );
 
-    await new Promise((r) => setTimeout(r, 1500));
-
     setApplications((prev) =>
       prev.map((a) =>
         a.id === appId

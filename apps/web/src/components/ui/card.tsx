@@ -31,13 +31,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = 'Card';
 
-export interface LegacyCardHeaderProps {
+export type CardHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
   title?: React.ReactNode;
   action?: React.ReactNode;
   subtitle?: React.ReactNode;
-}
-
-export type CardHeaderProps = React.HTMLAttributes<HTMLDivElement> & LegacyCardHeaderProps;
+};
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, title, subtitle, action, children, ...props }, ref) => {

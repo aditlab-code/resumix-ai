@@ -82,11 +82,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Footer Credentials & Copyright */}
       <div className="p-4 border-t border-slate-800 text-xs text-slate-400 space-y-1">
-        <div>© 2026 Resumix AI</div>
+        <div>© {new Date().getFullYear()} Resumix AI</div>
         <div>
           Created by{' '}
           <a
-            href="https://pradityawicaksono.com"
+            href={process.env.NEXT_PUBLIC_PORTFOLIO_URL || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-400 hover:text-blue-300 font-medium transition-colors hover:underline"

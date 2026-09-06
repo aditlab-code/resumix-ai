@@ -1,6 +1,11 @@
 import { ConnectionOptions, Queue } from 'bullmq';
 import { env } from './env';
 
+export const MAX_JOB_ATTEMPTS = 3;
+export const BACKOFF_DELAY_MS = 5000;
+export const REMOVE_ON_COMPLETE_COUNT = 100;
+export const REMOVE_ON_FAIL_COUNT = 500;
+
 export const redisConnectionOptions: ConnectionOptions = {
   host: env.REDIS_HOST,
   port: env.REDIS_PORT,
@@ -12,12 +17,12 @@ export const CV_PARSING_QUEUE_NAME = 'cv_processing_queue';
 export const cvParsingQueue = new Queue(CV_PARSING_QUEUE_NAME, {
   connection: redisConnectionOptions,
   defaultJobOptions: {
-    attempts: 3,
+    attempts: MAX_JOB_ATTEMPTS,
     backoff: {
       type: 'exponential',
-      delay: 5000,
+      delay: BACKOFF_DELAY_MS,
     },
-    removeOnComplete: 100,
-    removeOnFail: 500,
+    removeOnComplete: REMOVE_ON_COMPLETE_COUNT,
+    removeOnFail: REMOVE_ON_FAIL_COUNT,
   },
 });

@@ -1,6 +1,11 @@
 import re
 from typing import List
 
+# Text pruning thresholds
+MAX_PRUNED_CHARS = 2500
+SECTION_HEADER_MAX_LEN = 400
+LOW_QUALITY_THRESHOLD = 1500
+
 # Patterns for EEO disclaimers, legal policies, and diversity statements
 BOILERPLATE_EEO_PATTERNS = [
     r"equal opportunity employer[^\n.]*",
@@ -70,7 +75,7 @@ def extract_core_qualifications_sections(text: str) -> str:
         return ""
 
     # If text is concise (< 1500 chars), return as is after noise removal
-    if len(text.strip()) <= 1500:
+    if len(text.strip()) <= LOW_QUALITY_THRESHOLD:
         return text.strip()
 
     # Define high-value section header markers
@@ -92,14 +97,14 @@ def extract_core_qualifications_sections(text: str) -> str:
     matches = list(header_regex.finditer(text))
     if not matches:
         # Fallback: return the first 2500 characters if no explicit header matches
-        return text.strip()[:2500]
+        return text.strip()[:MAX_PRUNED_CHARS]
 
     extracted_blocks: List[str] = []
     # Include title / header block (text before first match if short)
     first_match_start = matches[0].start()
     if first_match_start > 0:
         title_block = text[:first_match_start].strip()
-        if len(title_block) <= 400:
+        if len(title_block) <= SECTION_HEADER_MAX_LEN:
             extracted_blocks.append(title_block)
 
     for i, match in enumerate(matches):

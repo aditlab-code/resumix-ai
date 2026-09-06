@@ -42,6 +42,10 @@ yarn-error.log*
 *.swp
 *.swo
 
+# Agent & Tooling artifacts
+.omo/
+.codegraph/
+
 # Test & Coverage
 coverage/
 .pytest_cache/

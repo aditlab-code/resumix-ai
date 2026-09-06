@@ -18,6 +18,9 @@ interface ExtractionFormProps {
   onCancel: () => void;
 }
 
+const DEFAULT_EDU_START = 2018;
+const DEFAULT_EDU_END = 2022;
+
 const splitList = (value: string) =>
   value
     .split(',')
@@ -101,8 +104,8 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
         institution: 'New University / Institute',
         degree: 'Bachelor',
         major: 'Computer Science',
-        start_year: 2018,
-        end_year: 2022,
+        start_year: DEFAULT_EDU_START,
+        end_year: DEFAULT_EDU_END,
       },
     ]);
   const updateEducation = (index: number, patch: Partial<EducationDTO>) =>
@@ -359,14 +362,14 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
-                        value={edu.start_year || 2018}
+                        value={edu.start_year || DEFAULT_EDU_START}
                         onChange={(e) => updateEducation(idx, { start_year: Number(e.target.value) })}
                         className="font-mono"
                       />
                       <span className="text-ink-subtle">to</span>
                       <Input
                         type="number"
-                        value={edu.end_year || 2022}
+                        value={edu.end_year || DEFAULT_EDU_END}
                         onChange={(e) => updateEducation(idx, { end_year: Number(e.target.value) })}
                         className="font-mono"
                       />

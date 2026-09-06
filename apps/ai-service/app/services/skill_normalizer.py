@@ -1,3 +1,4 @@
+import threading
 from typing import Dict, List, Set, Union
 
 SYNONYM_DICTIONARY: Dict[str, List[str]] = {
@@ -49,6 +50,7 @@ def normalize_skill_name(raw_name: str) -> str:
 
 
 DYNAMIC_TAXONOMY_REGISTRY: Dict[str, List[str]] = {}
+_taxonomy_lock = threading.Lock()
 
 
 def register_custom_taxonomy(canonical_name: str, synonyms: List[str]) -> Dict[str, List[str]]:
@@ -60,14 +62,17 @@ def register_custom_taxonomy(canonical_name: str, synonyms: List[str]) -> Dict[s
     clean_synonyms = [normalize_skill_name(s) for s in synonyms if s and isinstance(s, str)]
     clean_synonyms = [s for s in clean_synonyms if s]
 
-    DYNAMIC_TAXONOMY_REGISTRY[key] = clean_synonyms
+    with _taxonomy_lock:
+        DYNAMIC_TAXONOMY_REGISTRY[key] = clean_synonyms
     return DYNAMIC_TAXONOMY_REGISTRY
 
 
 def get_all_taxonomies() -> Dict[str, List[str]]:
     """Get merged dictionary of static SYNONYM_DICTIONARY and dynamic custom taxonomies."""
     merged = {k: list(v) for k, v in SYNONYM_DICTIONARY.items()}
-    for k, v in DYNAMIC_TAXONOMY_REGISTRY.items():
+    with _taxonomy_lock:
+        dynamic_snapshot = {k: list(v) for k, v in DYNAMIC_TAXONOMY_REGISTRY.items()}
+    for k, v in dynamic_snapshot.items():
         if k in merged:
             merged[k] = list(set(merged[k] + v))
         else:

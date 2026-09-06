@@ -18,6 +18,9 @@ const centerSizeClass: Record<OverlaySize, string> = {
   '3xl': 'max-w-3xl',
 };
 
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])';
+
 interface OverlayProps {
   isOpen: boolean;
   onClose: () => void;
@@ -43,6 +46,60 @@ export const Overlay: React.FC<OverlayProps> = ({
   children,
   bodyClassName,
 }) => {
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  const getFocusableElements = React.useCallback(() => {
+    if (!contentRef.current) return [];
+    return Array.from(contentRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+  }, []);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const timer = setTimeout(() => {
+      const focusableEls = getFocusableElements();
+      if (focusableEls.length > 0) {
+        focusableEls[0].focus();
+      }
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, getFocusableElements]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      if (e.key !== 'Tab') return;
+
+      const focusableEls = getFocusableElements();
+      if (focusableEls.length === 0) return;
+
+      const firstEl = focusableEls[0];
+      const lastEl = focusableEls[focusableEls.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, getFocusableElements]);
+
   if (variant === 'side') {
     return (
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -56,7 +113,10 @@ export const Overlay: React.FC<OverlayProps> = ({
             {header}
           </SheetHeader>
           {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
-          <div className={cn('flex-1 overflow-y-auto px-8 py-6 text-sm text-foreground', bodyClassName)}>
+          <div
+            ref={contentRef}
+            className={cn('flex-1 overflow-y-auto px-8 py-6 text-sm text-foreground', bodyClassName)}
+          >
             {children}
           </div>
           {footer && (
@@ -81,7 +141,10 @@ export const Overlay: React.FC<OverlayProps> = ({
           {header}
         </DialogHeader>
         {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
-        <div className={cn('flex-1 max-h-[75vh] overflow-y-auto px-8 py-6 text-sm text-foreground', bodyClassName)}>
+        <div
+          ref={contentRef}
+          className={cn('flex-1 max-h-[75vh] overflow-y-auto px-8 py-6 text-sm text-foreground', bodyClassName)}
+        >
           {children}
         </div>
         {footer && (

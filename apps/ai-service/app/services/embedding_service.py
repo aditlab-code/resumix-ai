@@ -1,5 +1,6 @@
 import os
 import math
+import threading
 from typing import Any, Dict, List, Union
 from sentence_transformers import SentenceTransformer
 
@@ -7,11 +8,15 @@ DEFAULT_EMBEDDING_MODEL_NAME = os.getenv(
     "EMBEDDING_MODEL_NAME", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 )
 
+# Embedding vector dimension for the model
+EMBEDDING_DIMENSION = 384
+
 DEFAULT_MODEL_CACHE_DIR = os.getenv(
     "MODEL_CACHE_DIR", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "models"))
 )
 
 _model_instance: SentenceTransformer | None = None
+_model_lock = threading.Lock()
 
 
 def get_embedding_model(model_name: str | None = None, cache_dir: str | None = None) -> SentenceTransformer:
@@ -20,9 +25,13 @@ def get_embedding_model(model_name: str | None = None, cache_dir: str | None = N
     name = model_name or DEFAULT_EMBEDDING_MODEL_NAME
     folder = cache_dir or DEFAULT_MODEL_CACHE_DIR
 
-    if _model_instance is None:
+    if _model_instance is not None:
+        return _model_instance
+    with _model_lock:
+        if _model_instance is not None:
+            return _model_instance
         _model_instance = SentenceTransformer(name, cache_folder=folder)
-    return _model_instance
+        return _model_instance
 
 
 def generate_embedding(text: str, model_name: str | None = None) -> List[float]:
@@ -30,7 +39,7 @@ def generate_embedding(text: str, model_name: str | None = None) -> List[float]:
     Handles empty text gracefully by returning a zero vector of dimension 384.
     """
     if not text or not text.strip():
-        return [0.0] * 384
+        return [0.0] * EMBEDDING_DIMENSION
 
     model = get_embedding_model(model_name)
     embedding = model.encode(text.strip(), convert_to_numpy=True, normalize_embeddings=True)

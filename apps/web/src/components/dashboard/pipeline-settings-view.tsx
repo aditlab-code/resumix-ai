@@ -54,6 +54,8 @@ const DEFAULT_TAXONOMIES: SkillTaxonomyItem[] = [
   { id: 'tax-8', canonical_name: 'Machine Learning', synonyms: ['ml', 'scikit-learn', 'sklearn'], category: 'data_ai' },
 ];
 
+const DEFAULT_MODEL_NAME = 'mixtral-8x7b-32768';
+
 const DEFAULT_DECISION_PROMPT = `You are a Senior HR System Auditor. Analyze candidate qualifications based on extracted resume data, Job-Fit Score, matched/missing mandatory skills, and total experience duration. Provide an objective 2-3 sentence Summary Decision with a clear screening recommendation (HIGHLY RECOMMENDED, SPECIAL REVIEW RECOMMENDED, or NOT RECOMMENDED).`;
 const DEFAULT_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY || '';
 
@@ -550,7 +552,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 <Select value={llmModel} onChange={(e) => setLlmModel(e.target.value)}>
                   <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fast & Precise)</option>
                   <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
-                  <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+                  <option value={DEFAULT_MODEL_NAME}>{DEFAULT_MODEL_NAME}</option>
                 </Select>
               </Field>
             </div>

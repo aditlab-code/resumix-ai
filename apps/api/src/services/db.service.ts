@@ -102,12 +102,22 @@ export class DBService {
    * Save Candidate Normalized Skills
    */
   async saveCandidateSkills(candidateId: string, documentId: string, skills: string[]): Promise<void> {
-    for (const skill of skills) {
-      await this.pool.query(
-        `INSERT INTO candidate_skills (candidate_id, document_id, skill_name, normalized_skill)
-         VALUES ($1, $2, $3, $4)`,
-        [candidateId, documentId, skill, skill]
-      );
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const skill of skills) {
+        await client.query(
+          `INSERT INTO candidate_skills (candidate_id, document_id, skill_name, normalized_skill)
+           VALUES ($1, $2, $3, $4)`,
+          [candidateId, documentId, skill, skill]
+        );
+      }
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
     }
   }
 
@@ -115,21 +125,31 @@ export class DBService {
    * Save Candidate Educations History
    */
   async saveCandidateEducations(candidateId: string, documentId: string, educations: EducationDTO[]): Promise<void> {
-    for (const edu of educations) {
-      await this.pool.query(
-        `INSERT INTO candidate_educations (candidate_id, document_id, institution, degree, major, start_year, end_year, gpa)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [
-          candidateId,
-          documentId,
-          edu.institution || null,
-          edu.degree || null,
-          edu.major || null,
-          edu.start_year || null,
-          edu.end_year || null,
-          edu.gpa ? String(edu.gpa) : null,
-        ]
-      );
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const edu of educations) {
+        await client.query(
+          `INSERT INTO candidate_educations (candidate_id, document_id, institution, degree, major, start_year, end_year, gpa)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            candidateId,
+            documentId,
+            edu.institution || null,
+            edu.degree || null,
+            edu.major || null,
+            edu.start_year || null,
+            edu.end_year || null,
+            edu.gpa ? String(edu.gpa) : null,
+          ]
+        );
+      }
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
     }
   }
 
@@ -176,43 +196,54 @@ export class DBService {
     const skillVectorString = this.formatVector(data.job_skill_embedding);
     const roleVectorString = this.formatVector(data.job_role_embedding);
 
-    const query = `
-      INSERT INTO job_postings (
-        title, description, minimum_experience_months, job_embedding,
-        job_skill_embedding, job_role_embedding
-      ) VALUES ($1, $2, $3, $4::vector, $5::vector, $6::vector)
-      RETURNING id;
-    `;
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
 
-    const result = await this.pool.query(query, [
-      data.title,
-      data.description,
-      data.minimum_experience_months || 0,
-      vectorString,
-      skillVectorString,
-      roleVectorString,
-    ]);
+      const query = `
+        INSERT INTO job_postings (
+          title, description, minimum_experience_months, job_embedding,
+          job_skill_embedding, job_role_embedding
+        ) VALUES ($1, $2, $3, $4::vector, $5::vector, $6::vector)
+        RETURNING id;
+      `;
 
-    const jobId = result.rows[0].id;
+      const result = await client.query(query, [
+        data.title,
+        data.description,
+        data.minimum_experience_months || 0,
+        vectorString,
+        skillVectorString,
+        roleVectorString,
+      ]);
 
-    // Insert required skills
-    for (const skill of data.mandatory_skills) {
-      await this.pool.query(
-        `INSERT INTO job_required_skills (job_id, skill_name, normalized_skill, is_mandatory) VALUES ($1, $2, $3, true)`,
-        [jobId, skill, skill.toLowerCase().trim()]
-      );
-    }
+      const jobId = result.rows[0].id;
 
-    if (data.preferred_skills) {
-      for (const skill of data.preferred_skills) {
-        await this.pool.query(
-          `INSERT INTO job_required_skills (job_id, skill_name, normalized_skill, is_mandatory) VALUES ($1, $2, $3, false)`,
+      // Insert required skills
+      for (const skill of data.mandatory_skills) {
+        await client.query(
+          `INSERT INTO job_required_skills (job_id, skill_name, normalized_skill, is_mandatory) VALUES ($1, $2, $3, true)`,
           [jobId, skill, skill.toLowerCase().trim()]
         );
       }
-    }
 
-    return jobId;
+      if (data.preferred_skills) {
+        for (const skill of data.preferred_skills) {
+          await client.query(
+            `INSERT INTO job_required_skills (job_id, skill_name, normalized_skill, is_mandatory) VALUES ($1, $2, $3, false)`,
+            [jobId, skill, skill.toLowerCase().trim()]
+          );
+        }
+      }
+
+      await client.query('COMMIT');
+      return jobId;
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -312,9 +343,19 @@ export class DBService {
   }
 
   async deleteJob(jobId: string): Promise<void> {
-    await this.pool.query(`DELETE FROM applications WHERE job_id = $1;`, [jobId]);
-    await this.pool.query(`DELETE FROM job_required_skills WHERE job_id = $1;`, [jobId]);
-    await this.pool.query(`DELETE FROM job_postings WHERE id = $1;`, [jobId]);
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(`DELETE FROM applications WHERE job_id = $1;`, [jobId]);
+      await client.query(`DELETE FROM job_required_skills WHERE job_id = $1;`, [jobId]);
+      await client.query(`DELETE FROM job_postings WHERE id = $1;`, [jobId]);
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   }
 
   async close(): Promise<void> {

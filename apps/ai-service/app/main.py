@@ -4,7 +4,7 @@ from app.schemas.cv_schema import JobFitScoreBreakdown
 from app.services.pdf_extractor import extract_pdf_text
 from app.services.skill_normalizer import normalize_skill_name
 from app.services.scoring_service import compute_job_fit_score
-from app.services.llm_provider import function_extract_via_groq
+from app.services.llm_provider import function_extract_via_groq, DEFAULT_GROQ_MODEL
 from app.services.embedding_service import (
     DEFAULT_EMBEDDING_MODEL_NAME,
     generate_embedding,
@@ -27,7 +27,7 @@ def health_check():
         "status": "ok",
         "service": "ai-service",
         "provider": "groq",
-        "model": "llama-3.1-8b-instant",
+        "model": DEFAULT_GROQ_MODEL,
         "embedding_model": DEFAULT_EMBEDDING_MODEL_NAME,
     }
 
@@ -80,7 +80,7 @@ async def llm_extract_endpoint(raw_text: str = Body(..., embed=True)):
         extraction = await function_extract_via_groq(raw_text)
         return {
             "provider": "groq",
-            "model": "llama-3.1-8b-instant",
+            "model": DEFAULT_GROQ_MODEL,
             "extraction": extraction
         }
     except Exception as exc:

@@ -89,7 +89,7 @@ export const DeleteCandidateModal: React.FC<DeleteCandidateModalProps> = ({
             <label className="block text-xs font-semibold text-foreground">
               Candidate Name Confirmation
             </label>
-            <span className="text-[11px] text-muted-foreground italic">Case-sensitive</span>
+            <span className="text-[11px] text-muted-foreground italic">Case-insensitive</span>
           </div>
           
           {/* Enhanced Target Name Badge Box */}

@@ -122,8 +122,8 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
                 </div>
                 <div className="w-full bg-muted rounded-full h-2 overflow-hidden relative">
                   <div
-                    className="bg-primary h-full rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(100, Math.max(0, app.job_fit_score))}%` }}
+                    className="bg-primary h-full rounded-full transition-all duration-500 w-[var(--width)]"
+                    style={{ '--width': `${Math.min(100, Math.max(0, app.job_fit_score))}%` } as React.CSSProperties}
                   />
                 </div>
               </div>

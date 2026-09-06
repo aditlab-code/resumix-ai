@@ -83,24 +83,24 @@ export default function DashboardPage() {
               </div>
               <div className="w-full bg-surface-sunken h-2.5 rounded-pill overflow-hidden flex">
                 <div
-                  className="bg-slate-400 h-full"
-                  style={{ width: `${(statusCounts.applied / totalApplications) * 100}%` }}
+                  className="bg-slate-400 h-full w-[var(--width)]"
+                  style={{ '--width': `${(statusCounts.applied / totalApplications) * 100}%` } as React.CSSProperties}
                 />
                 <div
-                  className="bg-blue-500 h-full"
-                  style={{ width: `${(statusCounts.screening / totalApplications) * 100}%` }}
+                  className="bg-blue-500 h-full w-[var(--width)]"
+                  style={{ '--width': `${(statusCounts.screening / totalApplications) * 100}%` } as React.CSSProperties}
                 />
                 <div
-                  className="bg-purple-500 h-full"
-                  style={{ width: `${(statusCounts.interview / totalApplications) * 100}%` }}
+                  className="bg-purple-500 h-full w-[var(--width)]"
+                  style={{ '--width': `${(statusCounts.interview / totalApplications) * 100}%` } as React.CSSProperties}
                 />
                 <div
-                  className="bg-emerald-500 h-full"
-                  style={{ width: `${(statusCounts.hired / totalApplications) * 100}%` }}
+                  className="bg-emerald-500 h-full w-[var(--width)]"
+                  style={{ '--width': `${(statusCounts.hired / totalApplications) * 100}%` } as React.CSSProperties}
                 />
                 <div
-                  className="bg-rose-500 h-full"
-                  style={{ width: `${(statusCounts.rejected / totalApplications) * 100}%` }}
+                  className="bg-rose-500 h-full w-[var(--width)]"
+                  style={{ '--width': `${(statusCounts.rejected / totalApplications) * 100}%` } as React.CSSProperties}
                 />
               </div>
             </div>

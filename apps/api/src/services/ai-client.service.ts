@@ -1,5 +1,15 @@
 import { env } from '../config/env';
 
+const AI_ENDPOINTS = {
+  HEALTH: '/health',
+  EXTRACT_TEXT: '/v1/cv/extract-text',
+  LLM_EXTRACT: '/v1/cv/llm-extract',
+  NORMALIZE_SKILLS: '/v1/cv/normalize-skills',
+  GENERATE_EMBEDDING: '/v1/cv/generate-embedding',
+  CALCULATE_SCORE: '/v1/cv/calculate-score',
+  EXTRACT_QUALIFICATIONS: '/v1/job/extract-qualifications',
+} as const;
+
 export interface AIServiceHealth {
   status: string;
   service: string;
@@ -54,7 +64,7 @@ export class AIClientService {
   }
 
   async checkHealth(): Promise<AIServiceHealth> {
-    const res = await fetch(`${this.baseUrl}/health`);
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.HEALTH}`);
     if (!res.ok) {
       throw new Error(`AI Service Health Check Failed: ${res.statusText}`);
     }
@@ -66,7 +76,7 @@ export class AIClientService {
     const formData = new FormData();
     formData.append('file', blob, filename);
 
-    const res = await fetch(`${this.baseUrl}/v1/cv/extract-text`, {
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.EXTRACT_TEXT}`, {
       method: 'POST',
       body: formData,
     });
@@ -80,7 +90,7 @@ export class AIClientService {
   }
 
   async extractViaLLM(rawText: string): Promise<{ provider: string; model: string; extraction: any }> {
-    const res = await fetch(`${this.baseUrl}/v1/cv/llm-extract`, {
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.LLM_EXTRACT}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ raw_text: rawText }),
@@ -95,7 +105,7 @@ export class AIClientService {
   }
 
   async normalizeSkills(skills: string[]): Promise<{ skills: string[]; normalized_skills: string[] }> {
-    const res = await fetch(`${this.baseUrl}/v1/cv/normalize-skills`, {
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.NORMALIZE_SKILLS}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(skills),
@@ -110,7 +120,7 @@ export class AIClientService {
   }
 
   async generateEmbedding(params: { text?: string; cv_extraction?: any }): Promise<EmbeddingResponse> {
-    const res = await fetch(`${this.baseUrl}/v1/cv/generate-embedding`, {
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.GENERATE_EMBEDDING}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -138,7 +148,7 @@ export class AIClientService {
     candidate_role_embedding?: number[];
     job_role_embedding?: number[];
   }): Promise<JobFitScoreBreakdown> {
-    const res = await fetch(`${this.baseUrl}/v1/cv/calculate-score`, {
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.CALCULATE_SCORE}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(params),
@@ -168,7 +178,7 @@ export class AIClientService {
     job_role_embedding?: number[];
     dimensions: number;
   }> {
-    const res = await fetch(`${this.baseUrl}/v1/job/extract-qualifications`, {
+    const res = await fetch(`${this.baseUrl}${AI_ENDPOINTS.EXTRACT_QUALIFICATIONS}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ raw_text: rawJobText }),

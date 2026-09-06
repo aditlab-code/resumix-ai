@@ -3,9 +3,12 @@ import json
 import httpx
 from typing import Any, Dict, Optional
 
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_API_URL = os.environ.get("GROQ_API_URL", "https://api.groq.com/openai/v1/chat/completions")
 DEFAULT_GROQ_API_KEY = os.getenv("GROQ_API_KEY") or os.getenv("LLM_API_KEY", "")
-DEFAULT_GROQ_MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
+DEFAULT_GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.1-8b-instant")
+
+# Maximum characters to send to LLM for CV extraction
+MAX_LLM_INPUT_CHARS = 6000
 
 SYSTEM_PROMPT = """You are an expert AI ATS System parser. Analyze the provided CV raw text and extract ALL structured facts without skipping any entry.
 OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
@@ -93,7 +96,7 @@ async def function_extract_via_groq(
     "model": selected_model,
     "messages": [
       {"role": "system", "content": SYSTEM_PROMPT},
-      {"role": "user", "content": f"Extract candidate profile from this CV text:\n\n{pruned_text[:6000]}"}
+      {"role": "user", "content": f"Extract candidate profile from this CV text:\n\n{pruned_text[:MAX_LLM_INPUT_CHARS]}"}
     ],
     "temperature": 0.1,
     "response_format": {"type": "json_object"}

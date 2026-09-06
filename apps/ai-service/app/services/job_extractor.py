@@ -3,6 +3,9 @@ import httpx
 from typing import Any, Dict, Optional
 from app.services.llm_provider import GROQ_API_URL, DEFAULT_GROQ_API_KEY, DEFAULT_GROQ_MODEL
 
+# Maximum characters to send to LLM for job description extraction
+MAX_JOB_INPUT_CHARS = 6000
+
 JOB_EXTRACTION_SYSTEM_PROMPT = """You are an expert AI HR ATS Job Description Parser. Analyze the provided raw job posting text (from LinkedIn, Glints, or Job Street across ANY tech/engineering domain) and extract structured job requirements.
 OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
 {
@@ -58,7 +61,7 @@ async def extract_job_qualifications_via_groq(
         "model": selected_model,
         "messages": [
             {"role": "system", "content": JOB_EXTRACTION_SYSTEM_PROMPT},
-            {"role": "user", "content": f"Extract job requirements from this job description text:\n\n{pruned_text[:6000]}"},
+            {"role": "user", "content": f"Extract job requirements from this job description text:\n\n{pruned_text[:MAX_JOB_INPUT_CHARS]}"},
         ],
         "temperature": 0.1,
         "response_format": {"type": "json_object"},

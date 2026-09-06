@@ -3,6 +3,22 @@ from app.schemas.cv_schema import JobFitScoreBreakdown
 from app.services.skill_normalizer import evaluate_mandatory_and_preferred_skills
 from app.services.experience_calculator import calculate_relevant_experience_months
 
+# Scoring Weights (must sum to 1.0)
+SKILL_SEMANTIC_WEIGHT = 0.25
+ROLE_SEMANTIC_WEIGHT = 0.20
+MANDATORY_SKILL_WEIGHT = 0.30
+EXPERIENCE_WEIGHT = 0.20
+PREFERRED_SKILL_WEIGHT = 0.05
+
+# Skill/Role semantic similarity ratio for combined score
+SKILL_ROLE_RATIO = 0.55
+COMBINED_SEMANTIC_WEIGHT = 0.45
+
+# Mandatory skill penalty factors
+HIGH_PENALTY = 0.75  # 1 missing mandatory skill → 25% discount
+MEDIUM_PENALTY = 0.50  # 2 missing mandatory skills → 50% discount
+LOW_PENALTY = 0.25  # 3+ missing mandatory skills → 75% discount
+
 
 def compute_job_fit_score(
     candidate_skills: list[str],
@@ -63,24 +79,22 @@ def compute_job_fit_score(
     if missing_count == 0:
         penalty_factor = 1.0
     elif missing_count == 1:
-        penalty_factor = 0.75  # 25% discount
+        penalty_factor = HIGH_PENALTY
     elif missing_count == 2:
-        penalty_factor = 0.50  # 50% discount
+        penalty_factor = MEDIUM_PENALTY
     else:
-        penalty_factor = 0.25  # 75% discount
+        penalty_factor = LOW_PENALTY
 
-    # Weights: 25% skill_semantic, 20% role_semantic, 30% mandatory skills, 20% experience, 5% preferred skills
-    w_skill_sem, w_role_sem, w_man, w_exp, w_pref = 0.25, 0.20, 0.30, 0.20, 0.05
     raw_score = 100 * (
-        w_skill_sem * clamped_skill_sim
-        + w_role_sem * clamped_role_sim
-        + w_man * mandatory_score
-        + w_exp * experience_score
-        + w_pref * preferred_score
+        SKILL_SEMANTIC_WEIGHT * clamped_skill_sim
+        + ROLE_SEMANTIC_WEIGHT * clamped_role_sim
+        + MANDATORY_SKILL_WEIGHT * mandatory_score
+        + EXPERIENCE_WEIGHT * experience_score
+        + PREFERRED_SKILL_WEIGHT * preferred_score
     )
 
     final_score = round(max(0.0, min(100.0, raw_score * penalty_factor)), 1)
-    combined_sem_sim = round(0.55 * clamped_skill_sim + 0.45 * clamped_role_sim, 2)
+    combined_sem_sim = round(SKILL_ROLE_RATIO * clamped_skill_sim + COMBINED_SEMANTIC_WEIGHT * clamped_role_sim, 2)
 
     return JobFitScoreBreakdown(
         score_version="v2",

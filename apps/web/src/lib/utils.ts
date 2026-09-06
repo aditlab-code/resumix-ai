@@ -144,7 +144,7 @@ export function reconstructPdfLines(
   return lines.join('\n');
 }
 
-export function cleanOcrText(text: string): string {
+function cleanOcrText(text: string): string {
   if (!text) return '';
   let cleaned = text.replace(/([a-zA-Z]{2,})-\s*\r?\n\s*([a-zA-Z]{2,})/g, '$1$2');
   cleaned = cleaned.replace(/([a-zA-Z]{2,})-\s+([a-zA-Z]{2,})/g, '$1-$2');
@@ -277,7 +277,7 @@ const splitSubtitleTech = (rest: string): { subtitle: string; tech: string[] } =
   return { subtitle: rest.trim(), tech: [] };
 };
 
-export function parseProjectEntries(fullText: string): ProjectEntry[] {
+function parseProjectEntries(fullText: string): ProjectEntry[] {
   const sections = extractCVSections(fullText);
   const src = sections.projects && sections.projects.trim().length > 20 ? sections.projects : '';
   if (!src) return [];
@@ -415,7 +415,7 @@ const INSTITUTION_RE =
   /\b(Universitas|University|Institut(?:e)?|Politeknik|Polytechnic|STMIK|STIE|STT|Sekolah\s+Tinggi|Academy|Akademi|College|Madrasah\s+Aliyah|Madrasah\s+Tsanawiyah|Madrasah\s+Ibtidaiyah|SMA(?:\s+Negeri)?|SMK(?:\s+Negeri)?|SMP(?:\s+Negeri)?|SD(?:\s+Negeri)?|MAN|MTsN?|MIN?)\b/i;
 
 /** Map a degree line to a normalised Indonesian qualification label. */
-export function classifyDegree(text: string): string {
+function classifyDegree(text: string): string {
   const t = ` ${text.toLowerCase()} `;
   if (/\b(s-?3|doktor(al)?|ph\.?\s?d|d\.?phil|doctor(ate)?)\b|\bdr\.\s/.test(t)) return 'Doktoral (S3 / Ph.D)';
   if (/\b(s-?2|magister|master(?:'s)?|m\.kom|m\.t\b|m\.sc|m\.eng|m\.si|m\.pd|m\.ba|mba|m\.hum|m\.h\b|m\.m\b|m\.e\b)\b/.test(t))
@@ -443,7 +443,7 @@ const degreeRank = (d = ''): number => {
   return 7;
 };
 
-export function sortEducations(list: EducationDTO[]): EducationDTO[] {
+function sortEducations(list: EducationDTO[]): EducationDTO[] {
   return [...list].sort(
     (a, b) =>
       degreeRank(a.degree || '') - degreeRank(b.degree || '') ||

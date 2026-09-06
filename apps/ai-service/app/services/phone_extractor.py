@@ -1,5 +1,9 @@
 import re
 
+# Phone digit length bounds
+MIN_PHONE_DIGITS = 7
+MAX_PHONE_DIGITS = 15
+
 
 def normalize_phone_number(raw: str) -> str:
     """Normalize extracted phone string into standard format.
@@ -12,7 +16,7 @@ def normalize_phone_number(raw: str) -> str:
     cleaned = re.sub(r"[^\d+()\- ]", "", cleaned).strip()
     digits_only = re.sub(r"\D", "", cleaned)
 
-    if len(digits_only) < 7 or len(digits_only) > 15:
+    if len(digits_only) < MIN_PHONE_DIGITS or len(digits_only) > MAX_PHONE_DIGITS:
         return ""
 
     # Indonesian Landline with area code e.g. (021) 8852574 or 021-8852574

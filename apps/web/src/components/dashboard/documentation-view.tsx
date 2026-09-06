@@ -96,8 +96,8 @@ const renderInlineContent = (text: string): React.ReactNode => {
           return (
             <span key={i} className="inline-flex items-center gap-1.5 align-middle my-0.5">
               <span
-                className="inline-block w-4 h-4 rounded border border-surface-border shadow-2xs shrink-0"
-                style={{ backgroundColor: hexColor }}
+                className="inline-block w-4 h-4 rounded border border-surface-border shadow-2xs shrink-0 bg-[var(--bg-color)]"
+                style={{ '--bg-color': hexColor } as React.CSSProperties}
                 title={hexColor}
               />
               <span className="font-mono text-[11px] font-bold text-ink-default">{hexColor}</span>

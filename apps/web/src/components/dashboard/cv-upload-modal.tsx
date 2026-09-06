@@ -31,6 +31,8 @@ interface CvUploadModalProps {
   onUploadSuccess: (newApp: CandidateApplication) => void;
 }
 
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
 const IGNORED_HEADER_KEYWORDS = [
   'curriculum', 'vitae', 'resume', 'biodata', 'profile', 'profil', 'application',
   'lamaran', 'halaman', 'page', 'software engineer', 'fullstack', 'backend', 'frontend',
@@ -285,7 +287,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       return;
     }
 
-    if (selectedFile.size > 10 * 1024 * 1024) {
+    if (selectedFile.size > MAX_FILE_SIZE_BYTES) {
       setErrorMsg('Ukuran berkas melebihi batas maksimum 10 MB.');
       return;
     }
@@ -320,13 +322,8 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     setErrorMsg(null);
     setCurrentStep('uploaded');
 
-    await new Promise((r) => setTimeout(r, 600));
     setCurrentStep('queued');
-
-    await new Promise((r) => setTimeout(r, 800));
     setCurrentStep('processing');
-
-    await new Promise((r) => setTimeout(r, 1200));
 
     const activeJob = jobs.find((j) => j.id === jobId) || jobs[0];
     const realData = await parsePdfMetadataWithPdfJs(file, activeJob);

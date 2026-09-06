@@ -324,6 +324,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
             disabled={currentPage <= 1}
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             className={iconBtn}
+            aria-label="Previous page"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -334,6 +335,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
             disabled={currentPage >= totalPages}
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             className={iconBtn}
+            aria-label="Next page"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -372,9 +374,11 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
           <div
             className="w-full max-w-2xl bg-card border border-border rounded-xl p-6 text-foreground space-y-5 transition-transform duration-300 shadow-sm"
             style={{
-              transform: `scale(${zoomLevel / 100}) rotate(${rotation}deg)`,
+              '--scale': zoomLevel / 100,
+              '--rotation': `${rotation}deg`,
+              transform: `scale(var(--scale)) rotate(var(--rotation))`,
               transformOrigin: 'top center',
-            }}
+            } as React.CSSProperties}
           >
             <div className="border-b border-border pb-3">
               <h2 className="text-lg font-extrabold tracking-tight uppercase text-foreground">

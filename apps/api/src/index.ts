@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { randomUUID } from 'crypto';
 import { env } from './config/env';
 import { errorHandler } from './middleware/error.middleware';
 import { aiClient } from './services/ai-client.service';
@@ -15,8 +16,9 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 // Initialize BullMQ Worker in background
+let cvWorker: ReturnType<typeof startCVProcessingWorker> | undefined;
 try {
-  startCVProcessingWorker();
+  cvWorker = startCVProcessingWorker();
   console.log('[Core API] Async BullMQ CV Processing Worker initialized.');
 } catch (err) {
   console.warn('[Core API] Warning: Failed to start BullMQ Worker (Redis might be offline):', err);
@@ -146,9 +148,9 @@ router.post('/jobs/:jobId/applications', async (req, res, next) => {
     const { jobId } = req.params;
     const { filename, file_base64, job_criteria } = req.body;
 
-    const applicationId = `app-${Date.now()}`;
-    const documentId = `doc-${Date.now()}`;
-    const processingJobId = `proc-${Date.now()}`;
+    const applicationId = `app-${randomUUID()}`;
+    const documentId = `doc-${randomUUID()}`;
+    const processingJobId = `proc-${randomUUID()}`;
 
     // Enqueue to Redis BullMQ Queue if file_base64 supplied
     if (file_base64 && filename) {
@@ -290,6 +292,13 @@ const server = app.listen(env.PORT, () => {
 
 const gracefulShutdown = async (signal: string) => {
   console.log(`[Core API] Received ${signal}. Shutting down gracefully...`);
+
+  // Stop accepting new jobs and drain in-flight jobs before closing server
+  if (cvWorker) {
+    await cvWorker.close();
+    console.log('[Core API] BullMQ Worker drained and closed.');
+  }
+
   server.close(async () => {
     try {
       await dbService.close();

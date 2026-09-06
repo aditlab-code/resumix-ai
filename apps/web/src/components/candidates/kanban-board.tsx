@@ -107,7 +107,15 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                     <div
                       key={app.id}
                       className="group relative bg-card border border-border hover:border-primary/50 rounded-lg p-3.5 shadow-sm transition-all cursor-pointer"
+                      role="button"
+                      tabIndex={0}
                       onClick={() => onSelectCandidate(app)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectCandidate(app);
+                        }
+                      }}
                     >
                       {/* Header: Name & Score */}
                       <div className="flex items-start justify-between gap-2 mb-2">
@@ -181,6 +189,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                           <button
                             onClick={() => onDeleteCandidate(app)}
                             className="text-muted-foreground hover:text-destructive transition-colors p-1.5 rounded-md hover:bg-destructive/10 focus-ring"
+                            aria-label="Delete candidate"
                             title="Delete Candidate"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
