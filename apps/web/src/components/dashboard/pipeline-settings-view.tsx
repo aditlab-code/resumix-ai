@@ -112,6 +112,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
   // 15-Minute Session Active Timer State (900 seconds)
   const [sessionSecondsLeft, setSessionSecondsLeft] = useState<number>(900);
+  const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [isSessionLocked, setIsSessionLocked] = useState<boolean>(false);
 
   // Connection Test State
@@ -170,15 +171,16 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     setDictPage(1);
   }, [searchTerm, activeCategoryFilter]);
 
-  // 15-Minute Countdown Timer Effect
+  // 15-Minute Countdown Timer Effect (Only ticks when activeTab === 'llm' AND isSessionActive AND NOT isSessionLocked)
   useEffect(() => {
-    if (activeTab !== 'llm' || isSessionLocked) return;
+    if (activeTab !== 'llm' || !isSessionActive || isSessionLocked) return;
 
     const timer = setInterval(() => {
       setSessionSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           setIsSessionLocked(true);
+          setIsSessionActive(false);
           setLlmApiKey(''); // Lock & clear key for security
           if (onAddToast) {
             onAddToast('error', 'LLM Session Expired', 'The 15-minute active session has ended for security.');
@@ -190,10 +192,11 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [activeTab, isSessionLocked, onAddToast]);
+  }, [activeTab, isSessionActive, isSessionLocked, onAddToast]);
 
   const handleExtendSession = () => {
     setSessionSecondsLeft(900);
+    setIsSessionActive(true);
     setIsSessionLocked(false);
     if (onAddToast) {
       onAddToast('info', 'Session Extended', 'Active session renewed for +15 minutes.');
@@ -207,7 +210,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   };
 
   const effectiveModelName = selectedModelOption === 'custom' ? customModelInput.trim() : selectedModelOption;
-  const isFormValid = llmProvider.trim() !== '' && llmApiKey.trim() !== '' && effectiveModelName !== '' && !isSessionLocked;
+  const isFormValid = llmProvider.trim() !== '' && llmApiKey.trim() !== '' && effectiveModelName !== '';
 
   const handleProviderChange = (newProvider: string) => {
     setLlmProvider(newProvider);
@@ -711,14 +714,34 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       {/* Tab 3: Aturan LLM & Guardrails */}
       {activeTab === 'llm' && (
         <Card className="p-6 space-y-6">
-          {/* Header & 15-Min Session Active Timer Badge (No emojis, Lucide icons only) */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-900 text-white border border-slate-800 shadow-sm">
-            <div className="flex items-center gap-2.5">
-              <Clock className={cn("w-4 h-4", isSessionLocked ? "text-rose-400" : "text-emerald-400")} />
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                <span className="text-xs font-semibold text-slate-200">15-Minute Session Active Window:</span>
-                <span className={cn("text-xs font-mono font-bold tracking-wider px-2 py-0.5 rounded", isSessionLocked ? "bg-rose-500/20 text-rose-300 border border-rose-500/30" : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30")}>
-                  {isSessionLocked ? 'EXPIRED' : `${formatTimer(sessionSecondsLeft)} remaining`}
+          {/* Header & 15-Min Session Active Timer Badge (Light Theme Styling) */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 text-foreground border border-slate-200 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "p-2 rounded-lg shrink-0 border",
+                isSessionLocked
+                  ? "bg-rose-100 text-rose-700 border-rose-200"
+                  : isSessionActive
+                  ? "bg-emerald-100 text-emerald-700 border-emerald-200 animate-pulse"
+                  : "bg-amber-100 text-amber-700 border-amber-200"
+              )}>
+                <Clock className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
+                <span className="text-xs font-semibold text-slate-800">15-Minute Session Active Window:</span>
+                <span className={cn(
+                  "text-xs font-mono font-bold tracking-wide px-2.5 py-0.5 rounded-md border",
+                  isSessionLocked
+                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                    : isSessionActive
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    : "bg-amber-50 text-amber-800 border-amber-200"
+                )}>
+                  {isSessionLocked
+                    ? 'EXPIRED'
+                    : isSessionActive
+                    ? `${formatTimer(sessionSecondsLeft)} remaining`
+                    : 'INACTIVE (Click Save to Activate)'}
                 </span>
               </div>
             </div>
@@ -728,10 +751,10 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               variant="outline"
               size="sm"
               onClick={handleExtendSession}
-              className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-100 border-slate-700 shrink-0"
-              iconLeft={<RefreshCw className="w-3.5 h-3.5 text-blue-400" />}
+              className="text-xs bg-white hover:bg-slate-100 text-slate-700 border-slate-200 shrink-0 shadow-2xs"
+              iconLeft={<RefreshCw className="w-3.5 h-3.5 text-blue-600" />}
             >
-              {isSessionLocked ? 'Re-activate Session (+15m)' : 'Extend Session (+15m)'}
+              {isSessionLocked ? 'Re-activate Session (+15m)' : isSessionActive ? 'Extend Session (+15m)' : 'Start 15m Session'}
             </Button>
           </div>
 
@@ -887,13 +910,13 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               <span className="text-xs text-rose-500 font-mono flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4" />
                 {isSessionLocked
-                  ? 'Session expired. Please click Extend Session to unlock.'
+                  ? 'Session expired. Click Re-activate Session (+15m) or Save LLM Configuration to unlock.'
                   : 'All fields (Provider, API Key, Model) must be non-empty.'}
               </span>
             ) : (
               <span className="text-xs text-emerald-600 font-mono flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" />
-                Form valid and ready to save.
+                Form valid. Click Save to activate 15-minute active session window.
               </span>
             )}
 
@@ -901,9 +924,12 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               type="button"
               onClick={() => {
                 if (isFormValid) {
+                  setSessionSecondsLeft(900);
+                  setIsSessionActive(true);
+                  setIsSessionLocked(false);
                   onSaveSettings(`Saved LLM Config (${llmProvider} / ${effectiveModelName})`);
                   if (onAddToast) {
-                    onAddToast('success', 'LLM Settings Saved', `Provider: ${llmProvider}, Model: ${effectiveModelName}`);
+                    onAddToast('success', 'LLM Settings Saved & Session Activated', `Provider: ${llmProvider}, Model: ${effectiveModelName} (15m active timer started)`);
                   }
                   if (onAddAuditLog) {
                     onAddAuditLog('UPDATE_LLM_CONFIG', 'Settings', 'llm-config', `Updated LLM provider to ${llmProvider} with model ${effectiveModelName}`);
