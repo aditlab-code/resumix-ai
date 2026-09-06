@@ -20,12 +20,14 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
   - Dukungan `REDIS_PASSWORD`, `REDIS_PREFIX`, dan Auto-TLS (`rediss://`) sudah terpasang di `env.ts`.
 - [x] **4. GitHub Repository Sync**: ✅ **TERHUBUNG**
   - URL Repo: `https://github.com/aditwicaksonodinus/resumix-ai.git` (Branch `main` & `dev`).
-- [ ] **5. AI Microservice (`apps/ai-service`)**: ⏳ **NEXT STEP**
-  - Siap di-deploy ke Render / Hugging Face / VPS Biznet GIO ketika verifikasi kartu/sinyal siap.
-  - Dockerfile & Environment Variables (`LLM_API_KEY`, `LLM_PROVIDER`, `LLM_MODEL`, `PORT`) sudah siap.
-- [ ] **6. Core API (`apps/api`), Worker & Database**: ⏳ **PENDING AI SERVICE**
+- [x] **5. AI Microservice (`apps/ai-service`)**: ✅ **TERKONFIGURASI DI RENDER (Ready to Deploy)**
+  - Web Service Render: Environment `Docker`, Root Directory `apps/ai-service`, Dockerfile Path `Dockerfile`, Port `8000`.
+  - Environment Variables diset: `LLM_API_KEY`, `LLM_PROVIDER=groq`, `LLM_MODEL=llama-3.1-8b-instant`, `PORT=8000`, `EMBEDDING_MODEL_NAME`.
+- [x] **6. Core API (`apps/api`), Worker & Database**: ✅ **TERKONFIGURASI DI RENDER & DATABASE (Ready to Deploy)**
+  - Web Service Render: Environment `Docker`, Root Directory `apps/api`, Dockerfile Path `Dockerfile`, Port `3001`.
   - Database: PostgreSQL 15+ + `pgvector` (Supabase / Neon.tech - HANYA untuk Data Relasional & Vector Embedding RAG).
-  - Menunggu URL AI Service publik untuk dipasang ke `AI_SERVICE_URL`.
+  - Terkoneksi ke Cloudflare R2 (`resumix-cv-bucket`), Upstash Redis (`rag_cv` prefix), & Supabase `pgvector`.
+
 
 ---
 
