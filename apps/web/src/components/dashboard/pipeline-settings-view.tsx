@@ -9,6 +9,13 @@ import {
   Pencil,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  RefreshCw,
+  Zap,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -41,6 +48,32 @@ interface PipelineSettingsViewProps {
   onAddAuditLog?: (action: string, entity: string, entityId: string, details: string) => void;
 }
 
+interface ModelOption {
+  label: string;
+  value: string;
+}
+
+const PROVIDER_MODEL_PRESETS: Record<string, ModelOption[]> = {
+  groq: [
+    { label: 'llama-3.1-8b-instant (Fast & Precise)', value: 'llama-3.1-8b-instant' },
+    { label: 'llama-3.3-70b-versatile (High Intelligence)', value: 'llama-3.3-70b-versatile' },
+    { label: 'mixtral-8x7b-32768 (32k Context)', value: 'mixtral-8x7b-32768' },
+    { label: 'Custom Model Name...', value: 'custom' },
+  ],
+  gemini: [
+    { label: 'gemini-1.5-flash (Fast & Multilingual)', value: 'gemini-1.5-flash' },
+    { label: 'gemini-1.5-pro (Complex Reasoning)', value: 'gemini-1.5-pro' },
+    { label: 'gemini-2.0-flash-exp (Experimental Speed)', value: 'gemini-2.0-flash-exp' },
+    { label: 'Custom Model Name...', value: 'custom' },
+  ],
+  openai: [
+    { label: 'gpt-4o-mini (Lightweight & Smart)', value: 'gpt-4o-mini' },
+    { label: 'gpt-4o (Omni High Accuracy)', value: 'gpt-4o' },
+    { label: 'gpt-3.5-turbo (Legacy Standard)', value: 'gpt-3.5-turbo' },
+    { label: 'Custom Model Name...', value: 'custom' },
+  ],
+};
+
 const DEFAULT_CATEGORIES = ['backend', 'frontend', 'database', 'devops', 'mobile', 'data_ai', 'custom'];
 
 const DEFAULT_TAXONOMIES: SkillTaxonomyItem[] = [
@@ -53,8 +86,6 @@ const DEFAULT_TAXONOMIES: SkillTaxonomyItem[] = [
   { id: 'tax-7', canonical_name: 'Redis', synonyms: ['redis cache', 'in-memory database'], category: 'database' },
   { id: 'tax-8', canonical_name: 'Machine Learning', synonyms: ['ml', 'scikit-learn', 'sklearn'], category: 'data_ai' },
 ];
-
-const DEFAULT_MODEL_NAME = 'mixtral-8x7b-32768';
 
 const DEFAULT_DECISION_PROMPT = `You are a Senior HR System Auditor. Analyze candidate qualifications based on extracted resume data, Job-Fit Score, matched/missing mandatory skills, and total experience duration. Provide an objective 2-3 sentence Summary Decision with a clear screening recommendation (HIGHLY RECOMMENDED, SPECIAL REVIEW RECOMMENDED, or NOT RECOMMENDED).`;
 const DEFAULT_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY || '';
@@ -72,11 +103,24 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   const [experienceWeight, setExperienceWeight] = useState(20);
   const [preferredWeight, setPreferredWeight] = useState(5);
 
-  // LLM State
-  const [llmProvider, setLlmProvider] = useState('groq');
-  const [llmApiKey, setLlmApiKey] = useState(DEFAULT_API_KEY);
-  const [llmModel, setLlmModel] = useState('llama-3.1-8b-instant');
-  const [promptDecision, setPromptDecision] = useState(DEFAULT_DECISION_PROMPT);
+  // LLM Multi-Provider State
+  const [llmProvider, setLlmProvider] = useState<string>('groq');
+  const [llmApiKey, setLlmApiKey] = useState<string>(DEFAULT_API_KEY);
+  const [selectedModelOption, setSelectedModelOption] = useState<string>('llama-3.1-8b-instant');
+  const [customModelInput, setCustomModelInput] = useState<string>('');
+  const [promptDecision, setPromptDecision] = useState<string>(DEFAULT_DECISION_PROMPT);
+
+  // 15-Minute Session Active Timer State (900 seconds)
+  const [sessionSecondsLeft, setSessionSecondsLeft] = useState<number>(900);
+  const [isSessionLocked, setIsSessionLocked] = useState<boolean>(false);
+
+  // Connection Test State
+  const [isTestingConnection, setIsTestingConnection] = useState<boolean>(false);
+  const [testResult, setTestResult] = useState<{
+    status: 'idle' | 'success' | 'error';
+    message?: string;
+    latencyMs?: number;
+  }>({ status: 'idle' });
 
   // Dictionary Skill State
   const [taxonomies, setTaxonomies] = useState<SkillTaxonomyItem[]>(DEFAULT_TAXONOMIES);
@@ -125,6 +169,133 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   useEffect(() => {
     setDictPage(1);
   }, [searchTerm, activeCategoryFilter]);
+
+  // 15-Minute Countdown Timer Effect
+  useEffect(() => {
+    if (activeTab !== 'llm' || isSessionLocked) return;
+
+    const timer = setInterval(() => {
+      setSessionSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setIsSessionLocked(true);
+          setLlmApiKey(''); // Lock & clear key for security
+          if (onAddToast) {
+            onAddToast('error', 'LLM Session Expired', 'The 15-minute active session has ended for security.');
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [activeTab, isSessionLocked, onAddToast]);
+
+  const handleExtendSession = () => {
+    setSessionSecondsLeft(900);
+    setIsSessionLocked(false);
+    if (onAddToast) {
+      onAddToast('info', 'Session Extended', 'Active session renewed for +15 minutes.');
+    }
+  };
+
+  const formatTimer = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const effectiveModelName = selectedModelOption === 'custom' ? customModelInput.trim() : selectedModelOption;
+  const isFormValid = llmProvider.trim() !== '' && llmApiKey.trim() !== '' && effectiveModelName !== '' && !isSessionLocked;
+
+  const handleProviderChange = (newProvider: string) => {
+    setLlmProvider(newProvider);
+    const defaultModel = PROVIDER_MODEL_PRESETS[newProvider]?.[0]?.value || 'custom';
+    setSelectedModelOption(defaultModel);
+    setTestResult({ status: 'idle' });
+  };
+
+  const handleTestConnection = async () => {
+    if (!llmApiKey.trim()) {
+      setTestResult({ status: 'error', message: 'API Key is required.' });
+      return;
+    }
+    if (!effectiveModelName) {
+      setTestResult({ status: 'error', message: 'Model Name is required.' });
+      return;
+    }
+
+    setIsTestingConnection(true);
+    setTestResult({ status: 'idle' });
+    const startTime = Date.now();
+
+    try {
+      if (llmProvider === 'groq') {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${llmApiKey.trim()}`,
+          },
+          body: JSON.stringify({
+            model: effectiveModelName,
+            messages: [{ role: 'user', content: 'ping' }],
+            max_tokens: 5,
+          }),
+        });
+        const latencyMs = Date.now() - startTime;
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error?.message || `HTTP ${res.status} ${res.statusText}`);
+        }
+        setTestResult({ status: 'success', message: 'Groq Cloud Connection Successful!', latencyMs });
+      } else if (llmProvider === 'gemini') {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${effectiveModelName}:generateContent?key=${llmApiKey.trim()}`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'ping' }] }],
+          }),
+        });
+        const latencyMs = Date.now() - startTime;
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error?.message || `HTTP ${res.status} ${res.statusText}`);
+        }
+        setTestResult({ status: 'success', message: 'Google Studio Gemini Connection Successful!', latencyMs });
+      } else if (llmProvider === 'openai') {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${llmApiKey.trim()}`,
+          },
+          body: JSON.stringify({
+            model: effectiveModelName,
+            messages: [{ role: 'user', content: 'ping' }],
+            max_tokens: 5,
+          }),
+        });
+        const latencyMs = Date.now() - startTime;
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error?.message || `HTTP ${res.status} ${res.statusText}`);
+        }
+        setTestResult({ status: 'success', message: 'OpenAI Connection Successful!', latencyMs });
+      }
+    } catch (err: any) {
+      const latencyMs = Date.now() - startTime;
+      setTestResult({
+        status: 'error',
+        message: err.message || 'Failed to connect to Provider API.',
+        latencyMs,
+      });
+    } finally {
+      setIsTestingConnection(false);
+    }
+  };
 
   const saveTaxonomies = (updated: SkillTaxonomyItem[]) => {
     setTaxonomies(updated);
@@ -540,38 +711,165 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       {/* Tab 3: Aturan LLM & Guardrails */}
       {activeTab === 'llm' && (
         <Card className="p-6 space-y-6">
+          {/* Header & 15-Min Session Active Timer Badge (No emojis, Lucide icons only) */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-900 text-white border border-slate-800 shadow-sm">
+            <div className="flex items-center gap-2.5">
+              <Clock className={cn("w-4 h-4", isSessionLocked ? "text-rose-400" : "text-emerald-400")} />
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                <span className="text-xs font-semibold text-slate-200">15-Minute Session Active Window:</span>
+                <span className={cn("text-xs font-mono font-bold tracking-wider px-2 py-0.5 rounded", isSessionLocked ? "bg-rose-500/20 text-rose-300 border border-rose-500/30" : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30")}>
+                  {isSessionLocked ? 'EXPIRED' : `${formatTimer(sessionSecondsLeft)} remaining`}
+                </span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleExtendSession}
+              className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-100 border-slate-700 shrink-0"
+              iconLeft={<RefreshCw className="w-3.5 h-3.5 text-blue-400" />}
+            >
+              {isSessionLocked ? 'Re-activate Session (+15m)' : 'Extend Session (+15m)'}
+            </Button>
+          </div>
+
           <CardHeader
             className="p-0 border-none mb-2"
-            title="Groq LLM Model Configuration & System Guardrails"
+            title="Multi-Provider LLM Configuration & System Guardrails"
           />
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="LLM Provider">
-                <Select value={llmProvider} onChange={(e) => setLlmProvider(e.target.value)}>
+              <Field label="LLM Provider" required>
+                <Select
+                  value={llmProvider}
+                  onChange={(e) => handleProviderChange(e.target.value)}
+                  disabled={isSessionLocked}
+                >
                   <option value="groq">Groq Cloud (Fast Processing)</option>
-                  <option value="gemini">Google Gemini 1.5</option>
-                  <option value="openai">OpenAI GPT-4o Mini</option>
+                  <option value="gemini">Google Studio API (Gemini)</option>
+                  <option value="openai">OpenAI API (GPT-4o)</option>
                 </Select>
               </Field>
 
-              <Field label="Model Name">
-                <Select value={llmModel} onChange={(e) => setLlmModel(e.target.value)}>
-                  <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fast & Precise)</option>
-                  <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
-                  <option value={DEFAULT_MODEL_NAME}>{DEFAULT_MODEL_NAME}</option>
+              <Field label="Model Name" required>
+                <Select
+                  value={selectedModelOption}
+                  onChange={(e) => {
+                    setSelectedModelOption(e.target.value);
+                    setTestResult({ status: 'idle' });
+                  }}
+                  disabled={isSessionLocked}
+                >
+                  {(PROVIDER_MODEL_PRESETS[llmProvider] || []).map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {m.label}
+                    </option>
+                  ))}
                 </Select>
               </Field>
             </div>
 
-            <Field label="API Key">
+            {selectedModelOption === 'custom' && (
+              <Field label="Custom Model Identifier Name" required>
+                <Input
+                  value={customModelInput}
+                  onChange={(e) => {
+                    setCustomModelInput(e.target.value);
+                    setTestResult({ status: 'idle' });
+                  }}
+                  placeholder="e.g. gemini-2.0-flash-exp or gpt-4o-mini"
+                  disabled={isSessionLocked}
+                />
+                {!customModelInput.trim() && (
+                  <p className="text-[11px] text-rose-500 font-mono mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> Custom Model Name is required.
+                  </p>
+                )}
+              </Field>
+            )}
+
+            <Field label="API Key" required>
               <Input
                 type="password"
                 value={llmApiKey}
-                onChange={(e) => setLlmApiKey(e.target.value)}
-                placeholder="gsk_..."
+                onChange={(e) => {
+                  setLlmApiKey(e.target.value);
+                  setTestResult({ status: 'idle' });
+                }}
+                placeholder={
+                  llmProvider === 'groq'
+                    ? 'gsk_...'
+                    : llmProvider === 'gemini'
+                    ? 'AIzaSy...'
+                    : 'sk-proj-...'
+                }
+                disabled={isSessionLocked}
               />
+              {!llmApiKey.trim() && (
+                <p className="text-[11px] text-rose-500 font-mono mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" /> API Key is required and cannot be empty.
+                </p>
+              )}
             </Field>
+
+            {/* Test Connection Button & Result */}
+            <div className="p-4 rounded-xl border bg-slate-50 border-slate-200 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-bold text-foreground">Provider & Model Connection Test</h4>
+                  <p className="text-[11px] text-muted-foreground">
+                    Perform a direct client-side fetch ping to verify credentials & model availability.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestConnection}
+                  disabled={isTestingConnection || !llmApiKey.trim() || !effectiveModelName || isSessionLocked}
+                  iconLeft={
+                    isTestingConnection ? (
+                      <Loader2 className="w-4 h-4 text-primary animate-spin" />
+                    ) : (
+                      <Zap className="w-4 h-4 text-amber-500" />
+                    )
+                  }
+                >
+                  {isTestingConnection ? 'Testing Connection...' : 'Test Connection'}
+                </Button>
+              </div>
+
+              {testResult.status === 'success' && (
+                <div className="p-3 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-mono flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    {testResult.message}
+                  </span>
+                  {testResult.latencyMs && (
+                    <span className="text-[11px] text-emerald-700 font-bold">
+                      {testResult.latencyMs} ms
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {testResult.status === 'error' && (
+                <div className="p-3 rounded-lg bg-rose-50 text-rose-900 border border-rose-200 text-xs font-mono flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    {testResult.message}
+                  </span>
+                  {testResult.latencyMs && (
+                    <span className="text-[11px] text-rose-700 font-bold">
+                      {testResult.latencyMs} ms
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
 
             <Field label="System Prompt Decision Guardrails">
               <Textarea
@@ -579,12 +877,44 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 value={promptDecision}
                 onChange={(e) => setPromptDecision(e.target.value)}
                 className="w-full text-xs font-mono"
+                disabled={isSessionLocked}
               />
             </Field>
           </div>
 
-          <div className="flex justify-end pt-3 border-t border-border">
-            <Button type="button" onClick={handleSave} variant="primary" size="sm" iconLeft={<Save className="w-4 h-4 text-white" />}>
+          <div className="flex items-center justify-between pt-3 border-t border-border">
+            {!isFormValid ? (
+              <span className="text-xs text-rose-500 font-mono flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4" />
+                {isSessionLocked
+                  ? 'Session expired. Please click Extend Session to unlock.'
+                  : 'All fields (Provider, API Key, Model) must be non-empty.'}
+              </span>
+            ) : (
+              <span className="text-xs text-emerald-600 font-mono flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4" />
+                Form valid and ready to save.
+              </span>
+            )}
+
+            <Button
+              type="button"
+              onClick={() => {
+                if (isFormValid) {
+                  onSaveSettings(`Saved LLM Config (${llmProvider} / ${effectiveModelName})`);
+                  if (onAddToast) {
+                    onAddToast('success', 'LLM Settings Saved', `Provider: ${llmProvider}, Model: ${effectiveModelName}`);
+                  }
+                  if (onAddAuditLog) {
+                    onAddAuditLog('UPDATE_LLM_CONFIG', 'Settings', 'llm-config', `Updated LLM provider to ${llmProvider} with model ${effectiveModelName}`);
+                  }
+                }
+              }}
+              variant="primary"
+              size="sm"
+              disabled={!isFormValid}
+              iconLeft={<Save className="w-4 h-4 text-white" />}
+            >
               Save LLM Configuration
             </Button>
           </div>
