@@ -20,13 +20,15 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
   - Dukungan `REDIS_PASSWORD`, `REDIS_PREFIX`, dan Auto-TLS (`rediss://`) sudah terpasang di `env.ts`.
 - [x] **4. GitHub Repository Sync**: ✅ **TERHUBUNG**
   - URL Repo: `https://github.com/aditwicaksonodinus/resumix-ai.git` (Branch `main` & `dev`).
-- [x] **5. AI Microservice (`apps/ai-service`)**: ✅ **TERKONFIGURASI DI RENDER (Ready to Deploy)**
+- [ ] **5. AI Microservice (`apps/ai-service`)**: ⏳ **BELUM FINAL (Draf Form Render Ready, Menunggu Trigger Deploy)**
   - Web Service Render: Environment `Docker`, Root Directory `apps/ai-service`, Dockerfile Path `Dockerfile`, Port `8000`.
-  - Environment Variables diset: `LLM_API_KEY`, `LLM_PROVIDER=groq`, `LLM_MODEL=llama-3.1-8b-instant`, `PORT=8000`, `EMBEDDING_MODEL_NAME`.
-- [x] **6. Core API (`apps/api`), Worker & Database**: ✅ **TERKONFIGURASI DI RENDER & DATABASE (Ready to Deploy)**
+  - Envs diset: `LLM_API_KEY`, `LLM_PROVIDER=groq`, `LLM_MODEL=llama-3.1-8b-instant`, `PORT=8000`, `EMBEDDING_MODEL_NAME`.
+  - *Pending Action*: Klik tombol 'Create Web Service' di Render saat sinyal/verifikasi siap.
+- [ ] **6. Core API (`apps/api`), Worker & Database**: ⏳ **BELUM FINAL (Draf Form Render Ready, Menunggu Trigger Deploy)**
   - Web Service Render: Environment `Docker`, Root Directory `apps/api`, Dockerfile Path `Dockerfile`, Port `3001`.
   - Database: PostgreSQL 15+ + `pgvector` (Supabase / Neon.tech - HANYA untuk Data Relasional & Vector Embedding RAG).
   - Terkoneksi ke Cloudflare R2 (`resumix-cv-bucket`), Upstash Redis (`rag_cv` prefix), & Supabase `pgvector`.
+  - *Pending Action*: Mengisi `NEXT_PUBLIC_API_URL` di Vercel setelah URL Render terbit.
 
 
 ---
