@@ -195,9 +195,8 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
   }, [activeTab, isSessionActive, isSessionLocked, onAddToast]);
 
   const handleExtendSession = () => {
+    if (!isSessionActive) return;
     setSessionSecondsLeft(900);
-    setIsSessionActive(true);
-    setIsSessionLocked(false);
     if (onAddToast) {
       onAddToast('info', 'Session Extended', 'Active session renewed for +15 minutes.');
     }
@@ -751,10 +750,15 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               variant="outline"
               size="sm"
               onClick={handleExtendSession}
-              className="text-xs bg-white hover:bg-slate-100 text-slate-700 border-slate-200 shrink-0 shadow-2xs"
+              disabled={!isSessionActive}
+              className="text-xs bg-white hover:bg-slate-100 text-slate-700 border-slate-200 shrink-0 shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
               iconLeft={<RefreshCw className="w-3.5 h-3.5 text-blue-600" />}
             >
-              {isSessionLocked ? 'Re-activate Session (+15m)' : isSessionActive ? 'Extend Session (+15m)' : 'Start 15m Session'}
+              {isSessionLocked
+                ? 'Session Expired (Save Config to Unlock)'
+                : isSessionActive
+                ? 'Extend Session (+15m)'
+                : 'Save Config to Start Session'}
             </Button>
           </div>
 
