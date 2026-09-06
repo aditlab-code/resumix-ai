@@ -8,7 +8,8 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
 
 - [x] **1. Frontend (`apps/web`)**: ✅ **LIVE & GREEN (100% SUKSES)**
   - Domain Vercel Utama: `https://resumix-ai-web.vercel.app/`
-  - Subdomain Kustom Cloudflare: `https://resumix.pradityawicaksono.com` (Target CNAME).
+  - Subdomain Kustom Cloudflare: `https://resumix.pradityawicaksono.com` (Target CNAME: `7859b2397c9c966c.vercel-dns-017.com`).
+  - *Catatan Notifikasi Chrome ('Access other apps on this device')*: Notifikasi ini muncul sementara saat frontend dibuka di Chrome karena `NEXT_PUBLIC_API_URL` belum terhubung ke URL Cloud Backend HTTPS. Begitu Backend Render live & diset di Vercel, notifikasi ini otomatis HILANG 100% permanen.
 - [x] **2. Storage (`Cloudflare R2`)**: ✅ **TERKONFIGURASI (100% Tanpa Supabase Storage)**
   - Bucket: `resumix-cv-bucket` (Private Access, 10GB Free, $0 Egress).
   - Berkas PDF CV fisik 100% disimpan di Cloudflare R2 (Supabase Storage di-bypass penuh).
