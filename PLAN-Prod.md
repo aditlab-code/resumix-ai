@@ -4,6 +4,29 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
 
 ---
 
+## 📌 Status Progress Deployment Saat Ini (Checkpoint)
+
+- [x] **1. Frontend (`apps/web`)**: ✅ **LIVE & GREEN (100% SUKSES)**
+  - Domain Vercel: `https://resumix-ai-web-q1e9.vercel.app/`
+  - Perbaikan TypeScript Build (Implicit `any` & `@cv-ats/contracts` path mapping) sudah terverifikasi.
+  - Subdomain kustom yang ditargetkan kelak: `resumix.pradityawicaksono.com`.
+- [x] **2. Storage (`Cloudflare R2`)**: ✅ **TERKONFIGURASI**
+  - Bucket: `resumix-cv-bucket` (Private Access, 10GB Free, $0 Egress).
+  - Credentials & S3 Endpoint (`https://e90fa646d35177b22219f9a246ff6f95.r2.cloudflarestorage.com`) tersimpan aman di `.env`.
+- [x] **3. Queue (`Upstash Redis`)**: ✅ **TERKONFIGURASI**
+  - Shared Instance Host: `real-macaw-187505.upstash.io`
+  - Co-existence policy: Standard Prefix `rag_cv` dipasang untuk mengisolasi queue RAG Pipeline dari key `lectura` (`bull:*`) yang sudah ada.
+- [x] **4. GitHub Repository Sync**: ✅ **TERHUBUNG**
+  - URL Repo: `https://github.com/aditwicaksonodinus/resumix-ai.git` (Branch `main` & `dev`).
+- [ ] **5. AI Microservice (`apps/ai-service`)**: ⏳ **NEXT STEP**
+  - Siap di-deploy ke Render / Hugging Face / VPS Biznet GIO ketika verifikasi kartu/sinyal siap.
+  - Dockerfile & Environment Variables (`LLM_API_KEY`, `LLM_PROVIDER`, `LLM_MODEL`, `PORT`) sudah siap.
+- [ ] **6. Core API (`apps/api`) & Worker**: ⏳ **PENDING AI SERVICE**
+  - Menunggu URL AI Service publik untuk dipasang ke `AI_SERVICE_URL`.
+
+---
+
+
 ## 📊 1. Perbandingan Opsi Deployment
 
 | Fitur / Parameter      | ☁️ Opsi A: Managed Cloud Free-Tier                   | 💻 Opsi B: Private VPS Biznet GIO (Recommended)                                        |
