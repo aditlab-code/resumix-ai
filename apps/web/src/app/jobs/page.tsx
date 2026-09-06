@@ -38,6 +38,7 @@ export default function JobsPage() {
       {/* 1. Job Management Cards */}
       <JobsManagerView
         jobs={jobs}
+        selectedJobId={selectedJobId}
         onOpenCreateJobModal={() => setIsCreateJobModalOpen(true)}
         onSelectJobForCandidates={handleSelectJobForCandidates}
         onEditJob={(job) => setEditingJob(job)}

@@ -13,9 +13,9 @@ interface BuildColumnsArgs {
 }
 
 const getScoreBadgeClass = (s: number) => {
-  if (s >= 80) return 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold';
-  if (s >= 60) return 'bg-amber-100 text-amber-950 border-amber-300 font-extrabold';
-  return 'bg-rose-100 text-rose-900 border-rose-300 font-extrabold';
+  if (s >= 80) return 'bg-slate-100 text-emerald-950 border-emerald-500 font-extrabold';
+  if (s >= 60) return 'bg-slate-100 text-amber-950 border-amber-500 font-extrabold';
+  return 'bg-slate-100 text-rose-950 border-rose-500 font-extrabold';
 };
 
 export function buildCandidateColumns({

@@ -103,10 +103,19 @@ export const RangeField: React.FC<RangeFieldProps> = ({
   max = 100,
   hint,
 }) => (
-  <div className="space-y-2 bg-muted/40 rounded-xl p-3.5 border border-border">
-    <div className="flex justify-between text-xs font-bold">
-      <span className="text-foreground">{label}</span>
-      <span className="font-mono text-primary">{value}%</span>
+  <div className="space-y-2.5 bg-slate-50/80 rounded-xl p-4 border border-slate-200">
+    <div className="flex justify-between items-center text-xs font-bold">
+      <span className="text-slate-900 flex items-center gap-2">
+        <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
+          <span className="w-1 h-1 rounded-full bg-blue-600" />
+          <span className="w-1 h-1 rounded-full bg-blue-600" />
+          <span className="w-1 h-1 rounded-full bg-blue-600" />
+        </div>
+        {label}
+      </span>
+      <span className="font-mono font-extrabold text-blue-900 bg-slate-100 border border-blue-500 px-2.5 py-0.5 rounded-full text-xs shadow-2xs">
+        {value}%
+      </span>
     </div>
     <input
       type="range"
@@ -114,7 +123,7 @@ export const RangeField: React.FC<RangeFieldProps> = ({
       max={max}
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full accent-primary cursor-pointer"
+      className="w-full accent-blue-600 cursor-pointer h-2 bg-slate-200 rounded-lg appearance-none"
     />
     {hint && <p className="text-xs text-muted-foreground leading-snug">{hint}</p>}
   </div>

@@ -1,8 +1,8 @@
 ---
-design_md_version: "1.0"
+design_md_version: "2.0"
 project: "Resumix AI"
-description: "Enterprise Recruitment Intelligence & Next-Gen ATS — Dashboard Design System"
-style: "Enterprise Dark Navy / Data-Dense Dashboard"
+description: "Enterprise Recruitment Intelligence & Next-Gen ATS — Single Source of Truth Design System"
+style: "Enterprise Slate-Navy / Data-Dense Professional Dashboard"
 colors:
   brand:
     accent: "#1D4ED8"
@@ -72,79 +72,94 @@ motion:
   hover_lift: "translateY(-2px) scale(1.01)"
 ---
 
-## 1. Overview
+## 1. Overview & Single Source of Truth
 
-Resumix AI adalah dashboard HR **Enterprise Light Slate-Navy** yang harus terasa tepercaya, presisi, dan padat data (data-dense), tanpa terlihat "kosong" atau kaku seperti tabel spreadsheet. Masalah utama versi sebelumnya: seluruh permukaan (card, sidebar, tabel, header) memakai warna latar yang identik dan tanpa bayangan, sehingga mata tidak bisa membedakan mana elemen yang mengambang (interaktif) dan mana yang menjadi lantai statis — inilah sebab tampilan disebut **"terlalu flat"**.
+Resumix AI `DESIGN.md` v2.0 adalah **Single Source of Truth (SSOT)** resmi untuk seluruh pengembangan antarmuka (UI/UX) di `apps/web`. Setiap agen AI dan developer wajib mematuhi panduan di dokumen ini tanpa deviasi.
 
-Prinsip perbaikan: setiap permukaan memiliki *elevation level* yang jelas (0–4), transisi warna latar antar level terlihat jelas (Kanvas Slate-100 `#F1F5F9` memisahkan Card `#FFFFFF` dan Inset Header `#E2E8F0`), dan komponen interaktif wajib memberi respons visual (shadow lift, border highlight, warna accent tint `#EFF6FF` saat active/selected) saat *hover*/*focus*/*active*.
+### Prinsip Utama v2.0
+1. **DILARANG GLASSMORPHISM**: Tidak boleh menggunakan `backdrop-blur`, efek kaca buram semi-transparan, atau efek melayang tanpa latar padat.
+2. **DILARANG GRADIEN**: Tidak boleh menggunakan `bg-gradient-*`, `linear-gradient`, atau teks/latar bertingkat warna. Seluruh permukaan dan komponen menggunakan warna padat (*solid colors*) atau *soft background tint*.
+3. **BORDER UNIFIED**: Seluruh kartu, container, dan panel menggunakan garis pembatas padat yang presisi (`border border-slate-200` atau `border border-border`).
+4. **AKSEN 3 VERTICAL DOTS**: Judul kartu KPI, kartu posisi pekerjaan (*Job Available*), dan section header menggunakan aksen 3 titik vertikal (`flex flex-col gap-0.5` dengan 3 `w-1 h-1 rounded-full bg-blue-600`).
+5. **MINIMALIST PILL BADGES + INDICATOR DOT**: Badge status dan tag skill menggunakan latar Slate-100 neutral sunken (`bg-slate-100` / `var(--surface-sunken)`), border 1px solid berwarna indikator status, dan titik indikator 6px solid di sebelah kiri.
 
-## 2. Colors
+---
 
-Palet dasar (Enterprise Obsidian, Slate-Navy Accent) diperkaya dengan 7 token permukaan (`surface.*`) dan 6 token teks (`ink.*`) serta semantik status (`success`/`warning`/`danger`/`info`) agar kartu, badge status lamaran, dan skor kecocokan punya kontras yang tajam dan dinamis.
+## 2. Color Palette & Surface Tokens
 
-| Peran            | Token              |    Hex    | Penggunaan                           |
-|:-----------------|:-------------------|:---------:|:-------------------------------------|
-| Teks utama       | `ink.default`      | `#0F172A` | Judul utama, nama kandidat, metrik   |
-| Teks isi         | `ink.muted`        | `#1E293B` | Paragraf, deskripsi pekerjaan        |
-| Teks sekunder    | `ink.subtle`       | `#475569` | Caption, metadata, label field       |
-| Teks faint       | `ink.faint`        | `#94A3B8` | Text disabled, icon subtle           |
-| Teks inverse     | `ink.inverse`      | `#FFFFFF` | Teks di atas surface gelap/tombol    |
-| Teks aksen       | `ink.brand`        | `#1D4ED8` | Link, tab terpilih, skor aksen       |
-| Kanvas app       | `surface.canvas`   | `#F1F5F9` | Latar belakang utama dashboard       |
-| Permukaan sunken | `surface.sunken`   | `#E2E8F0` | Table header, filter bar, input fill |
-| Kartu dasar      | `surface.base`     | `#FFFFFF` | Latar belakang card dasar            |
-| Kartu terangkat  | `surface.raised`   | `#FFFFFF` | Card kandidat, floating panel        |
-| State hover      | `surface.hover`    | `#F8FAFC` | Hover state pada card/tabel          |
-| State terpilih   | `surface.active`   | `#EFF6FF` | Card/row aktif, tab terpilih         |
-| Permukaan modal  | `surface.overlay`  | `#FFFFFF` | Modal dialog, drawer upload          |
-| Border standar   | `surface.border`   | `#E2E8F0` | Pembatas section / table row         |
-| Border tegas     | `surface.border_strong` | `#CBD5E1` | Pembatas card terpilih / input focus |
+| Peran | Token | Hex / Class | Penggunaan |
+|:---|:---|:---:|:---|
+| Teks utama | `ink.default` | `#0F172A` | Judul utama, nama kandidat, metrik |
+| Teks sekunder | `ink.subtle` | `#475569` | Caption, metadata, label field |
+| Teks aksen | `ink.brand` | `#1D4ED8` | Link, tab terpilih, skor aksen |
+| Kanvas app | `surface.canvas` | `#F1F5F9` | Latar belakang utama dashboard (`Slate-100`) |
+| Permukaan sunken | `surface.sunken` | `#E2E8F0` / `bg-slate-100` | Header tabel, latar badge, filter bar |
+| Kartu KPI / Job | `surface.soft` | `bg-slate-50/80` | Latar belakang kartu KPI dan Job Available |
+| Kartu aktif | `surface.active_ring` | `bg-blue-50/60 border-blue-500 ring-1 ring-blue-500` | Highlight kartu posisi pekerjaan terpilih |
+| Border standar | `surface.border` | `#E2E8F0` / `border-slate-200` | Pembatas section / table row / card border |
 
-Aturan kunci: **jangan pernah** memakai warna latar yang sama untuk kanvas (`canvas`) dan kartu (`raised`) tanpa border atau shadow pembeda — kombinasi kanvas Slate-100 `#F1F5F9` dengan kartu putih `#FFFFFF` berbayangan `e1_card` memberi pemisah visual yang kokoh dan tidak flat.
+---
 
-## 3. Typography
+## 3. Typography & Numeric Precision
 
-Gunakan Inter untuk seluruh UI. Perbedaan bobot (weight) dan ukuran harus tegas antar level agar hierarki terasa, terutama untuk angka skor (`metric`) yang menjadi fokus visual utama di setiap kartu kandidat — gunakan ukuran `28px/700` khusus untuk skor, jangan disamakan dengan judul biasa. Label caption memakai `letter-spacing` positif tipis (`0.02em`) dan warna `ink.subtle` supaya terasa "mengambang" ringan di atas isi utama, bukan menyatu.
+- **Font UI**: Inter / system-ui untuk seluruh teks UI.
+- **Font Numeric / Metrics**: Monospaced tabular numerals (`tabular-nums font-mono font-extrabold`) wajib digunakan pada:
+  - Angka Job-Fit Score (`85%`, `92.5/100`).
+  - Total bobot formula scoring (`Total Weight Accumulation: 100%`).
+  - Angka metrik jumlah pelamar (`applications_count`).
+  - Durasi pengalaman kerja (`total_experience_months`).
 
-## 4. Layout
+---
 
-Grid 12 kolom dengan gutter 24px, sidebar tetap 264px. Skala spacing berbasis 4px (4/8/12/16/20/24/32/48/64) — jangan pakai nilai spacing acak di luar skala ini karena akan merusak ritme visual. Kartu kandidat, panel skor, dan tabel aplikasi harus memiliki padding internal minimal 16px agar konten tidak menempel ke tepi (salah satu ciri desain flat yang terasa sempit).
+## 4. Components Specification
 
-## 5. Elevation and Depth
+### A. Minimalist Pill Badge & Indicator Dots (`StatusBadge`)
+- **Container**: `inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-extrabold tracking-wider uppercase border bg-slate-100`.
+- **Borders & Tones**:
+  - `ok` / `hired` / `processed`: `text-emerald-900 border-emerald-500` (Dot: `bg-emerald-600`).
+  - `warn` / `screening` / `needs_review`: `text-amber-900 border-amber-500` (Dot: `bg-amber-600`).
+  - `danger` / `rejected` / `failed`: `text-rose-900 border-rose-500` (Dot: `bg-rose-600`).
+  - `accent` / `processing`: `text-blue-900 border-blue-500` (Dot: `bg-blue-600`).
+  - `neutral` / `applied`: `text-slate-800 border-slate-300` (Dot: `bg-slate-400`).
+- **Indicator Dot**: Solid 6px dot (`w-1.5 h-1.5 rounded-full shrink-0`) di sisi kiri teks. Tambahkan `animate-pulse` khusus untuk status aktif/dalam proses (`processing`, `queued`, `needs_review`).
 
-Ini bagian inti untuk mengatasi kesan flat. Terapkan **4 level elevasi** yang konsisten di seluruh dashboard:
+### B. Job-Fit Score Badges
+- **Format**: `bg-slate-100 border text-caption font-bold tabular-nums font-mono px-2.5 py-1 rounded-full`.
+- **Indikator Border**:
+  - Score >= 80: `text-emerald-950 border-emerald-500`.
+  - Score >= 60: `text-amber-950 border-amber-500`.
+  - Score < 60: `text-rose-950 border-rose-500`.
 
-| Level | Nama     | Contoh Komponen                               | Shadow                              |
-|:------|:---------|:----------------------------------------------|:------------------------------------|
-| E1    | Card     | Kartu kandidat, panel KPI, sidebar item aktif | `elevation.e1_card`                 |
-| E2    | Hover    | Card saat `:hover`, tombol primer saat hover  | `elevation.e2_hover` + `hover_lift` |
-| E3    | Dropdown | Menu filter, tooltip skor breakdown, popover  | `elevation.e3_dropdown`             |
-| E4    | Modal    | Dialog upload CV, drawer detail kandidat      | `elevation.e4_modal`                |
+### C. KPI & Job Available Cards
+- **Tanpa Border Kiri Tebal**: Seluruh kartu menggunakan border solid 1px seragam (`border-slate-200`).
+- **3 Vertical Dots**: Header kartu memuat 3 titik vertikal (`flex flex-col gap-0.5` dengan 3 `w-1 h-1 rounded-full bg-blue-600` / `bg-slate-400`).
+- **Latar Soft Tint**: Latar kartu `bg-slate-50/80` (atau `bg-blue-50/50`, `bg-amber-50/50` untuk varian KPI).
+- **Kartu Aktif**: Kartu yang sedang dipilih memakai ring border aksen `border-blue-500 bg-blue-50/60 ring-1 ring-blue-500`.
 
-Aturan wajib:
-- Setiap kartu (`surface.raised`) di atas kanvas (`surface.canvas`) **harus** memakai minimal `e1_card` — tidak boleh ada kartu tanpa shadow sama sekali.
-- Saat *hover* pada elemen interaktif (card kandidat, row tabel yang bisa diklik, tombol), naikkan ke `e2_hover` disertai `hover_lift` (translateY -2px) dalam durasi `duration_base` (200ms) dengan `easing` yang sudah didefinisikan — ini memberi sinyal "bisa diklik" yang saat ini hilang.
-- Table header dan filter bar memakai `surface.sunken` (bukan putih polos) supaya ada pembeda luminance dengan body tabel, meniru pendekatan *luminance-step elevation* alih-alih shadow di area padat data.
-- Fokus keyboard (accessibility) wajib memakai `focus_ring` (ring biru 3px opacity 30%), bukan hanya outline default browser.
+### D. Settings & Range Input Fields (`RangeField`)
+- Wadah slider menggunakan `bg-slate-50/80 border border-slate-200 rounded-xl p-4`.
+- Header label memiliki aksen 3 vertical dots dan badge persentase `bg-slate-100 text-blue-900 border border-blue-500 font-mono font-extrabold`.
+- Slider track & thumb menggunakan `accent-blue-600 h-2 bg-slate-200 rounded-lg` padat tanpa gradien.
 
-## 6. Shapes
+---
 
-Radius konsisten: `sm` (6px) untuk badge/chip status, `md` (10px) untuk card dan input, `lg` (14px) untuk modal dan panel besar, `pill` untuk avatar dan status dot. Hindari mencampur radius kecil dan besar dalam satu komponen yang sama (misalnya card dengan radius 14px tapi tombol di dalamnya radius 2px) — ini juga sumber kesan tidak rapi.
+## 5. Integration Governance with AGENTS.md
 
-## 7. Components
+Dokumen `DESIGN.md` ini diikat secara langsung dalam `AGENTS.md` pada bagian **MUST RULES** dan **DO NOT RULES**:
 
-- **KPI Card** (skor, jumlah kandidat): elevasi `e1_card`, radius `md`, padding 24px, angka metrik memakai warna `ink.default` dan label caption `ink.subtle` — beri sedikit gradasi tipis brand-tint (`brand.accent` 4–6% opacity) di background card skor tertinggi agar tidak semua kartu terlihat identik.
-- **Candidate Row / Table**: baris memakai `surface.base`, header `surface.sunken`, hover row `surface.canvas` dengan transisi `duration_fast`. Skor kecocokan ditampilkan sebagai badge berwarna semantik (`success_soft`/`warning_soft`/`danger_soft`) berdasarkan ambang skor, bukan teks polos.
-- **Status Badge** (`applied`, `screening`, `interview`, `hired`, `rejected`, `needs_review`): radius `pill`, latar `*_soft`, teks warna `*` solid, font `caption` weight 600.
-- **Primary Button**: latar `brand.accent`, radius `md`, shadow `e1_card` saat rest, naik ke `e2_hover` + warna `accent_hover` saat hover, `focus_ring` saat fokus.
-- **Modal / Drawer Upload CV**: latar `surface.overlay`, elevasi `e4_modal`, radius `lg`, backdrop gelap `rgba(15,23,42,0.4)` di belakangnya agar kedalaman terasa jelas terhadap dashboard di baliknya.
-- **Sidebar**: latar `ink.default` (gelap, kontras dari canvas terang), item aktif memakai latar `brand.accent` dengan radius `md` dan sedikit inset shadow agar terasa "ditekan", bukan cuma teks bold.
+1. **MUST RULE**:
+   - `MUST follow DESIGN.md v2.0 as the single source of truth for all UI component styling, colors, and layout in apps/web.`
+2. **DO NOT RULE**:
+   - `DO NOT use gradients, linear-gradients, backdrop-blur, or glassmorphism in any UI component.`
+   - `DO NOT hardcode ad-hoc colors or create un-unified card borders outside DESIGN.md tokens.`
 
-## 8. Do's and Don'ts
+---
 
-- **Do** beri setiap permukaan yang mengambang (card, modal, dropdown) shadow sesuai level elevasinya — jangan ada elemen "melayang" tanpa bayangan.
-- **Do** gunakan `surface.sunken` untuk area latar sekunder (header tabel, filter bar) agar ada kontras luminance dengan kartu di atasnya.
-- **Do** animasikan transisi hover/focus (200ms, easing yang ditentukan) supaya interaktivitas terasa hidup, bukan statis.
-- **Don't** menumpuk elevasi tinggi di semua tempat — modal dan dropdown harus terlihat berbeda beratnya dari card biasa; jangan pakai `e4_modal` untuk tooltip kecil.
-- **Don't** memakai warna latar identik (`canvas` == `raised`) tanpa border/shadow pemisah — ini akar masalah "flat" yang harus dihindari di semua komponen baru.
-- **Don't** menambah gradient atau dekorasi berlebihan di luar token `elevation`/`brand.accent` tint — tema tetap *enterprise*, bukan *playful*.
+## 6. Do's and Don'ts Checklist
+
+- **Do** gunakan `bg-slate-100` dengan border solid 1px dan indicator dot 6px untuk semua status badge.
+- **Do** sertakan 3 titik vertikal (`3 vertical dots`) pada header kartu KPI, kartu lowongan, dan section title.
+- **Do** gunakan `tabular-nums font-mono` untuk seluruh angka skor dan metrik kuantitatif.
+- **Don't** menggunakan `bg-gradient-*` atau `linear-gradient` pada tombol, kartu, badge, atau background.
+- **Don't** menggunakan `backdrop-blur` atau efek glassmorphism semi-transparan.
+- **Don't** menggunakan border tebal di sebelah kiri kartu (diganti dengan aksen 3 titik vertikal di header).

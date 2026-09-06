@@ -45,9 +45,9 @@ const getRecommendationText = (score: number) => {
 };
 
 const getRecommendationBadgeClass = (score: number) => {
-  if (score >= 80) return 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 border border-emerald-500/30 font-bold shadow-2xs';
-  if (score >= 60) return 'bg-amber-500/15 text-amber-800 dark:text-amber-200 border border-amber-500/30 font-bold shadow-2xs';
-  return 'bg-rose-500/15 text-rose-800 dark:text-rose-200 border border-rose-500/30 font-bold shadow-2xs';
+  if (score >= 80) return 'bg-slate-100 text-emerald-950 border border-emerald-500 font-bold shadow-2xs';
+  if (score >= 60) return 'bg-slate-100 text-amber-950 border border-amber-500 font-bold shadow-2xs';
+  return 'bg-slate-100 text-rose-950 border border-rose-500 font-bold shadow-2xs';
 };
 
 export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
@@ -180,13 +180,13 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
           {/* Left Sidebar Column (Sticky Summary & Contact) */}
           <div className="lg:col-span-4 space-y-4 sticky top-0">
             {/* AI Decision Card */}
-            <Card className="p-5 space-y-4 bg-gradient-to-br from-primary/10 via-primary/5 to-card border border-primary/20 rounded-xl backdrop-blur-md shadow-sm relative overflow-hidden">
-              <div className="flex items-center justify-between gap-2 border-b border-primary/15 pb-3">
-                <span className="text-xs font-extrabold text-primary uppercase tracking-wider flex items-center gap-1.5 font-mono">
-                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+            <Card className="p-5 space-y-4 bg-slate-50/80 border border-slate-200 rounded-xl shadow-xs relative overflow-hidden">
+              <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                <span className="text-xs font-extrabold text-blue-900 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                  <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
                   Decision Summary
                 </span>
-                <span className="text-xs font-extrabold font-mono px-2.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+                <span className="text-xs font-extrabold font-mono px-2.5 py-0.5 rounded-full bg-slate-100 text-blue-900 border border-blue-500">
                   {application.job_fit_score.toFixed(1)}/100
                 </span>
               </div>

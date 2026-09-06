@@ -48,8 +48,12 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         >
           <div>
             {typeof title === 'string' ? (
-              <h3 className="text-lg font-semibold text-card-foreground tracking-tight flex items-center gap-2">
-                <span className="w-1.5 h-3.5 bg-primary rounded-sm inline-block"></span>
+              <h3 className="text-lg font-bold text-card-foreground tracking-tight flex items-center gap-2.5">
+                <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
+                  <span className="w-1 h-1 rounded-full bg-blue-600" />
+                  <span className="w-1 h-1 rounded-full bg-blue-600" />
+                  <span className="w-1 h-1 rounded-full bg-blue-600" />
+                </div>
                 {title}
               </h3>
             ) : (
@@ -70,10 +74,9 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 );
 CardHeader.displayName = 'CardHeader';
 
-
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('font-semibold leading-none tracking-tight text-lg', className)} {...props} />
+    <h3 ref={ref} className={cn('font-bold leading-none tracking-tight text-lg', className)} {...props} />
   )
 );
 CardTitle.displayName = 'CardTitle';
@@ -105,10 +108,10 @@ export const SectionLabel: React.FC<React.HTMLAttributes<HTMLParagraphElement>> 
   ...props
 }) => (
   <p
-    className={cn('text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-2', className)}
+    className={cn('text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-2', className)}
     {...props}
   >
-    <span className="w-1.5 h-1.5 bg-primary rounded-full inline-block"></span>
+    <span className="w-1.5 h-1.5 bg-blue-600 rounded-full inline-block shrink-0"></span>
     {children}
   </p>
 );

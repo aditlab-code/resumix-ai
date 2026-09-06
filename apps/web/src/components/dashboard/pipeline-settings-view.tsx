@@ -386,13 +386,13 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                     <div className="space-y-2 min-w-0">
                       <div className="flex items-center gap-2.5">
                         <span className="font-bold text-sm text-foreground">{item.canonical_name}</span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border text-[11px] font-bold uppercase">
+                        <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-300 text-[11px] font-extrabold uppercase shadow-2xs">
                           {formatCategoryLabel(item.category)}
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {item.synonyms.map((syn) => (
-                          <span key={syn} className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 text-xs font-medium">
+                          <span key={syn} className="px-2.5 py-0.5 rounded-full bg-slate-100 text-blue-900 border border-blue-500 text-xs font-bold shadow-2xs font-mono">
                             {syn}
                           </span>
                         ))}
@@ -514,9 +514,16 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               hint="Bonus score for optional preferred skills."
             />
 
-            <div className="p-4 rounded-xl border flex items-center justify-between bg-muted/40 border-border">
-              <span className="font-bold text-sm text-foreground">Total Weight Accumulation:</span>
-              <span className={cn('text-xl font-extrabold tabular-nums', weightValid ? 'text-emerald-600' : 'text-destructive')}>
+            <div className="p-4 rounded-xl border flex items-center justify-between bg-slate-50/80 border-slate-200">
+              <span className="font-bold text-sm text-foreground flex items-center gap-2.5">
+                <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
+                  <span className="w-1 h-1 rounded-full bg-blue-600" />
+                  <span className="w-1 h-1 rounded-full bg-blue-600" />
+                  <span className="w-1 h-1 rounded-full bg-blue-600" />
+                </div>
+                Total Weight Accumulation:
+              </span>
+              <span className={cn('text-xl font-extrabold font-mono tabular-nums px-3 py-1 rounded-full border shadow-2xs', weightValid ? 'bg-slate-100 text-emerald-950 border-emerald-500' : 'bg-slate-100 text-rose-950 border-rose-500')}>
                 {totalWeight}% {weightValid ? '(Valid 100%)' : '(Must be 100%)'}
               </span>
             </div>

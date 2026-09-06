@@ -37,6 +37,7 @@
 1. MUST TypeScript Next.js Framework For Front-end Website or Python use Pydantic for AI Service
 2. MUST Migration Database create new file at `database/migrations/` DONT CHANGE File Migration if commited
 3. MUST Semua pemrosesan AI harus via `apps/ai-service`.
+4. MUST follow DESIGN.md v2.0 as the Single Source of Truth for all UI component styling, colors, indicator dots, and layout in `apps/web`.
 
 ## DO NOT RULES 
 1. DO NOT CHANGE File Migration if commited
@@ -44,3 +45,5 @@
 3. DO NOT HARDCODE STYLING, MUST USE COMPONENT GLOBAL
 4. DO NOT Claim Skoring AI
 5. DO NOT Save any API, password, secret, token didalam code
+6. DO NOT use gradients (`bg-gradient-*`), `linear-gradient`, `backdrop-blur`, or glassmorphism in any UI component.
+7. DO NOT create un-unified card borders or ad-hoc styling outside DESIGN.md tokens.

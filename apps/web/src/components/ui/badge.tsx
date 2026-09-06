@@ -14,11 +14,11 @@ const badgeVariants = cva(
         secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'text-foreground border-border',
-        success: 'bg-emerald-500/15 text-emerald-800 border-emerald-500/35 font-bold',
-        warning: 'bg-amber-500/15 text-amber-900 border-amber-500/35 font-bold',
-        danger: 'bg-rose-500/15 text-rose-800 border-rose-500/35 font-bold',
-        accent: 'bg-blue-500/15 text-blue-800 border-blue-500/35 font-bold',
-        neutral: 'bg-slate-200 text-slate-900 border-slate-300 font-bold',
+        success: 'bg-slate-100 text-emerald-900 border-emerald-500 font-bold',
+        warning: 'bg-slate-100 text-amber-900 border-amber-500 font-bold',
+        danger: 'bg-slate-100 text-rose-900 border-rose-500 font-bold',
+        accent: 'bg-slate-100 text-blue-900 border-blue-500 font-bold',
+        neutral: 'bg-slate-100 text-slate-800 border-slate-300 font-bold',
       },
     },
     defaultVariants: {
@@ -41,11 +41,19 @@ export type StatusType = ApplicationStatus | ParseStatus;
 type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
 
 const toneClass: Record<Tone, string> = {
-  neutral: 'bg-slate-500/15 text-slate-800 border-slate-500/30 font-extrabold',
-  accent: 'bg-blue-500/15 text-blue-700 border-blue-500/35 font-extrabold',
-  ok: 'bg-emerald-500/15 text-emerald-700 border-emerald-500/35 font-extrabold',
-  warn: 'bg-amber-500/15 text-amber-800 border-amber-500/35 font-extrabold',
-  danger: 'bg-rose-500/15 text-rose-700 border-rose-500/35 font-extrabold',
+  neutral: 'bg-slate-100 text-slate-800 border-slate-300 font-extrabold',
+  accent: 'bg-slate-100 text-blue-900 border-blue-500 font-extrabold',
+  ok: 'bg-slate-100 text-emerald-900 border-emerald-500 font-extrabold',
+  warn: 'bg-slate-100 text-amber-900 border-amber-500 font-extrabold',
+  danger: 'bg-slate-100 text-rose-900 border-rose-500 font-extrabold',
+};
+
+const dotColorClass: Record<Tone, string> = {
+  neutral: 'bg-slate-400',
+  accent: 'bg-blue-600',
+  ok: 'bg-emerald-600',
+  warn: 'bg-amber-600',
+  danger: 'bg-rose-600',
 };
 
 const statusMap: Record<StatusType, { label: string; tone: Tone }> = {
@@ -83,9 +91,13 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
         className
       )}
     >
-      {PULSE.includes(status) && (
-        <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse shrink-0" />
-      )}
+      <span
+        className={cn(
+          'w-1.5 h-1.5 rounded-full shrink-0',
+          dotColorClass[config.tone],
+          PULSE.includes(status) && 'animate-pulse'
+        )}
+      />
       {config.label}
     </span>
   );
