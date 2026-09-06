@@ -219,8 +219,8 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const sections2 = extractCVSections(fullText);
     let extractedSummary = (sections2.summary || '').replace(/\s*\n\s*/g, ' ').trim();
     if (extractedSummary.length < 40) {
-      const skillNames = detectedSkills.map((s) => s.normalized_name);
-      const companies = workExperience.map((w) => w.company || '').filter((c) => c.length > 0);
+      const skillNames = detectedSkills.map((s: { normalized_name: string }) => s.normalized_name);
+      const companies = workExperience.map((w: { company?: string }) => w.company || '').filter((c: string) => c.length > 0);
       extractedSummary = constructExecutiveSummary(
         candidateName,
         totalExpMonths || 24,

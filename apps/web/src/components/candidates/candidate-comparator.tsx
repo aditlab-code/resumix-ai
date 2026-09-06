@@ -82,7 +82,7 @@ export const CandidateComparator: React.FC<CandidateComparatorProps> = ({
         {selectedApps.map((app) => {
           const breakdown = app.score_breakdown || {};
           const isTopOverall = app.job_fit_score === highestScore && selectedApps.length > 1;
-          const candidateSkills = app.cv_extraction?.skills?.map((s) => s.name || s.normalized_name || '') || [];
+          const candidateSkills = app.cv_extraction?.skills?.map((s: { name?: string; normalized_name?: string }) => s.name || s.normalized_name || '') || [];
           const expMonths = app.cv_extraction?.total_experience_months || 0;
           const education = app.cv_extraction?.education?.[0];
 

@@ -88,7 +88,7 @@ export const ExtractionForm: React.FC<ExtractionFormProps> = ({
     setSummary(application.cv_extraction.summary || '');
     setSkillsText(
       (application.cv_extraction.skills || [])
-        .map((s) => s.normalized_name || s.name)
+        .map((s: { name?: string; normalized_name?: string }) => s.normalized_name || s.name || '')
         .join(', ')
     );
     setWorkExperiences(application.cv_extraction.work_experience || []);

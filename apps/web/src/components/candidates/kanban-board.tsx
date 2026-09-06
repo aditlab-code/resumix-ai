@@ -97,7 +97,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 </div>
               ) : (
                 columnApps.map((app) => {
-                  const candidateSkills = app.cv_extraction?.skills?.map((s) => s.name || s.normalized_name || '') || [];
+                  const candidateSkills = app.cv_extraction?.skills?.map((s: { name?: string; normalized_name?: string }) => s.name || s.normalized_name || '') || [];
                   const expMonths = app.cv_extraction?.total_experience_months || 0;
                   const rawDegree = app.cv_extraction?.education?.[0]?.degree || 'Bachelor';
                   // Format degree compactly to prevent line wrapping & text overlap
