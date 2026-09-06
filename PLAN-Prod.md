@@ -7,9 +7,8 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
 ## 📌 Status Progress Deployment Saat Ini (Checkpoint)
 
 - [x] **1. Frontend (`apps/web`)**: ✅ **LIVE & GREEN (100% SUKSES)**
-  - Domain Vercel: `https://resumix-ai-web-q1e9.vercel.app/`
-  - Perbaikan TypeScript Build (Implicit `any` & `@cv-ats/contracts` path mapping) sudah terverifikasi.
-  - Subdomain kustom yang ditargetkan kelak: `resumix.pradityawicaksono.com`.
+  - Domain Vercel Utama: `https://resumix-ai-web.vercel.app/`
+  - Subdomain Kustom Cloudflare: `https://resumix.pradityawicaksono.com` (Target CNAME).
 - [x] **2. Storage (`Cloudflare R2`)**: ✅ **TERKONFIGURASI (100% Tanpa Supabase Storage)**
   - Bucket: `resumix-cv-bucket` (Private Access, 10GB Free, $0 Egress).
   - Berkas PDF CV fisik 100% disimpan di Cloudflare R2 (Supabase Storage di-bypass penuh).
