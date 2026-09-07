@@ -112,7 +112,7 @@ export const Overlay: React.FC<OverlayProps> = ({
             )}
             {header}
           </SheetHeader>
-          {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-4 sm:px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
+          {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-3 sm:px-8 py-2.5 text-xs text-muted-foreground overflow-x-auto no-scrollbar">{subheader}</div>}
           <div
             ref={contentRef}
             className={cn('flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 text-sm text-foreground', bodyClassName)}

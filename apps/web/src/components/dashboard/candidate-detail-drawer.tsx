@@ -161,7 +161,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
       }
       subheader={
         !isEditing && (
-          <Tabs items={TABS} active={activeTab} onChange={setActiveTab} className="px-6" />
+          <Tabs items={TABS} active={activeTab} onChange={setActiveTab} />
         )
       }
     >
@@ -178,7 +178,7 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Sidebar Column (Sticky Summary & Contact) */}
-          <div className="lg:col-span-4 space-y-4 sticky top-0">
+          <div className="lg:col-span-4 space-y-4 static lg:sticky lg:top-0">
             {/* AI Decision Card */}
             <Card className="p-5 space-y-4 bg-slate-50/80 border border-slate-200 rounded-xl shadow-xs relative overflow-hidden">
               <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-3">
