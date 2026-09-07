@@ -5,7 +5,7 @@
     "successfully_processed": 192,
     "scanned_rejected_http400": 8,
     "outlier_candidates": 40,
-    "avg_latency_ms": 10.6,
+    "avg_latency_ms": 10.91,
     "avg_final_score": 24.6,
     "max_final_score": 89.9,
     "min_final_score": 4.8
@@ -19,7 +19,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.72,
+      "latency_ms": 15.55,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -66,7 +66,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.45,
+      "latency_ms": 8.63,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -109,7 +109,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 9.76,
+      "latency_ms": 9.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -156,7 +156,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.98,
+      "latency_ms": 9.08,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -203,7 +203,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.21,
+      "latency_ms": 16.02,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -246,7 +246,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.74,
+      "latency_ms": 8.79,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -293,7 +293,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 11.05,
+      "latency_ms": 11.83,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -336,7 +336,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.31,
+      "latency_ms": 9.77,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -379,7 +379,7 @@
       "role": "Insinyur Sipil Lapangan",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 7.54,
+      "latency_ms": 7.58,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -426,7 +426,7 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 12.15,
+      "latency_ms": 11.22,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -473,7 +473,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.69,
+      "latency_ms": 14.85,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -520,7 +520,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.58,
+      "latency_ms": 21.92,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.67,
@@ -569,7 +569,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.12,
+      "latency_ms": 14.16,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -616,7 +616,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 13.28,
+      "latency_ms": 13.27,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -659,7 +659,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.79,
+      "latency_ms": 8.6,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -702,7 +702,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.46,
+      "latency_ms": 15.01,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -747,7 +747,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.65,
+      "latency_ms": 12.63,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -794,7 +794,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.78,
+      "latency_ms": 8.77,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -837,7 +837,7 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 14.18,
+      "latency_ms": 8.36,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.46,
@@ -880,7 +880,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 17.3,
+      "latency_ms": 11.61,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -927,7 +927,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.14,
+      "latency_ms": 6.91,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -972,7 +972,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.96,
+      "latency_ms": 9.7,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -1015,7 +1015,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.25,
+      "latency_ms": 9.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -1060,7 +1060,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 15.52,
+      "latency_ms": 7.91,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -1109,7 +1109,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 16.55,
+      "latency_ms": 12.08,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -1156,7 +1156,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 15.01,
+      "latency_ms": 17.44,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -1199,7 +1199,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.85,
+      "latency_ms": 8.69,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -1244,7 +1244,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.73,
+      "latency_ms": 8.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.69,
@@ -1291,7 +1291,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 15.17,
+      "latency_ms": 11.01,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -1334,7 +1334,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.93,
+      "latency_ms": 8.81,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -1383,7 +1383,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.9,
+      "latency_ms": 11.06,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -1430,7 +1430,7 @@
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 11.29,
+      "latency_ms": 9.55,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -1477,7 +1477,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.97,
+      "latency_ms": 7.8,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -1524,7 +1524,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 20.47,
+      "latency_ms": 19.0,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -1567,7 +1567,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 18.01,
+      "latency_ms": 11.15,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -1612,7 +1612,7 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 20.1,
+      "latency_ms": 16.28,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -1659,7 +1659,7 @@
       "role": "System Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.74,
+      "latency_ms": 10.66,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -1704,7 +1704,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.87,
+      "latency_ms": 10.55,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -1753,7 +1753,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.73,
+      "latency_ms": 10.9,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -1796,7 +1796,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 5.97,
+      "latency_ms": 6.16,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -1843,7 +1843,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.76,
+      "latency_ms": 8.11,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -1888,7 +1888,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.36,
+      "latency_ms": 11.34,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -1931,7 +1931,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.89,
+      "latency_ms": 7.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -1976,7 +1976,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.76,
+      "latency_ms": 11.97,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -2023,7 +2023,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.48,
+      "latency_ms": 12.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -2068,7 +2068,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.53,
+      "latency_ms": 16.12,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -2115,7 +2115,7 @@
       "role": "Sales Manager Properti",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 11.87,
+      "latency_ms": 11.58,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -2162,7 +2162,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.16,
+      "latency_ms": 18.1,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -2207,7 +2207,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.19,
+      "latency_ms": 14.91,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -2254,7 +2254,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.83,
+      "latency_ms": 13.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -2301,7 +2301,7 @@
       "role": "Machine Learning Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.24,
+      "latency_ms": 7.11,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -2348,7 +2348,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 15.29,
+      "latency_ms": 13.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -2397,7 +2397,7 @@
       "role": "HR Generalist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 19.39,
+      "latency_ms": 9.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.47,
@@ -2440,7 +2440,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.86,
+      "latency_ms": 10.23,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -2483,7 +2483,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 22.92,
+      "latency_ms": 13.51,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -2526,7 +2526,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 20.4,
+      "latency_ms": 13.2,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -2569,7 +2569,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 22.27,
+      "latency_ms": 11.88,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.67,
@@ -2618,7 +2618,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 22.02,
+      "latency_ms": 12.14,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -2663,7 +2663,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 16.72,
+      "latency_ms": 14.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -2712,7 +2712,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 16.02,
+      "latency_ms": 13.07,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -2759,7 +2759,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.09,
+      "latency_ms": 8.41,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -2802,7 +2802,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.33,
+      "latency_ms": 10.45,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -2849,7 +2849,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.59,
+      "latency_ms": 7.67,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -2892,7 +2892,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.52,
+      "latency_ms": 9.58,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.78,
@@ -2939,7 +2939,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.2,
+      "latency_ms": 15.3,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -2982,7 +2982,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.0,
+      "latency_ms": 14.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -3029,7 +3029,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.13,
+      "latency_ms": 7.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -3072,7 +3072,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.23,
+      "latency_ms": 11.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -3115,7 +3115,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.79,
+      "latency_ms": 6.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -3160,7 +3160,7 @@
       "role": "Marketing Communication Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 11.7,
+      "latency_ms": 11.52,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.43,
@@ -3203,7 +3203,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 10.54,
+      "latency_ms": 11.03,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -3246,7 +3246,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.23,
+      "latency_ms": 7.05,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -3293,7 +3293,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.64,
+      "latency_ms": 6.55,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -3340,7 +3340,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.76,
+      "latency_ms": 10.07,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -3383,7 +3383,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.29,
+      "latency_ms": 12.66,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -3430,7 +3430,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.98,
+      "latency_ms": 6.89,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -3475,7 +3475,7 @@
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 7.95,
+      "latency_ms": 9.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -3518,7 +3518,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.4,
+      "latency_ms": 14.35,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -3561,7 +3561,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.73,
+      "latency_ms": 9.51,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -3608,7 +3608,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.01,
+      "latency_ms": 12.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -3651,7 +3651,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.25,
+      "latency_ms": 7.72,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -3694,7 +3694,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.92,
+      "latency_ms": 6.83,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -3737,7 +3737,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.58,
+      "latency_ms": 11.51,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -3784,7 +3784,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.72,
+      "latency_ms": 7.15,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -3833,7 +3833,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.75,
+      "latency_ms": 14.32,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -3876,7 +3876,7 @@
       "role": "Sales Manager Properti",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 6.77,
+      "latency_ms": 11.0,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -3923,7 +3923,7 @@
       "role": "Apoteker Klinis",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 9.42,
+      "latency_ms": 13.36,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.45,
@@ -3966,7 +3966,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.37,
+      "latency_ms": 9.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -4009,7 +4009,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.35,
+      "latency_ms": 14.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -4052,7 +4052,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.68,
+      "latency_ms": 15.05,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -4099,7 +4099,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.37,
+      "latency_ms": 18.62,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -4146,7 +4146,7 @@
       "role": "iOS Swift Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.96,
+      "latency_ms": 12.81,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -4189,7 +4189,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.22,
+      "latency_ms": 16.25,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -4234,7 +4234,7 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 9.57,
+      "latency_ms": 14.22,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.47,
@@ -4277,7 +4277,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 16.33,
+      "latency_ms": 16.52,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -4320,7 +4320,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.45,
+      "latency_ms": 23.18,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -4367,7 +4367,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 14.64,
+      "latency_ms": 21.48,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -4410,7 +4410,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.24,
+      "latency_ms": 15.24,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -4457,7 +4457,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.62,
+      "latency_ms": 9.38,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -4500,7 +4500,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.17,
+      "latency_ms": 16.14,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -4547,7 +4547,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.08,
+      "latency_ms": 13.99,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -4592,7 +4592,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.38,
+      "latency_ms": 17.63,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -4635,7 +4635,7 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 9.5,
+      "latency_ms": 10.23,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.44,
@@ -4678,7 +4678,7 @@
       "role": "Frontend React Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.0,
+      "latency_ms": 7.8,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -4721,7 +4721,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.83,
+      "latency_ms": 11.61,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -4768,7 +4768,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.68,
+      "latency_ms": 12.71,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -4813,7 +4813,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.17,
+      "latency_ms": 12.15,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -4858,7 +4858,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 10.78,
+      "latency_ms": 11.67,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -4901,7 +4901,7 @@
       "role": "Java Backend Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.98,
+      "latency_ms": 12.72,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -4946,7 +4946,7 @@
       "role": "HR Generalist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 17.2,
+      "latency_ms": 11.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.48,
@@ -4989,7 +4989,7 @@
       "role": "Data Scientist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.38,
+      "latency_ms": 11.62,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -5036,7 +5036,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.34,
+      "latency_ms": 11.3,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.73,
@@ -5083,7 +5083,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.26,
+      "latency_ms": 14.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.67,
@@ -5130,7 +5130,7 @@
       "role": "Apoteker Klinis",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 6.48,
+      "latency_ms": 11.8,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -5177,7 +5177,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.12,
+      "latency_ms": 16.12,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -5222,7 +5222,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 9.41,
+      "latency_ms": 13.35,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -5265,7 +5265,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.69,
+      "latency_ms": 10.83,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -5310,7 +5310,7 @@
       "role": "Akuntan Pajak",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 12.8,
+      "latency_ms": 12.85,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -5353,7 +5353,7 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 12.7,
+      "latency_ms": 12.63,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -5400,7 +5400,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.5,
+      "latency_ms": 12.51,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -5449,7 +5449,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.76,
+      "latency_ms": 9.95,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -5498,7 +5498,7 @@
       "role": "Machine Learning Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.32,
+      "latency_ms": 12.42,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.73,
@@ -5545,7 +5545,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.81,
+      "latency_ms": 9.96,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -5590,7 +5590,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.46,
+      "latency_ms": 9.7,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -5637,7 +5637,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 5.92,
+      "latency_ms": 6.13,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -5682,7 +5682,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.92,
+      "latency_ms": 14.81,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -5729,7 +5729,7 @@
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 10.57,
+      "latency_ms": 9.52,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.52,
@@ -5772,7 +5772,7 @@
       "role": "Technical Writer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.66,
+      "latency_ms": 11.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -5815,7 +5815,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.6,
+      "latency_ms": 12.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -5858,7 +5858,7 @@
       "role": "Machine Learning Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.51,
+      "latency_ms": 9.65,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.71,
@@ -5905,7 +5905,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.15,
+      "latency_ms": 10.98,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -5948,7 +5948,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.42,
+      "latency_ms": 13.13,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -5993,7 +5993,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.32,
+      "latency_ms": 6.44,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.75,
@@ -6083,7 +6083,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.58,
+      "latency_ms": 7.81,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -6130,7 +6130,7 @@
       "role": "Guru Matematika & Fisika SMA",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 6.91,
+      "latency_ms": 7.81,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.51,
@@ -6173,7 +6173,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.18,
+      "latency_ms": 9.28,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -6218,7 +6218,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.04,
+      "latency_ms": 7.45,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -6265,7 +6265,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.45,
+      "latency_ms": 11.8,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -6308,7 +6308,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 5.41,
+      "latency_ms": 5.6,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.74,
@@ -6355,7 +6355,7 @@
       "role": "System Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.68,
+      "latency_ms": 14.74,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -6400,7 +6400,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.16,
+      "latency_ms": 9.42,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -6443,7 +6443,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.87,
+      "latency_ms": 14.47,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -6488,7 +6488,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.76,
+      "latency_ms": 6.87,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.71,
@@ -6535,7 +6535,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.59,
+      "latency_ms": 11.91,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -6582,7 +6582,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.63,
+      "latency_ms": 8.05,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -6625,7 +6625,7 @@
       "role": "Cyber Security Specialist",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.58,
+      "latency_ms": 8.11,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -6672,7 +6672,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 15.53,
+      "latency_ms": 16.71,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -6715,7 +6715,7 @@
       "role": "Scrum Master",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 11.7,
+      "latency_ms": 12.49,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -6801,7 +6801,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.84,
+      "latency_ms": 11.16,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.64,
@@ -6848,7 +6848,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.93,
+      "latency_ms": 13.21,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -6895,7 +6895,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.52,
+      "latency_ms": 9.73,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -6938,7 +6938,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.0,
+      "latency_ms": 7.86,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -6981,7 +6981,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.42,
+      "latency_ms": 13.88,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -7030,7 +7030,7 @@
       "role": "Insinyur Sipil Lapangan",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 15.2,
+      "latency_ms": 11.94,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.72,
@@ -7077,7 +7077,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.87,
+      "latency_ms": 7.32,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -7124,7 +7124,7 @@
       "role": "Embedded Systems Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.86,
+      "latency_ms": 10.14,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -7169,7 +7169,7 @@
       "role": "Database Administrator",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 14.23,
+      "latency_ms": 14.57,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.65,
@@ -7214,7 +7214,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.28,
+      "latency_ms": 9.43,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -7257,7 +7257,7 @@
       "role": "Fullstack Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.59,
+      "latency_ms": 8.02,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.62,
@@ -7302,7 +7302,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.89,
+      "latency_ms": 7.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.61,
@@ -7349,7 +7349,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.13,
+      "latency_ms": 7.69,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -7394,7 +7394,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 7.2,
+      "latency_ms": 9.06,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -7437,7 +7437,7 @@
       "role": "UI/UX Designer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.52,
+      "latency_ms": 7.07,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.5,
@@ -7480,7 +7480,7 @@
       "role": "Data Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.43,
+      "latency_ms": 9.3,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.7,
@@ -7527,7 +7527,7 @@
       "role": "Mobile Flutter Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 6.33,
+      "latency_ms": 7.64,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -7570,7 +7570,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.56,
+      "latency_ms": 8.08,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -7617,7 +7617,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.22,
+      "latency_ms": 7.65,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.81,
@@ -7664,7 +7664,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 7.24,
+      "latency_ms": 7.6,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.82,
@@ -7711,7 +7711,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 9.12,
+      "latency_ms": 9.63,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.6,
@@ -7758,7 +7758,7 @@
       "role": "Staff Front Desk & Guest Relations",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 5.93,
+      "latency_ms": 6.53,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.42,
@@ -7801,7 +7801,7 @@
       "role": "Apoteker Klinis",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 17.85,
+      "latency_ms": 19.31,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -7848,7 +7848,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 15.36,
+      "latency_ms": 17.28,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.49,
@@ -7891,7 +7891,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 8.68,
+      "latency_ms": 9.28,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -7934,7 +7934,7 @@
       "role": "DevOps Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 15.49,
+      "latency_ms": 16.8,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.63,
@@ -7981,7 +7981,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 14.01,
+      "latency_ms": 15.14,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -8028,7 +8028,7 @@
       "role": "QA Automation Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.31,
+      "latency_ms": 11.71,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -8077,7 +8077,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 13.26,
+      "latency_ms": 14.43,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.77,
@@ -8124,7 +8124,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.66,
+      "latency_ms": 14.17,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -8171,7 +8171,7 @@
       "role": "Android Developer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 15.77,
+      "latency_ms": 17.54,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.58,
@@ -8218,7 +8218,7 @@
       "role": "Cloud Architect",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.96,
+      "latency_ms": 9.26,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -8265,7 +8265,7 @@
       "role": "Business Analyst",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.77,
+      "latency_ms": 11.48,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.57,
@@ -8310,7 +8310,7 @@
       "role": "HR Generalist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 10.77,
+      "latency_ms": 11.29,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.59,
@@ -8357,7 +8357,7 @@
       "role": "Perawat Medis Rawat Inap",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 12.15,
+      "latency_ms": 12.36,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.53,
@@ -8400,7 +8400,7 @@
       "role": "AI Researcher",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 10.99,
+      "latency_ms": 11.39,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.66,
@@ -8447,7 +8447,7 @@
       "role": "Backend Go Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.35,
+      "latency_ms": 9.53,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -8494,7 +8494,7 @@
       "role": "Insinyur Sipil Lapangan",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 7.54,
+      "latency_ms": 7.65,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.56,
@@ -8537,7 +8537,7 @@
       "role": "Product Manager",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 12.39,
+      "latency_ms": 12.97,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.55,
@@ -8580,7 +8580,7 @@
       "role": "Site Reliability Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.95,
+      "latency_ms": 10.98,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.68,
@@ -8629,7 +8629,7 @@
       "role": "Executive Chef & Pastry Specialist",
       "is_outlier": true,
       "domain_warning": true,
-      "latency_ms": 7.9,
+      "latency_ms": 8.02,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.54,
@@ -8672,7 +8672,7 @@
       "role": "Senior Python Engineer",
       "is_outlier": false,
       "domain_warning": false,
-      "latency_ms": 8.71,
+      "latency_ms": 9.5,
       "breakdown": {
         "score_version": "v2",
         "semantic_similarity": 0.83,
@@ -8716,7 +8716,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.52,
+      "latency_ms": 0.71,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8727,7 +8727,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.31,
+      "latency_ms": 0.43,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8738,7 +8738,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.25,
+      "latency_ms": 0.33,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8749,7 +8749,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.25,
+      "latency_ms": 0.3,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8760,7 +8760,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.24,
+      "latency_ms": 0.29,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8771,7 +8771,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.23,
+      "latency_ms": 0.27,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",
@@ -8782,7 +8782,7 @@
       "status": "needs_review",
       "error_code": "NO_TEXT_LAYER",
       "message": "Hanya berkas format PDF ber-layer teks yang didukung.",
-      "latency_ms": 0.23,
+      "latency_ms": 0.25,
       "final_score": 0.0,
       "is_outlier": true,
       "layout_type": "scanned",

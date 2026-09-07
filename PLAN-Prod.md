@@ -6,10 +6,10 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
 
 ## 📌 Status Progress Deployment Saat Ini (Checkpoint)
 
-- [x] **1. Frontend (`apps/web`)**: ✅ **LIVE & GREEN (100% SUKSES)**
+- [x] **1. Frontend (`apps/web`)**: ✅ **LIVE & GREEN (100% TERCONNECT KE RAILWAY)**
   - Domain Vercel Utama: `https://resumix-ai-web.vercel.app/`
   - Subdomain Kustom Cloudflare: `https://resumix.pradityawicaksono.com` (Target CNAME: `7859b2397c9c966c.vercel-dns-017.com`).
-  - *Catatan Notifikasi Chrome ('Access other apps on this device')*: Notifikasi ini muncul sementara saat frontend dibuka di Chrome karena `NEXT_PUBLIC_API_URL` belum terhubung ke URL Cloud Backend HTTPS. Begitu Backend Render live & diset di Vercel, notifikasi ini otomatis HILANG 100% permanen.
+  - *Notifikasi Chrome*: **HILANG 100% PERMANEN**. Variabel `NEXT_PUBLIC_API_URL` terhubung ke `https://resumix-core-api-production.up.railway.app` (tipe Config) dan `metadataBase` mengarah ke URL produksi HTTPS.
 - [x] **2. Storage (`Cloudflare R2`)**: ✅ **TERKONFIGURASI (100% Tanpa Supabase Storage)**
   - Bucket: `resumix-cv-bucket` (Private Access, 10GB Free, $0 Egress).
   - Berkas PDF CV fisik 100% disimpan di Cloudflare R2 (Supabase Storage di-bypass penuh).
@@ -20,15 +20,15 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
   - Dukungan `REDIS_PASSWORD`, `REDIS_PREFIX`, dan Auto-TLS (`rediss://`) sudah terpasang di `env.ts`.
 - [x] **4. GitHub Repository Sync**: ✅ **TERHUBUNG**
   - URL Repo: `https://github.com/aditwicaksonodinus/resumix-ai.git` (Branch `main` & `dev`).
-- [x] **5. AI Microservice (`apps/ai-service`)**: ✅ **SIAP DEPLOY (Render Blueprint & Docker Confined)**
-  - Web Service Render: Environment `Docker`, Root Directory `apps/ai-service`, Dockerfile Path `Dockerfile`, Port `8000`.
+- [x] **5. AI Microservice (`apps/ai-service`)**: ✅ **LIVE DI RAILWAY.APP (100% HEALTHY)**
+  - Web Service Railway: Environment `Docker`, Root Directory `apps/ai-service`, Dockerfile Path `Dockerfile`, Port `8000`.
+  - URL Live: `https://resumix-ai-service-production.up.railway.app`
   - Envs diset: `LLM_API_KEY`, `LLM_PROVIDER=groq`, `LLM_MODEL=llama-3.1-8b-instant`, `PORT=8000`.
-  - *Status*: File Blueprint `render.yaml` siap di root repositori.
-- [x] **6. Core API (`apps/api`), Worker & Database**: ✅ **SIAP DEPLOY (Render Blueprint & Dynamic PORT Compatible)**
-  - Web Service Render: Environment `Docker`, Root Directory `.` (Root Repo), Dockerfile Path `apps/api/Dockerfile`, Port `3001` (atau `$PORT` Render).
-  - Database: PostgreSQL 15+ + `pgvector` (Supabase / Neon.tech).
-  - Terkoneksi ke Cloudflare R2 (`resumix-cv-bucket`), Upstash Redis (`rag_cv` prefix), & Supabase `pgvector`.
-  - *Status*: Code `env.ts` telah disesuaikan agar kompatibel dengan dynamic `$PORT` Render.
+- [x] **6. Core API (`apps/api`), Worker & Database**: ✅ **LIVE DI RAILWAY.APP (100% HEALTHY)**
+  - Web Service Railway: Environment `Docker`, Root Directory `.` (Root Repo), Dockerfile Path `apps/api/Dockerfile`, Port `3001` (atau `$PORT` Railway).
+  - URL Live: `https://resumix-core-api-production.up.railway.app`
+  - Database: PostgreSQL 15+ + `pgvector` (Railway PostgreSQL / Supabase / Neon).
+  - Terkoneksi ke Cloudflare R2 (`resumix-cv-bucket`), Upstash Redis (`rag_cv` prefix), & Railway PostgreSQL.
 
 
 ---
@@ -192,9 +192,9 @@ chmod +x /opt/backup.sh
 | Service / Komponen                       | Stack                       | Platform                            | Limit & Spesifikasi Free Tier                                      |
 |:-----------------------------------------|:----------------------------|:------------------------------------|:-------------------------------------------------------------------|
 | **Frontend** (`apps/web`)                | Next.js 14                  | **Vercel** (Hobby Plan)             | Edge Network, Unlimited GitHub CI/CD, SSL Otomatis.                |
-| **Core API** (`apps/api`)                | Node.js / Express           | **Koyeb** / **Render.com**          | 512MB RAM, Free Web Service.                                       |
-| **Queue Worker** (`apps/api/src/worker`) | BullMQ Worker               | **Koyeb** / **Render.com**          | Background Worker Process.                                         |
-| **AI Microservice** (`apps/ai-service`)  | FastAPI (Python)            | **Hugging Face Spaces** / **Koyeb** | Docker/FastAPI container (16GB RAM CPU gratis di HF Spaces).       |
+| **Core API** (`apps/api`)                | Node.js / Express           | **Railway.app** / **Render.com**    | 512MB RAM, Free Web Service.                                       |
+| **Queue Worker** (`apps/api/src/worker`) | BullMQ Worker               | **Railway.app** / **Render.com**    | Background Worker Process.                                         |
+| **AI Microservice** (`apps/ai-service`)  | FastAPI (Python)            | **Railway.app** / **Hugging Face**  | Docker/FastAPI container (16GB RAM CPU / Railway).                |
 | **Database** (`database`)                | PostgreSQL 15+ + `pgvector` | **Supabase**                        | 500MB DB, `pgvector` extension pre-installed.                      |
 | **Queue Database**                       | Redis                       | **Upstash Redis** (Serverless)      | 10.000 req/day, SSL Enabled.                                       |
 | **Storage CV**                           | Private Object Storage      | **Cloudflare R2**                   | 10GB Storage gratis + **Zero Egress Fees** (Bebas Biaya Transfer). |

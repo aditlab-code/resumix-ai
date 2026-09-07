@@ -14,7 +14,7 @@ Laporan pengujian komprehensif efisiensi dan akurasi evaluasi kualifikasi CV pad
 | **Dokumen Ber-Layer Teks (Processed)** | `192 Dokumen` | Passed | Berhasil diekstrak PyMuPDF |
 | **Scanned PDFs Rejection (HTTP 400)** | `8 Dokumen` | 100% Zero-Text Rejection | Menolak dokumen tanpa layer teks |
 | **Kandidat Outlier Non-IT Detected** | `40 Dokumen` | Correct Mismatch Penalty | Guru, Chef, Nurse, Akuntan, Sipil, Sales |
-| **Rata-rata Latensi Pemrosesan** | `10.6 ms / document` | High Performance | Kecepatan pipeline ultra-fast |
+| **Rata-rata Latensi Pemrosesan** | `10.91 ms / document` | High Performance | Kecepatan pipeline ultra-fast |
 | **Rata-rata Skor Populasi (All 200 CVs)** | `24.6 / 100` | Consistent Distribution | Rata-rata dari seluruh 200 CV heterogen |
 | **Skor Tertinggi / Terendah** | `89.9 / 4.8` | Range [0.0 - 100.0] | Selektivitas tinggi tanpa inflasi skor |
 
