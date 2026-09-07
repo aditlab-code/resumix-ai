@@ -26,7 +26,7 @@ def compute_job_fit_score(
     mandatory_skills: list[str],
     preferred_skills: list[str] | None = None,
     required_experience_months: int = 24,
-    semantic_similarity: float = 0.80,
+    semantic_similarity: float = 0.0,
     skill_semantic_similarity: float | None = None,
     role_semantic_similarity: float | None = None,
     skill_equivalents: Dict[str, List[str]] | None = None,

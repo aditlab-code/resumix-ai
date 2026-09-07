@@ -130,7 +130,7 @@ def calculate_score_endpoint(
     mandatory_skills: list[str] = Body(...),
     preferred_skills: list[str] | None = Body(default=None),
     required_experience_months: int = Body(default=24),
-    semantic_similarity: float = Body(default=0.80),
+    semantic_similarity: float = Body(default=0.0),
     candidate_embedding: Optional[List[float]] = Body(default=None),
     job_embedding: Optional[List[float]] = Body(default=None),
     candidate_skill_embedding: Optional[List[float]] = Body(default=None),
