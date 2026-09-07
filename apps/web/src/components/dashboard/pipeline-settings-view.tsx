@@ -9,7 +9,6 @@ import {
   Pencil,
   ChevronLeft,
   ChevronRight,
-  Clock,
   RefreshCw,
   Zap,
   CheckCircle2,
@@ -724,36 +723,26 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       {/* Tab 3: Aturan LLM & Guardrails */}
       {activeTab === 'llm' && (
         <Card className="p-6 space-y-6">
-          {/* Header & 15-Min Session Active Timer Badge (Light Theme Styling) */}
+          {/* Minimalist Session Active Badge (No Icons, Minimal Text, Pure Status Pill) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 text-foreground border border-slate-200 shadow-2xs">
-            <div className="flex items-center gap-3">
-              <div className={cn(
-                "p-2 rounded-lg shrink-0 border",
-                isSessionLocked
-                  ? "bg-rose-100 text-rose-700 border-rose-200"
-                  : isSessionActive
-                  ? "bg-emerald-100 text-emerald-700 border-emerald-200 animate-pulse"
-                  : "bg-amber-100 text-amber-700 border-amber-200"
-              )}>
-                <Clock className="w-4 h-4" />
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
-                <span className="text-xs font-semibold text-slate-800">15-Minute Session Active Window:</span>
-                <span className={cn(
-                  "text-xs font-mono font-bold tracking-wide px-2.5 py-0.5 rounded-md border",
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs font-bold text-slate-800">Session:</span>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold font-mono tabular-nums border bg-slate-100 shadow-2xs',
                   isSessionLocked
-                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                    ? 'text-rose-900 border-rose-500'
                     : isSessionActive
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : "bg-amber-50 text-amber-800 border-amber-200"
-                )}>
-                  {isSessionLocked
-                    ? 'EXPIRED'
-                    : isSessionActive
-                    ? `${formatTimer(sessionSecondsLeft)} remaining`
-                    : 'INACTIVE (Click Save to Activate)'}
-                </span>
-              </div>
+                    ? 'text-emerald-900 border-emerald-500'
+                    : 'text-slate-700 border-slate-300'
+                )}
+              >
+                {isSessionLocked
+                  ? 'Expired'
+                  : isSessionActive
+                  ? formatTimer(sessionSecondsLeft)
+                  : 'Inactive'}
+              </span>
             </div>
 
             <Button
