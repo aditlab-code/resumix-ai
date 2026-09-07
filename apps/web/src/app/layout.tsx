@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://resumix-ai-web.vercel.app'),
   title: {
     default: 'Resumix AI | Enterprise Recruitment Intelligence',
     template: '%s | Resumix AI',
