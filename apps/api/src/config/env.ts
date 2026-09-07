@@ -13,7 +13,7 @@ function requireEnv(name: string): string {
 
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: parseInt(requireEnv('API_PORT'), 10),
+  PORT: parseInt(process.env.API_PORT || process.env.PORT || '3001', 10),
   AI_SERVICE_URL: requireEnv('AI_SERVICE_URL'),
   DATABASE_URL: requireEnv('DATABASE_URL'),
   REDIS_HOST: process.env.REDIS_HOST || 'localhost',

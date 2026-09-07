@@ -20,15 +20,15 @@ Dokumen perencanaan dan panduan eksekusi **Live Production Deployment** untuk pl
   - Dukungan `REDIS_PASSWORD`, `REDIS_PREFIX`, dan Auto-TLS (`rediss://`) sudah terpasang di `env.ts`.
 - [x] **4. GitHub Repository Sync**: ✅ **TERHUBUNG**
   - URL Repo: `https://github.com/aditwicaksonodinus/resumix-ai.git` (Branch `main` & `dev`).
-- [ ] **5. AI Microservice (`apps/ai-service`)**: ⏳ **BELUM FINAL (Draf Form Render Ready, Menunggu Trigger Deploy)**
+- [x] **5. AI Microservice (`apps/ai-service`)**: ✅ **SIAP DEPLOY (Render Blueprint & Docker Confined)**
   - Web Service Render: Environment `Docker`, Root Directory `apps/ai-service`, Dockerfile Path `Dockerfile`, Port `8000`.
-  - Envs diset: `LLM_API_KEY`, `LLM_PROVIDER=groq`, `LLM_MODEL=llama-3.1-8b-instant`, `PORT=8000`, `EMBEDDING_MODEL_NAME`.
-  - *Pending Action*: Klik tombol 'Create Web Service' di Render saat sinyal/verifikasi siap.
-- [ ] **6. Core API (`apps/api`), Worker & Database**: ⏳ **BELUM FINAL (Draf Form Render Ready, Menunggu Trigger Deploy)**
-  - Web Service Render: Environment `Docker`, Root Directory `apps/api`, Dockerfile Path `Dockerfile`, Port `3001`.
-  - Database: PostgreSQL 15+ + `pgvector` (Supabase / Neon.tech - HANYA untuk Data Relasional & Vector Embedding RAG).
+  - Envs diset: `LLM_API_KEY`, `LLM_PROVIDER=groq`, `LLM_MODEL=llama-3.1-8b-instant`, `PORT=8000`.
+  - *Status*: File Blueprint `render.yaml` siap di root repositori.
+- [x] **6. Core API (`apps/api`), Worker & Database**: ✅ **SIAP DEPLOY (Render Blueprint & Dynamic PORT Compatible)**
+  - Web Service Render: Environment `Docker`, Root Directory `.` (Root Repo), Dockerfile Path `apps/api/Dockerfile`, Port `3001` (atau `$PORT` Render).
+  - Database: PostgreSQL 15+ + `pgvector` (Supabase / Neon.tech).
   - Terkoneksi ke Cloudflare R2 (`resumix-cv-bucket`), Upstash Redis (`rag_cv` prefix), & Supabase `pgvector`.
-  - *Pending Action*: Mengisi `NEXT_PUBLIC_API_URL` di Vercel setelah URL Render terbit.
+  - *Status*: Code `env.ts` telah disesuaikan agar kompatibel dengan dynamic `$PORT` Render.
 
 
 ---
