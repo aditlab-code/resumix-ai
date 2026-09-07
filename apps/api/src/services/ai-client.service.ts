@@ -60,7 +60,11 @@ export class AIClientService {
   private baseUrl: string;
 
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || env.AI_SERVICE_URL;
+    let url = baseUrl || env.AI_SERVICE_URL;
+    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `http://${url}`;
+    }
+    this.baseUrl = url;
   }
 
   async checkHealth(): Promise<AIServiceHealth> {
