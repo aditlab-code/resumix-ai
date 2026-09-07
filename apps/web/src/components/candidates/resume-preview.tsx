@@ -106,6 +106,11 @@ const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           }
           const byteArray = new Uint8Array(byteNumbers);
           loadingTask = pdfjsLib.getDocument({ data: byteArray });
+        } else if (effectivePdfUrl.startsWith('blob:')) {
+          const res = await fetch(effectivePdfUrl);
+          const buf = await res.arrayBuffer();
+          const byteArray = new Uint8Array(buf);
+          loadingTask = pdfjsLib.getDocument({ data: byteArray });
         } else {
           loadingTask = pdfjsLib.getDocument(effectivePdfUrl);
         }
