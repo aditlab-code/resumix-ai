@@ -687,7 +687,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
               hint="Bonus score for optional preferred skills."
             />
 
-            <div className="p-4 rounded-xl border flex items-center justify-between bg-slate-50/80 border-slate-200">
+            <div className="p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border-slate-200">
               <span className="font-bold text-sm text-foreground flex items-center gap-2.5">
                 <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
                   <span className="w-1 h-1 rounded-full bg-blue-600" />
@@ -696,8 +696,19 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 </div>
                 Total Weight Accumulation:
               </span>
-              <span className={cn('text-xl font-extrabold font-mono tabular-nums px-3 py-1 rounded-full border shadow-2xs', weightValid ? 'bg-slate-100 text-emerald-950 border-emerald-500' : 'bg-slate-100 text-rose-950 border-rose-500')}>
-                {totalWeight}% {weightValid ? '(Valid 100%)' : '(Must be 100%)'}
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-extrabold font-mono tabular-nums tracking-wider uppercase border bg-slate-100 shadow-2xs self-start sm:self-auto',
+                  weightValid ? 'text-emerald-900 border-emerald-500' : 'text-rose-900 border-rose-500'
+                )}
+              >
+                <span
+                  className={cn(
+                    'w-1.5 h-1.5 rounded-full shrink-0',
+                    weightValid ? 'bg-emerald-600' : 'bg-rose-600 animate-pulse'
+                  )}
+                />
+                {totalWeight}% {weightValid ? 'Valid (100%)' : 'Must be 100%'}
               </span>
             </div>
 

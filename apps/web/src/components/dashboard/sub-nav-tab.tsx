@@ -29,11 +29,11 @@ export function SubNavTab<T extends string = string>({
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1',
+        'w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 py-1',
         className
       )}
     >
-      <div className="inline-flex h-11 items-center justify-center rounded-xl bg-muted/60 p-1 text-muted-foreground self-start sm:self-auto overflow-x-auto no-scrollbar shadow-sm border border-border">
+      <div className="w-full sm:w-auto inline-flex min-h-[44px] h-auto items-center rounded-xl bg-muted/60 p-1 text-muted-foreground overflow-x-auto no-scrollbar shadow-sm border border-border">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -43,14 +43,14 @@ export function SubNavTab<T extends string = string>({
               type="button"
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                'inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none gap-2',
+                'flex-1 sm:flex-none inline-flex items-center justify-center min-h-[36px] rounded-lg px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none gap-2 whitespace-normal text-center',
                 isActive
                   ? 'bg-primary text-primary-foreground shadow-sm font-bold'
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/60'
               )}
             >
               {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
-              <span>{tab.label}</span>
+              <span className="text-center leading-snug line-clamp-2 max-w-full break-words">{tab.label}</span>
             </button>
           );
         })}

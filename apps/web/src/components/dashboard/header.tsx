@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   else if (pathname.startsWith('/docs')) activeView = 'docs';
 
   return (
-    <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-raised border border-surface-border p-3.5 sm:p-4 rounded-md shadow-e1 sticky top-0 z-20">
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-raised border-b md:border border-surface-border p-4 sm:p-4 rounded-none md:rounded-md shadow-none md:shadow-e1 sticky top-0 z-20 -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 md:mx-0 md:mt-0">
       <div className="flex items-center justify-between md:justify-start gap-3 w-full md:w-auto">
         <div className="flex items-center gap-2.5 min-w-0">
           {onToggleMobileMenu && (

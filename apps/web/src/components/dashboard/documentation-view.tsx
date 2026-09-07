@@ -469,7 +469,7 @@ export const DocumentationView: React.FC = () => {
       {/* Wiki 2-Column Layout */}
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* Wiki Sidebar */}
-        <Card className="w-full lg:w-72 shrink-0 p-4 space-y-5 sticky top-24">
+        <Card className="w-full lg:w-72 shrink-0 p-4 space-y-5 static lg:sticky lg:top-24">
           <div className="px-1 border-b border-surface-border pb-3">
             <h3 className="text-h3 font-bold text-ink-default tracking-tight">Documentation</h3>
           </div>
@@ -506,7 +506,7 @@ export const DocumentationView: React.FC = () => {
         </Card>
 
         {/* Wiki Reading Canvas */}
-        <Card className="flex-1 min-w-0 p-4 sm:p-8 min-h-[600px] bg-white border-surface-border shadow-e1">
+        <Card className="flex-1 min-w-0 w-full p-4 sm:p-8 min-h-[600px] bg-white border-surface-border shadow-e1 overflow-hidden">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-28 text-center space-y-3">
               <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
@@ -521,7 +521,7 @@ export const DocumentationView: React.FC = () => {
               </Button>
             </div>
           ) : (
-            <article className="prose prose-slate max-w-none text-body leading-relaxed space-y-2">
+            <article className="prose prose-slate max-w-none text-body leading-relaxed space-y-2 break-words min-w-0 overflow-x-auto">
               {parsedMarkdown}
             </article>
           )}

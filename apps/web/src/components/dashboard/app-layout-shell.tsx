@@ -74,7 +74,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      <main className="flex-1 p-6 space-y-6 w-full min-w-0 max-w-[1440px] mx-auto">
+      <main className="flex-1 p-4 sm:p-6 space-y-6 w-full min-w-0 max-w-[1440px] mx-auto">
         <Header
           onSaveSettings={() =>
             addToast('success', 'Settings saved', 'All ATS pipeline parameters were successfully updated.')

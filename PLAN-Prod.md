@@ -189,16 +189,16 @@ chmod +x /opt/backup.sh
 
 ### 🧩 1. Pemetaan Layanan Free Tier
 
-| Service / Komponen | Stack | Platform | Limit & Spesifikasi Free Tier |
-| :--- | :--- | :--- | :--- |
-| **Frontend** (`apps/web`) | Next.js 14 | **Vercel** (Hobby Plan) | Edge Network, Unlimited GitHub CI/CD, SSL Otomatis. |
-| **Core API** (`apps/api`) | Node.js / Express | **Koyeb** / **Render.com** | 512MB RAM, Free Web Service. |
-| **Queue Worker** (`apps/api/src/worker`) | BullMQ Worker | **Koyeb** / **Render.com** | Background Worker Process. |
-| **AI Microservice** (`apps/ai-service`) | FastAPI (Python) | **Hugging Face Spaces** / **Koyeb** | Docker/FastAPI container (16GB RAM CPU gratis di HF Spaces). |
-| **Database** (`database`) | PostgreSQL 15+ + `pgvector` | **Supabase** | 500MB DB, `pgvector` extension pre-installed. |
-| **Queue Database** | Redis | **Upstash Redis** (Serverless) | 10.000 req/day, SSL Enabled. |
-| **Storage CV** | Private Object Storage | **Cloudflare R2** | 10GB Storage gratis + **Zero Egress Fees** (Bebas Biaya Transfer). |
-| **LLM Provider** | Llama 3 / Mixtral | **Groq Cloud API** | Free Tier Rate Limit tinggi. |
+| Service / Komponen                       | Stack                       | Platform                            | Limit & Spesifikasi Free Tier                                      |
+|:-----------------------------------------|:----------------------------|:------------------------------------|:-------------------------------------------------------------------|
+| **Frontend** (`apps/web`)                | Next.js 14                  | **Vercel** (Hobby Plan)             | Edge Network, Unlimited GitHub CI/CD, SSL Otomatis.                |
+| **Core API** (`apps/api`)                | Node.js / Express           | **Koyeb** / **Render.com**          | 512MB RAM, Free Web Service.                                       |
+| **Queue Worker** (`apps/api/src/worker`) | BullMQ Worker               | **Koyeb** / **Render.com**          | Background Worker Process.                                         |
+| **AI Microservice** (`apps/ai-service`)  | FastAPI (Python)            | **Hugging Face Spaces** / **Koyeb** | Docker/FastAPI container (16GB RAM CPU gratis di HF Spaces).       |
+| **Database** (`database`)                | PostgreSQL 15+ + `pgvector` | **Supabase**                        | 500MB DB, `pgvector` extension pre-installed.                      |
+| **Queue Database**                       | Redis                       | **Upstash Redis** (Serverless)      | 10.000 req/day, SSL Enabled.                                       |
+| **Storage CV**                           | Private Object Storage      | **Cloudflare R2**                   | 10GB Storage gratis + **Zero Egress Fees** (Bebas Biaya Transfer). |
+| **LLM Provider**                         | Llama 3 / Mixtral           | **Groq Cloud API**                  | Free Tier Rate Limit tinggi.                                       |
 
 ---
 

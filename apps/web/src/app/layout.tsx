@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { AppDataProvider } from '@/context/app-data-context';
@@ -17,9 +18,55 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 });
 
-export const metadata = {
-  title: 'Resumix AI | Enterprise Recruitment Intelligence',
-  description: 'AI-Assisted Candidate Screening & Recruitment ATS System',
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: {
+    default: 'Resumix AI | Enterprise Recruitment Intelligence',
+    template: '%s | Resumix AI',
+  },
+  description:
+    'Enterprise Recruitment Intelligence & Next-Gen ATS Resume Screening System. Automate candidate evaluation, job-fit scoring, and skill taxonomy matching.',
+  applicationName: 'Resumix AI',
+  authors: [{ name: 'Resumix AI Engineering Team' }],
+  generator: 'Next.js 14',
+  keywords: [
+    'Resumix AI',
+    'Recruitment Intelligence',
+    'ATS System',
+    'AI Resume Parser',
+    'Job-Fit Scoring',
+    'Candidate Screening',
+    'pgvector',
+    'FastAPI',
+    'BullMQ',
+    'Skill Matching',
+  ],
+  referrer: 'origin-when-cross-origin',
+  creator: 'Resumix AI Team',
+  publisher: 'Resumix AI',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
+  openGraph: {
+    title: 'Resumix AI | Enterprise Recruitment Intelligence',
+    description:
+      'Enterprise Recruitment Intelligence & Next-Gen ATS Resume Screening System.',
+    siteName: 'Resumix AI',
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Resumix AI | Enterprise Recruitment Intelligence',
+    description:
+      'Enterprise Recruitment Intelligence & Next-Gen ATS Resume Screening System.',
+    creator: '@resumix_ai',
+  },
 };
 
 export default function RootLayout({
