@@ -44,14 +44,6 @@ export const metadata: Metadata = {
   referrer: 'origin-when-cross-origin',
   creator: 'Resumix AI Team',
   publisher: 'Resumix AI',
-  icons: {
-    icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico' },
-    ],
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
-  },
   openGraph: {
     title: 'Resumix AI | Enterprise Recruitment Intelligence',
     description:
