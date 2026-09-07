@@ -64,7 +64,7 @@ export class AIClientService {
     if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
       url = `http://${url}`;
     }
-    this.baseUrl = url;
+    this.baseUrl = url.replace(/\/+$/, '');
   }
 
   async checkHealth(): Promise<AIServiceHealth> {
