@@ -131,8 +131,8 @@ export const Overlay: React.FC<OverlayProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('p-0 gap-0 overflow-hidden border border-surface-border bg-background shadow-e4_modal rounded-xl sm:rounded-2xl max-h-[85vh]', centerSizeClass[size])}>
-        <DialogHeader className="px-4 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-border bg-background shrink-0 text-left pr-14 sm:pr-16">
+      <DialogContent className={cn('p-0 gap-0 border border-surface-border bg-background shadow-e4_modal rounded-none sm:rounded-2xl sm:max-h-[85vh]', centerSizeClass[size])}>
+        <DialogHeader className="px-4 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-border bg-background text-left pr-14 sm:pr-16 shrink-0">
           {typeof title === 'string' ? (
             <DialogTitle className="text-lg font-bold text-foreground truncate">{title}</DialogTitle>
           ) : (
@@ -143,12 +143,12 @@ export const Overlay: React.FC<OverlayProps> = ({
         {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-4 sm:px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
         <div
           ref={contentRef}
-          className={cn('flex-1 max-h-[75vh] overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 text-sm text-foreground', bodyClassName)}
+          className={cn('flex-1 px-4 sm:px-8 py-4 sm:py-6 text-sm text-foreground sm:overflow-y-auto sm:max-h-[65vh]', bodyClassName)}
         >
           {children}
         </div>
         {footer && (
-          <div className="flex items-center justify-end gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-t border-border bg-muted/30 shrink-0">
+          <div className="flex items-center justify-end gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-t border-border bg-muted/30 shrink-0 mt-auto sm:mt-0">
             {footer}
           </div>
         )}
