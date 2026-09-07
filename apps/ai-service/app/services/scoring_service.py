@@ -26,7 +26,7 @@ def compute_job_fit_score(
     mandatory_skills: list[str],
     preferred_skills: list[str] | None = None,
     required_experience_months: int = 24,
-    semantic_similarity: float = 0.0,
+    semantic_similarity: float | None = None,
     skill_semantic_similarity: float | None = None,
     role_semantic_similarity: float | None = None,
     skill_equivalents: Dict[str, List[str]] | None = None,
@@ -40,11 +40,6 @@ def compute_job_fit_score(
     mandatory_list = mandatory_skills or []
     preferred_list = preferred_skills or []
 
-    # Clamp semantic similarities to [0.0, 1.0]
-    clamped_overall_sim = max(0.0, min(1.0, float(semantic_similarity or 0.0)))
-    clamped_skill_sim = max(0.0, min(1.0, float(skill_semantic_similarity if skill_semantic_similarity is not None else clamped_overall_sim)))
-    clamped_role_sim = max(0.0, min(1.0, float(role_semantic_similarity if role_semantic_similarity is not None else clamped_overall_sim)))
-
     # Evaluate Mandatory & Preferred Skills matching with Dynamic LLM Skill Equivalents
     eval_res = evaluate_mandatory_and_preferred_skills(
         candidate_skills=skills_list,
@@ -57,6 +52,15 @@ def compute_job_fit_score(
     preferred_score = float(eval_res["preferred_score"])
     matched_skills = list(eval_res["matched_skills"])
     missing_mandatory = list(eval_res["missing_mandatory_skills"])
+
+    # Clamp semantic similarities to [0.0, 1.0] (default to mandatory_score when embeddings omitted)
+    if semantic_similarity is None:
+        clamped_overall_sim = mandatory_score
+    else:
+        clamped_overall_sim = max(0.0, min(1.0, float(semantic_similarity)))
+
+    clamped_skill_sim = max(0.0, min(1.0, float(skill_semantic_similarity if skill_semantic_similarity is not None else clamped_overall_sim)))
+    clamped_role_sim = max(0.0, min(1.0, float(role_semantic_similarity if role_semantic_similarity is not None else clamped_overall_sim)))
 
     # Calculate Relevant Domain Experience Months
     if work_experiences and isinstance(work_experiences, list):
