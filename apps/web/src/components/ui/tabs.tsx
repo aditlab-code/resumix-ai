@@ -68,20 +68,20 @@ export type TabsProps = Omit<React.ComponentPropsWithoutRef<typeof TabsPrimitive
 const Tabs: React.FC<TabsProps> = ({ items, active, onChange, className, value, onValueChange, children, ...props }) => {
   if (items && active && onChange) {
     return (
-      <div className={cn('w-full flex flex-wrap sm:flex-nowrap min-h-[44px] h-auto items-center rounded-xl bg-muted/60 p-1 text-muted-foreground shadow-sm border border-border max-w-full justify-start sm:justify-center', className)}>
+      <div className={cn('w-full flex flex-wrap sm:flex-nowrap min-h-[44px] h-auto items-center justify-start rounded-xl bg-muted/60 p-1 text-muted-foreground shadow-sm border border-border max-w-full', className)}>
         {items.map((item) => (
           <button
             key={item.key}
             type="button"
             onClick={() => onChange(item.key)}
             className={cn(
-              'flex-1 sm:flex-none inline-flex items-center justify-center min-h-[36px] rounded-lg px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none whitespace-normal text-center',
+              'flex-1 sm:flex-initial inline-flex items-center justify-start text-left min-h-[36px] rounded-lg px-3 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none whitespace-normal',
               active === item.key
                 ? 'bg-primary text-primary-foreground shadow-sm font-bold'
                 : 'text-muted-foreground hover:text-foreground hover:bg-background/60'
             )}
           >
-            <span className="text-center leading-snug line-clamp-2 max-w-full break-words">{item.label}</span>
+            <span className="text-left leading-snug line-clamp-2 max-w-full break-words">{item.label}</span>
           </button>
         ))}
       </div>

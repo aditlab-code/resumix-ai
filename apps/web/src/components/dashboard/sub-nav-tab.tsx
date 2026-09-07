@@ -33,7 +33,7 @@ export function SubNavTab<T extends string = string>({
         className
       )}
     >
-      <div className="w-full sm:w-auto inline-flex min-h-[44px] h-auto items-center rounded-xl bg-muted/60 p-1 text-muted-foreground overflow-x-auto no-scrollbar shadow-sm border border-border">
+      <div className="w-full sm:w-auto inline-flex min-h-[44px] h-auto items-center justify-start rounded-xl bg-muted/60 p-1 text-muted-foreground overflow-x-auto no-scrollbar shadow-sm border border-border">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -43,14 +43,14 @@ export function SubNavTab<T extends string = string>({
               type="button"
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                'flex-1 sm:flex-none inline-flex items-center justify-center min-h-[36px] rounded-lg px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none gap-2 whitespace-normal text-center',
+                'flex-1 sm:flex-none inline-flex items-center justify-start text-left min-h-[36px] rounded-lg px-3 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none outline-none select-none gap-2 whitespace-normal',
                 isActive
                   ? 'bg-primary text-primary-foreground shadow-sm font-bold'
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/60'
               )}
             >
               {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
-              <span className="text-center leading-snug line-clamp-2 max-w-full break-words">{tab.label}</span>
+              <span className="text-left leading-snug line-clamp-2 max-w-full break-words">{tab.label}</span>
             </button>
           );
         })}
