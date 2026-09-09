@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
   cleanDistDir: true,
   reactStrictMode: true,
+  outputFileTracing: false,
   transpilePackages: ['@cv-ats/contracts'],
   experimental: {
     turbo: {
