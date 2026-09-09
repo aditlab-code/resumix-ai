@@ -11,10 +11,12 @@ interface CandidateProfileProps {
 
 export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }) => (
   <div className="space-y-4">
-    {/* Summary Card */}
+    {/* Profile Summary */}
     {extraction.summary && (
-      <Card className="p-4 space-y-2 bg-card border border-border rounded-xl">
-        <SectionLabel>Profile Summary (AI)</SectionLabel>
+      <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+        <div className="border-b border-border/60 pb-2">
+          <SectionLabel className="mb-0">Profile Summary (AI)</SectionLabel>
+        </div>
         <p className="text-xs text-muted-foreground font-medium leading-relaxed bg-muted/30 p-3 rounded-lg border border-border/50">
           {extraction.summary}
         </p>
@@ -22,11 +24,13 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     )}
 
     {/* Keahlian / Skills */}
-    <Card className="p-4 space-y-2.5 bg-card border border-border rounded-xl">
-      <SectionLabel>
-        Skills & Technical Tags ({extraction.skills?.length || 0})
-      </SectionLabel>
-      <div className="flex flex-wrap gap-1.5">
+    <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+      <div className="border-b border-border/60 pb-2">
+        <SectionLabel className="mb-0">
+          Skills & Technical Tags ({extraction.skills?.length || 0})
+        </SectionLabel>
+      </div>
+      <div className="flex flex-wrap gap-1.5 pt-0.5">
         {extraction.skills && extraction.skills.length > 0 ? (
           extraction.skills.map((skill, idx) => (
             <span
@@ -48,11 +52,13 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
     </Card>
 
     {/* Work Experience */}
-    <div className="space-y-2">
-      <SectionLabel>
-        Work Experience & Projects ({extraction.work_experience?.length || 0})
-      </SectionLabel>
-      <div className="space-y-2.5">
+    <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+      <div className="border-b border-border/60 pb-2">
+        <SectionLabel className="mb-0">
+          Work Experience & Projects ({extraction.work_experience?.length || 0})
+        </SectionLabel>
+      </div>
+      <div className="space-y-2.5 pt-0.5">
         {extraction.work_experience && extraction.work_experience.length > 0 ? (
           extraction.work_experience.map((exp, idx) => {
             const hasDuplicateDesc =
@@ -71,8 +77,8 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
               : exp.description;
 
             return (
-              <Card key={idx} className="p-4 space-y-2.5 bg-card border border-border rounded-xl">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 border-b border-border/60 pb-2">
+              <div key={idx} className="p-3.5 space-y-2.5 bg-muted/20 border border-border/60 rounded-lg">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 border-b border-border/40 pb-2">
                   <div className="min-w-0 flex-1">
                     <h5 className="font-bold text-sm text-foreground leading-snug">{displayTitle}</h5>
                     {displaySubTitle && (
@@ -91,7 +97,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
 
                 {/* Technologies used */}
                 {exp.technologies && exp.technologies.length > 0 && (
-                  <div className="pt-1.5 space-y-1">
+                  <div className="pt-1 space-y-1">
                     <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
                       Technologies:
                     </span>
@@ -110,7 +116,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
 
                 {/* Projects */}
                 {exp.projects && exp.projects.length > 0 && (
-                  <div className="pt-2 border-t border-border/60 space-y-1.5">
+                  <div className="pt-1.5 border-t border-border/40 space-y-1">
                     <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
                       Key Projects
                     </span>
@@ -126,21 +132,23 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                     </div>
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })
         ) : (
           <span className="text-xs text-muted-foreground italic">No work experience available</span>
         )}
       </div>
-    </div>
+    </Card>
 
     {/* Pendidikan */}
-    <div className="space-y-2.5">
-      <SectionLabel>
-        Education ({extraction.education?.length || 0})
-      </SectionLabel>
-      <div className="space-y-2">
+    <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+      <div className="border-b border-border/60 pb-2">
+        <SectionLabel className="mb-0">
+          Education ({extraction.education?.length || 0})
+        </SectionLabel>
+      </div>
+      <div className="space-y-2 pt-0.5">
         {extraction.education && extraction.education.length > 0 ? (
           extraction.education.map((edu, idx) => {
             const hasInst = edu.institution && edu.institution.trim() !== '' && edu.institution.trim() !== 'Tidak tercantum' && edu.institution.trim() !== 'Not listed';
@@ -151,7 +159,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
               .join(' — ');
 
             return (
-              <Card key={idx} className="p-4 bg-card border border-border rounded-xl shadow-xs">
+              <div key={idx} className="p-3.5 bg-muted/20 border border-border/60 rounded-lg shadow-2xs">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <h5 className="font-bold text-sm text-foreground leading-snug">{displayInst}</h5>
@@ -172,81 +180,100 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                     )}
                   </div>
                 </div>
-              </Card>
+              </div>
             );
           })
         ) : (
           <span className="text-xs text-muted-foreground italic">No education data available</span>
         )}
       </div>
-    </div>
+    </Card>
 
-    {/* Sertifikasi & Portofolio */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {extraction.certifications && extraction.certifications.length > 0 && (
-        <div className="space-y-2">
-          <SectionLabel>
-            Certifications ({extraction.certifications.length})
-          </SectionLabel>
-          <div className="space-y-1.5">
+    {/* Certifications */}
+    <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+      <div className="border-b border-border/60 pb-2">
+        <SectionLabel className="mb-0">
+          Certifications ({extraction.certifications?.length || 0})
+        </SectionLabel>
+      </div>
+      <div className="pt-0.5">
+        {extraction.certifications && extraction.certifications.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {extraction.certifications.map((c, i) => (
-              <div key={i} className="text-xs text-foreground bg-card border border-border p-3 rounded-xl font-bold shadow-2xs flex items-center">
-                <span>{c}</span>
+              <div
+                key={i}
+                className="text-xs text-foreground bg-muted/20 border border-border/60 p-2.5 rounded-lg font-semibold shadow-2xs flex items-center gap-2"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                <span className="leading-snug">{c}</span>
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <span className="text-xs text-muted-foreground italic">No certifications recorded</span>
+        )}
+      </div>
+    </Card>
 
-      {extraction.projects && extraction.projects.length > 0 && (
-        <div className="space-y-2">
-          <SectionLabel>
+    {/* Project Portfolio (if present) */}
+    {extraction.projects && extraction.projects.length > 0 && (
+      <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+        <div className="border-b border-border/60 pb-2">
+          <SectionLabel className="mb-0">
             Project Portfolio ({extraction.projects.length})
           </SectionLabel>
-          <div className="space-y-1.5">
-            {extraction.projects.map((p, i) => (
-              <div key={i} className="text-xs text-foreground bg-card border border-border p-3 rounded-xl font-bold shadow-2xs flex items-center">
-                <span>{p}</span>
-              </div>
-            ))}
-          </div>
         </div>
-      )}
-    </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
+          {extraction.projects.map((p, i) => (
+            <div
+              key={i}
+              className="text-xs text-foreground bg-muted/20 border border-border/60 p-2.5 rounded-lg font-semibold shadow-2xs flex items-center gap-2"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+              <span className="leading-snug">{p}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    )}
 
     {/* Portfolios section */}
     {extraction.portfolios && extraction.portfolios.length > 0 && (
-      <div className="space-y-2">
-        <SectionLabel>
-          Portfolio Links ({extraction.portfolios.length})
-        </SectionLabel>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+        <div className="border-b border-border/60 pb-2">
+          <SectionLabel className="mb-0">
+            Portfolio Links ({extraction.portfolios.length})
+          </SectionLabel>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
           {extraction.portfolios.map((pf, i) => (
             <a
               key={i}
               href={pf.url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-foreground bg-card border border-border p-3 rounded-xl font-bold shadow-2xs flex items-center justify-between gap-2 hover:bg-muted/50 transition-colors"
+              className="text-xs text-foreground bg-muted/20 border border-border/60 p-2.5 rounded-lg font-semibold shadow-2xs flex items-center justify-between gap-2 hover:bg-muted/50 transition-colors"
             >
               <span className="truncate">{pf.title}</span>
             </a>
           ))}
         </div>
-      </div>
+      </Card>
     )}
 
     {/* References section */}
     {extraction.references && extraction.references.length > 0 && (
-      <div className="space-y-2">
-        <SectionLabel>
-          Work References ({extraction.references.length})
-        </SectionLabel>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
+        <div className="border-b border-border/60 pb-2">
+          <SectionLabel className="mb-0">
+            Work References ({extraction.references.length})
+          </SectionLabel>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
           {extraction.references.map((rf, i) => (
             <div
               key={i}
-              className="text-xs text-foreground bg-card border border-border p-3 rounded-xl font-bold shadow-2xs flex items-center"
+              className="text-xs text-foreground bg-muted/20 border border-border/60 p-2.5 rounded-lg font-semibold shadow-2xs flex items-center"
             >
               <div>
                 <span className="block font-bold">{rf.name}</span>
@@ -255,7 +282,7 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     )}
 
     {/* Catatan AI Extraction */}
