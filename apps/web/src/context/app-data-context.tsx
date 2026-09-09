@@ -5,7 +5,7 @@ import { JobPosting, CandidateApplication, AuditLogItem } from '@/lib/types';
 import { ToastMessage } from '@/components/ui/toast';
 import { ApplicationStatus } from '@cv-ats/contracts';
 import { INITIAL_JOBS, INITIAL_APPLICATIONS, INITIAL_AUDIT_LOGS } from '@/lib/mock-data';
-import { fetchJobs, updateApplicationStatus as apiUpdateStatus } from '@/lib/api-client';
+import { fetchJobs, createJobApi, deleteJobApi, updateApplicationStatus as apiUpdateStatus } from '@/lib/api-client';
 import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
 
 interface AppDataContextType {
@@ -82,16 +82,18 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     async function loadLiveData() {
       try {
-        const savedJobs = localStorage.getItem('cv_ats_jobs');
-        if (savedJobs !== null) {
-          const parsed = JSON.parse(savedJobs);
-          if (Array.isArray(parsed)) {
-            setJobs(parsed);
-          }
+        const liveJobsResponse = await fetchJobs().catch(() => null);
+        if (liveJobsResponse && Array.isArray(liveJobsResponse.data) && liveJobsResponse.data.length > 0) {
+          setJobs(liveJobsResponse.data);
         } else {
-          const liveJobsResponse = await fetchJobs().catch(() => null);
-          if (liveJobsResponse && Array.isArray(liveJobsResponse.data) && liveJobsResponse.data.length > 0) {
-            setJobs(liveJobsResponse.data);
+          const savedJobs = localStorage.getItem('cv_ats_jobs');
+          if (savedJobs !== null) {
+            const parsed = JSON.parse(savedJobs);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setJobs(parsed);
+            } else {
+              setJobs(INITIAL_JOBS);
+            }
           } else {
             setJobs(INITIAL_JOBS);
           }
@@ -186,6 +188,23 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const handleCreateJobSuccess = (newJob: JobPosting) => {
     setJobs((prev) => [newJob, ...prev]);
     setSelectedJobId(newJob.id);
+
+    createJobApi({
+      title: newJob.title,
+      description: `Position for ${newJob.title}`,
+      minimum_experience_months: newJob.minimum_experience_months,
+      mandatory_skills: newJob.mandatory_skills,
+      preferred_skills: newJob.preferred_skills,
+    })
+      .then((res) => {
+        if (res?.data?.id) {
+          const createdId = String(res.data.id);
+          setJobs((prev) => prev.map((j) => (j.id === newJob.id ? { ...j, id: createdId } : j)));
+          setSelectedJobId(createdId);
+        }
+      })
+      .catch((err) => console.warn('Centralized DB Job Creation warning:', err));
+
     addAuditLog(
       'job_created',
       'job_postings',
@@ -210,6 +229,7 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const jobToDelete = deletingJob;
     if (!jobToDelete) return;
 
+    deleteJobApi(jobToDelete.id).catch((err) => console.warn('Centralized DB Delete warning:', err));
     setJobs((prev) => prev.filter((j) => j.id !== jobToDelete.id));
     if (selectedJobId === jobToDelete.id) {
       const remaining = jobs.filter((j) => j.id !== jobToDelete.id);
