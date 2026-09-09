@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { JobPosting } from '@/lib/types';
 import { Plus, MapPin, Clock, Users, Edit3, Trash2, Briefcase } from 'lucide-react';
-import { Button, Card, Toolbar, SearchInput, EmptyState } from '@/components/ui';
+import { Button, Card, Toolbar, SearchInput, EmptyState, SectionLabel } from '@/components/ui';
 
 import { cn } from '@/lib/utils';
 
@@ -74,16 +74,12 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                 <div className="space-y-4">
                   <div className="flex justify-between items-start gap-2">
                     <div>
-                      <div className="flex items-center gap-2.5 min-w-0 mb-1">
-                        <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
-                          <span className={cn('w-1 h-1 rounded-full', isActive ? 'bg-blue-600' : 'bg-slate-400')} />
-                          <span className={cn('w-1 h-1 rounded-full', isActive ? 'bg-blue-600' : 'bg-slate-400')} />
-                          <span className={cn('w-1 h-1 rounded-full', isActive ? 'bg-blue-600' : 'bg-slate-400')} />
-                        </div>
-                        <span className={cn('text-xs font-extrabold uppercase tracking-wider block truncate', isActive ? 'text-blue-950' : 'text-slate-600')}>
-                          {job.department}
-                        </span>
-                      </div>
+                      <SectionLabel
+                        accentColor={isActive ? 'bg-blue-600' : 'bg-slate-400'}
+                        className={cn('mb-1 text-xs font-extrabold uppercase tracking-wider block truncate', isActive ? 'text-blue-950' : 'text-slate-600')}
+                      >
+                        {job.department}
+                      </SectionLabel>
                       <h3 className="text-lg font-bold text-foreground leading-snug">{job.title}</h3>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">

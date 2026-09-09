@@ -31,31 +31,62 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = 'Card';
 
+export interface ThreeDotsAccentProps {
+  colorClassName?: string;
+  className?: string;
+}
+
+export const ThreeDotsAccent: React.FC<ThreeDotsAccentProps> = ({
+  colorClassName = 'bg-blue-600',
+  className,
+}) => (
+  <div className={cn('flex flex-col gap-0.5 shrink-0', className)} aria-hidden="true">
+    <span className={cn('w-1 h-1 rounded-full', colorClassName)} />
+    <span className={cn('w-1 h-1 rounded-full', colorClassName)} />
+    <span className={cn('w-1 h-1 rounded-full', colorClassName)} />
+  </div>
+);
+
 export type CardHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
   title?: React.ReactNode;
-  action?: React.ReactNode;
   subtitle?: React.ReactNode;
+  action?: React.ReactNode;
+  disableBorder?: boolean;
+  showAccent?: boolean;
+  accentColor?: string;
 };
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ className, title, subtitle, action, children, ...props }, ref) => {
+  (
+    {
+      className,
+      title,
+      subtitle,
+      action,
+      disableBorder = false,
+      showAccent = true,
+      accentColor,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     if (title || subtitle || action) {
       return (
         <div
           ref={ref}
-          className={cn('flex items-center justify-between gap-3 border-b border-border pb-4 mb-4 p-6', className)}
+          className={cn(
+            'flex items-center justify-between gap-3',
+            !disableBorder && 'border-b border-border pb-4 mb-4',
+            className
+          )}
           {...props}
         >
           <div>
             {typeof title === 'string' ? (
-              <h3 className="text-lg font-bold text-card-foreground tracking-tight flex items-center gap-2.5">
-                <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
-                  <span className="w-1 h-1 rounded-full bg-blue-600" />
-                  <span className="w-1 h-1 rounded-full bg-blue-600" />
-                  <span className="w-1 h-1 rounded-full bg-blue-600" />
-                </div>
+              <CardTitle showAccent={showAccent} accentColor={accentColor}>
                 {title}
-              </h3>
+              </CardTitle>
             ) : (
               title
             )}
@@ -66,7 +97,15 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       );
     }
     return (
-      <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props}>
+      <div
+        ref={ref}
+        className={cn(
+          'flex flex-col space-y-1.5',
+          !disableBorder && 'border-b border-border pb-4 mb-4',
+          className
+        )}
+        {...props}
+      >
         {children}
       </div>
     );
@@ -74,9 +113,21 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 );
 CardHeader.displayName = 'CardHeader';
 
-const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('font-bold leading-none tracking-tight text-lg', className)} {...props} />
+export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  showAccent?: boolean;
+  accentColor?: string;
+}
+
+const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+  ({ className, showAccent = true, accentColor, children, ...props }, ref) => (
+    <h3
+      ref={ref}
+      className={cn('font-bold leading-tight tracking-tight text-lg text-card-foreground flex items-center gap-2.5', className)}
+      {...props}
+    >
+      {showAccent && <ThreeDotsAccent colorClassName={accentColor} />}
+      {children}
+    </h3>
   )
 );
 CardTitle.displayName = 'CardTitle';
@@ -102,20 +153,29 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardFooter.displayName = 'CardFooter';
 
-export const SectionLabel: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = ({
+export interface SectionLabelProps extends React.HTMLAttributes<HTMLParagraphElement> {
+  showAccent?: boolean;
+  accentColor?: string;
+}
+
+export const SectionLabel: React.FC<SectionLabelProps> = ({
   className,
+  showAccent = true,
+  accentColor,
   children,
   ...props
 }) => (
   <p
-    className={cn('text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-2', className)}
+    className={cn(
+      'text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-2',
+      className
+    )}
     {...props}
   >
-    <span className="w-1.5 h-1.5 bg-blue-600 rounded-full inline-block shrink-0"></span>
+    {showAccent && <ThreeDotsAccent colorClassName={accentColor} />}
     {children}
   </p>
 );
-
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
 

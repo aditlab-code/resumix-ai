@@ -5,15 +5,15 @@
 ## License Summary
 
 You are free to:
-* **Share** — copy and redistribute the material in any medium or format
-* **Adapt** — remix, transform, and build upon the material
+* **Share** — Copy and redistribute the material in any medium or format.
+* **Adapt** — Remix, transform, and build upon the material.
 
-The licensor cannot revoke these freedoms as long as you follow the license terms.
+The licensor cannot revoke these freedoms as long as you follow the stated license terms.
 
-### Under the following terms:
+### Under the Following Terms:
 
 1. **Attribution (BY)** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-2. **NonCommercial (NC)** — You may not use the material for **commercial purposes**. Perusahaan, HR agency, atau entitas komersial **dilarang keras** menggunakan, memperjualbelikan, atau memanfaatkan dokumentasi dan arsitektur sistem ini untuk produk komersial tanpa izin tertulis dari pemilik hak cipta.
+2. **NonCommercial (NC)** — You may not use the material for **commercial purposes**. Corporations, HR agencies, or commercial entities are **strictly prohibited** from utilizing, selling, or embedding this system documentation and architecture into commercial products without explicit written authorization from the copyright holder.
 3. **ShareAlike (SA)** — If you remix, transform, or build upon the material, you must distribute your contributions under the **same license** as the original.
 
 ### Notices:

@@ -61,17 +61,10 @@ export const Stat: React.FC<StatProps> = ({ label, value, hint, onClick, variant
         onClick && 'cursor-pointer'
       )}
     >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-6">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
-            <span className={cn('w-1 h-1 rounded-full', currentVariant.dot)} />
-            <span className={cn('w-1 h-1 rounded-full', currentVariant.dot)} />
-            <span className={cn('w-1 h-1 rounded-full', currentVariant.dot)} />
-          </div>
-          <CardTitle className={cn('text-xs uppercase tracking-wider truncate', currentVariant.title)}>
-            {label}
-          </CardTitle>
-        </div>
+      <CardHeader disableBorder className="flex flex-row items-center justify-between space-y-0 pb-2 p-6">
+        <CardTitle accentColor={currentVariant.dot} className={cn('text-xs uppercase tracking-wider truncate', currentVariant.title)}>
+          {label}
+        </CardTitle>
         {hint && (
           <span className={cn('text-xs px-2.5 py-0.5 rounded-full border shadow-2xs shrink-0', currentVariant.hint)}>
             {hint}

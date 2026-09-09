@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from './label';
+import { ThreeDotsAccent } from './card';
 import { Input as ShadcnInput } from './input';
 import { Textarea as ShadcnTextarea } from './textarea';
 import { ChevronDown } from 'lucide-react';
@@ -106,11 +107,7 @@ export const RangeField: React.FC<RangeFieldProps> = ({
   <div className="space-y-2.5 bg-slate-50/80 rounded-xl p-4 border border-slate-200">
     <div className="flex justify-between items-center text-xs font-bold">
       <span className="text-slate-900 flex items-center gap-2">
-        <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
-          <span className="w-1 h-1 rounded-full bg-blue-600" />
-          <span className="w-1 h-1 rounded-full bg-blue-600" />
-          <span className="w-1 h-1 rounded-full bg-blue-600" />
-        </div>
+        <ThreeDotsAccent />
         {label}
       </span>
       <span className="font-mono font-extrabold text-blue-900 bg-slate-100 border border-blue-500 px-2.5 py-0.5 rounded-full text-xs shadow-2xs">

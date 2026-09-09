@@ -26,6 +26,7 @@ import {
   Select,
   Textarea,
   RangeField,
+  ThreeDotsAccent,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -441,7 +442,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
         <div className="space-y-6">
           <Card className="p-6 space-y-5">
             <CardHeader
-              className="p-0 border-none mb-2"
+              disableBorder
               title="Add New Skill & Synonyms"
             />
 
@@ -645,7 +646,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
       {activeTab === 'scoring' && (
         <Card className="p-6 space-y-6">
           <CardHeader
-            className="p-0 border-none mb-2"
+            disableBorder
             title="Scoring Config"
           />
 
@@ -688,11 +689,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
 
             <div className="p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border-slate-200">
               <span className="font-bold text-sm text-foreground flex items-center gap-2.5">
-                <div className="flex flex-col gap-0.5 shrink-0" aria-hidden="true">
-                  <span className="w-1 h-1 rounded-full bg-blue-600" />
-                  <span className="w-1 h-1 rounded-full bg-blue-600" />
-                  <span className="w-1 h-1 rounded-full bg-blue-600" />
-                </div>
+                <ThreeDotsAccent />
                 Total Weight Accumulation:
               </span>
               <span
@@ -763,7 +760,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
           </div>
 
           <CardHeader
-            className="p-0 border-none mb-2"
+            disableBorder
             title="Multi-Provider LLM Configuration & System Guardrails"
           />
 

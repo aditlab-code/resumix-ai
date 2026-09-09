@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { CandidateApplication, JobPosting } from '@/lib/types';
 import { ApplicationStatus } from '@cv-ats/contracts';
-import { Edit3, RefreshCw, Trash2, Sparkles, Mail, Phone, MapPin, Calendar, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { Edit3, RefreshCw, Trash2, Mail, Phone, MapPin, Calendar } from 'lucide-react';
 import { constructGroqDecisionSummary } from '@/lib/utils';
 import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
-import { Overlay, Tabs, Button, Select, StatusBadge, Card } from '@/components/ui';
+import { Overlay, Tabs, Button, Select, StatusBadge, Card, SectionLabel } from '@/components/ui';
 import { ScoreBreakdownCard } from '@/components/scoring/score-breakdown';
 import { CandidateProfile } from '@/components/candidates/candidate-profile';
 import { ExtractionForm } from '@/components/candidates/extraction-form';
@@ -182,10 +182,9 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
             {/* AI Decision Card */}
             <Card className="p-5 space-y-4 bg-slate-50/80 border border-slate-200 rounded-xl shadow-xs relative overflow-hidden">
               <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-3">
-                <span className="text-xs font-extrabold text-blue-900 uppercase tracking-wider flex items-center gap-1.5 font-mono">
-                  <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
+                <SectionLabel className="mb-0">
                   Decision Summary
-                </span>
+                </SectionLabel>
                 <span className="text-xs font-extrabold font-mono px-2.5 py-0.5 rounded-full bg-slate-100 text-blue-900 border border-blue-500">
                   {application.job_fit_score.toFixed(1)}/100
                 </span>
@@ -198,13 +197,15 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
                     application.job_fit_score
                   )}`}
                 >
-                  {application.job_fit_score >= 80 ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  ) : application.job_fit_score >= 60 ? (
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  ) : (
-                    <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
-                  )}
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                      application.job_fit_score >= 80
+                        ? 'bg-emerald-600'
+                        : application.job_fit_score >= 60
+                        ? 'bg-amber-600'
+                        : 'bg-rose-600'
+                    }`}
+                  />
                   {getRecommendationText(application.job_fit_score)}
                 </span>
               </div>
@@ -216,9 +217,9 @@ export const CandidateDetailDrawer: React.FC<CandidateDetailDrawerProps> = ({
 
             {/* Contact Summary Card */}
             <Card className="p-4 space-y-3 bg-card border border-border rounded-xl">
-              <h4 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground border-b border-border pb-2">
-                Contact & Information
-              </h4>
+              <div className="border-b border-border pb-2">
+                <SectionLabel className="mb-0">Contact & Information</SectionLabel>
+              </div>
               <div className="space-y-2.5 text-xs text-muted-foreground font-medium">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Mail className="w-4 h-4 text-primary shrink-0" />

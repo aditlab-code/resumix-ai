@@ -1,6 +1,6 @@
 export { Button, buttonVariants } from './button';
 export type { ButtonProps } from './button';
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, SectionLabel } from './card';
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, SectionLabel, ThreeDotsAccent } from './card';
 export { Field, Input, Textarea, Select, RangeField } from './field';
 export { Toolbar, SearchInput, FilterSelect } from './toolbar';
 export { Overlay, ConfirmDialog } from './overlay';

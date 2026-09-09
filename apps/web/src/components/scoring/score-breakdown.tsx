@@ -55,8 +55,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
 
       <div className="pt-4 border-t border-border space-y-4">
         <div>
-          <SectionLabel className="mb-2.5 flex items-center gap-1.5 normal-case tracking-normal text-foreground font-extrabold text-xs">
-            <Check className="w-4 h-4 text-emerald-600" />
+          <SectionLabel accentColor="bg-emerald-600">
             Matched skills ({score.matched_skills.length})
           </SectionLabel>
           <div className="flex flex-wrap gap-1.5">
@@ -77,8 +76,7 @@ export const ScoreBreakdownCard: React.FC<ScoreBreakdownCardProps> = ({ score, c
 
         {score.missing_mandatory_skills.length > 0 && (
           <div>
-            <SectionLabel className="mb-2.5 flex items-center gap-1.5 normal-case tracking-normal text-destructive font-extrabold text-xs">
-              <AlertCircle className="w-4 h-4 text-destructive" />
+            <SectionLabel accentColor="bg-rose-600">
               Missing mandatory skills ({score.missing_mandatory_skills.length})
             </SectionLabel>
             <div className="flex flex-wrap gap-1.5">
