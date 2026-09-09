@@ -155,8 +155,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     }
 
     if (!email) {
-      const slug = candidateName.toLowerCase().replace(/[^a-z0-9]/g, '.').replace(/\.+/g, '.');
-      email = slug ? `${slug}@example.com` : '';
+      email = '';
     }
 
 
@@ -177,8 +176,6 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
     const pool = [
       ...targetJob.mandatory_skills,
       ...targetJob.preferred_skills,
-      'Python', 'React', 'TypeScript', 'Docker', 'PostgreSQL', 'Node.js', 'Go', 'AWS', 'Linux', 'Git',
-      'Java', 'C++', 'Golang', 'SQL', 'NoSQL',
     ];
 
     pool.forEach((skill) => {

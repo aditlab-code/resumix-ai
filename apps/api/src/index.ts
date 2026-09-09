@@ -152,17 +152,21 @@ router.post('/jobs/:jobId/applications', async (req, res, next) => {
     const documentId = `doc-${randomUUID()}`;
     const processingJobId = `proc-${randomUUID()}`;
 
-    // Enqueue to Redis BullMQ Queue if file_base64 supplied
-    if (file_base64 && filename) {
-      await cvParsingQueue.add('cv_parse_job', {
-        processing_job_id: processingJobId,
-        document_id: documentId,
-        job_id: jobId,
-        filename,
-        file_base64,
-        job_criteria,
+    if (!filename || !file_base64) {
+      return res.status(400).json({
+        error: { message: 'Parameters filename dan file_base64 wajib diisi.' },
       });
     }
+
+    // Enqueue to Redis BullMQ Queue
+    await cvParsingQueue.add('cv_parse_job', {
+      processing_job_id: processingJobId,
+      document_id: documentId,
+      job_id: jobId,
+      filename,
+      file_base64,
+      job_criteria,
+    });
 
     return res.status(202).json({
       application_id: applicationId,

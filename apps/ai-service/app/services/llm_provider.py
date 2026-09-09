@@ -15,7 +15,7 @@ OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
 {
   "full_name": "Candidate Full Name",
   "contact": {
-    "email": "user@example.com",
+    "email": "candidate_email_address",
     "phone_number": "+62 8xx-xxxx-xxxx",
     "location": "City, Country or Full Address"
   },
@@ -71,7 +71,8 @@ RULES:
 5. Extract ALL projects, portfolio links (GitHub, Figma, Behance, Drive, Dribbble, personal websites), achievements, awards, and certifications.
 6. Extract ALL work references/referees (name, job title, company, contact details).
 7. Extract phone numbers with high precision. Support mobile (+62 8xx-xxxx-xxxx / 08xx) and landlines with area codes (e.g. (021) 8852574, (022) 2501234, +62 21-8852574). Do NOT omit area codes or drop numbers.
-8. Do not hallucinate non-existent details. Output ONLY JSON without markdown wrappers.
+8. NEVER hallucinate example emails like 'user@example.com'. If no email address exists in the text, return null for email.
+9. Output ONLY JSON without markdown wrappers.
 """
 
 async def function_extract_via_groq(
@@ -79,8 +80,8 @@ async def function_extract_via_groq(
   api_key: Optional[str] = None,
   model: Optional[str] = None
 ) -> Dict[str, Any]:
-  from app.services.text_pruner import prune_raw_text
-  pruned_text = prune_raw_text(raw_text)
+  from app.services.text_pruner import prune_cv_text
+  pruned_text = prune_cv_text(raw_text)
 
   key = api_key or DEFAULT_GROQ_API_KEY or os.getenv("GROQ_API_KEY") or os.getenv("LLM_API_KEY", "")
   if not key or not key.strip():
@@ -113,13 +114,33 @@ async def function_extract_via_groq(
     # Parse JSON content
     parsed_json = json.loads(content)
 
+    # Post-process contact email fallback using deterministic extractor if missing, null, or placeholder
+    from app.services.email_extractor import extract_email, is_valid_candidate_email
+    contact = parsed_json.setdefault("contact", {})
+    current_email = contact.get("email")
+    if not current_email or not is_valid_candidate_email(str(current_email)):
+        extracted_email = extract_email(raw_text)
+        contact["email"] = extracted_email if extracted_email else None
+
     # Post-process contact phone_number fallback using deterministic extractor if missing or null
     from app.services.phone_extractor import extract_phone_number
-    contact = parsed_json.setdefault("contact", {})
     if not contact.get("phone_number") or not str(contact.get("phone_number")).strip():
         extracted_phone = extract_phone_number(raw_text)
         if extracted_phone:
             contact["phone_number"] = extracted_phone
+
+    # Post-process education GPA/IPK normalization & regex extraction
+    from app.services.gpa_extractor import normalize_gpa_value, extract_gpa_from_text
+    educations = parsed_json.get("education") or []
+    fallback_text_gpa = extract_gpa_from_text(raw_text)
+    if isinstance(educations, list):
+        for edu in educations:
+            if isinstance(edu, dict):
+                raw_gpa = edu.get("gpa")
+                norm_gpa = normalize_gpa_value(raw_gpa)
+                if not norm_gpa and fallback_text_gpa:
+                    norm_gpa = fallback_text_gpa
+                edu["gpa"] = norm_gpa
 
     return parsed_json
 

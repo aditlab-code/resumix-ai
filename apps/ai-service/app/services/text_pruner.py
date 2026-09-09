@@ -78,13 +78,24 @@ def extract_core_qualifications_sections(text: str) -> str:
     if len(text.strip()) <= LOW_QUALITY_THRESHOLD:
         return text.strip()
 
-    # Define high-value section header markers
+    # Define high-value section header markers (multilingual & cross-domain)
     target_headers = [
         r"Technical Skills",
+        r"Skills & Competencies",
+        r"Skills",
+        r"Keahlian",
+        r"Kompetensi",
         r"Key Responsibilities",
+        r"Responsibilities",
+        r"Tanggung Jawab",
+        r"Tugas dan Tanggung Jawab",
         r"Qualifications",
+        r"Kualifikasi",
         r"Requirements",
+        r"Persyaratan",
+        r"Syarat",
         r"Job Description",
+        r"Deskripsi Pekerjaan",
         r"What You'll Do",
         r"What We're Looking For",
         r"About The Role",
@@ -117,17 +128,34 @@ def extract_core_qualifications_sections(text: str) -> str:
     return "\n\n".join(extracted_blocks)
 
 
-def prune_raw_text(raw_text: str) -> str:
-    """Hybrid text pruner: Strips noise & boilerplate, then extracts high-value qualification sections.
-    Reduces token size by 30-50% while preserving 100% of core technical matching signals.
+def prune_cv_text(raw_text: str) -> str:
+    """Pruner text khusus CV Kandidat.
+    Membersihkan noise legal/EEO & spasi berlebih tanpa memotong struktur kontak atau pendidikan.
+    Mempertahankan hingga 6000 karakter penuh CV agar IPK & email tidak hilang.
     """
     if not raw_text or not raw_text.strip():
         return ""
 
-    # 1. Strip noise and boilerplate
+    # 1. Clear boilerplate noise (EEO, apply disclaimers)
     clean_text = strip_boilerplate_noise(raw_text)
 
-    # 2. Filter core qualification sections if text is still long
-    pruned_text = extract_core_qualifications_sections(clean_text)
+    # 2. Return clean CV text preserving up to 6000 characters
+    return clean_text.strip()[:MAX_PRUNED_CHARS * 2 + 1000]
 
+
+def prune_job_text(raw_text: str) -> str:
+    """Pruner text khusus Deskripsi Lowongan Kerja (Job Description).
+    Memotong noise dan menyaring section kualifikasi inti.
+    """
+    if not raw_text or not raw_text.strip():
+        return ""
+
+    clean_text = strip_boilerplate_noise(raw_text)
+    pruned_text = extract_core_qualifications_sections(clean_text)
     return pruned_text.strip()
+
+
+def prune_raw_text(raw_text: str) -> str:
+    """Hybrid text pruner (alias kompatibilitas mundur untuk Job Descriptions)."""
+    return prune_job_text(raw_text)
+

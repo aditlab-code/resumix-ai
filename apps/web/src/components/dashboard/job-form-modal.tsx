@@ -101,12 +101,12 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
       const companyMatch = rawLinkedInText.match(/(?:company|about|at)\s+([A-Z][A-Za-z0-9\s]{2,20})/i);
 
       setForm({
-        title: titleMatch ? titleMatch[1].trim() : 'ML Engineer / AI Engineer',
-        department: companyMatch ? `${companyMatch[1].trim()} — Engineering` : 'Engineering',
+        title: titleMatch ? titleMatch[1].trim() : 'Job Vacancy Title',
+        department: companyMatch ? companyMatch[1].trim() : 'General',
         location: 'Jakarta (Hybrid)',
         minExpMonths: 36,
-        mandatory: mandatoryMatch ? mandatoryMatch[1].trim() : 'Python, PyTorch, LLMs, RAG',
-        preferred: 'Docker, Kubernetes, GCP, Azure',
+        mandatory: mandatoryMatch ? mandatoryMatch[1].trim() : '',
+        preferred: '',
       });
       setImportStatus('Successfully extracted job qualifications! You can adjust the inputs below.');
       setActiveTab('manual');
@@ -140,7 +140,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         location: form.location,
         status: 'open',
         minimum_experience_months: Number(form.minExpMonths),
-        mandatory_skills: mandatorySkills.length > 0 ? mandatorySkills : ['Python'],
+        mandatory_skills: mandatorySkills,
         preferred_skills: preferredSkills,
         created_at: new Date().toISOString(),
         applications_count: 0,
@@ -226,7 +226,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                 rows={8}
                 value={rawLinkedInText}
                 onChange={(e) => setRawLinkedInText(e.target.value)}
-                placeholder="We are looking for a Senior Backend Engineer. Minimum 3 years of experience. Must master Python, PostgreSQL, and Docker..."
+                placeholder="Paste job posting text here (e.g. key responsibilities, required qualifications, minimum experience)..."
                 className="font-sans text-xs leading-relaxed"
               />
             </Field>
@@ -238,7 +238,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                 required
                 value={form.title}
                 onChange={(e) => set('title', e.target.value)}
-                placeholder="Senior Python Backend Developer"
+                placeholder="Job Position Title (e.g. Operations Manager, Lead Specialist...)"
               />
             </Field>
 
@@ -262,21 +262,21 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
               />
             </Field>
 
-            <Field label="Mandatory Skills" required hint="Comma-separated. weight in Job-Fit configuration.">
+            <Field label="Mandatory Skills" required hint="Comma-separated. Weight in Job-Fit criteria.">
               <Input
                 required
                 value={form.mandatory}
                 onChange={(e) => set('mandatory', e.target.value)}
-                placeholder="Python, PostgreSQL, Docker"
+                placeholder="Primary required skills (comma-separated)"
                 className="font-mono"
               />
             </Field>
 
-            <Field label="Preferred Skills" hint="Comma-separated. weight in Job-Fit formula.">
+            <Field label="Preferred Skills" hint="Comma-separated. Weight in Job-Fit criteria.">
               <Input
                 value={form.preferred}
                 onChange={(e) => set('preferred', e.target.value)}
-                placeholder="Redis, FastAPI, Kubernetes"
+                placeholder="Optional preferred skills (comma-separated)"
                 className="font-mono"
               />
             </Field>

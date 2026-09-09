@@ -22,15 +22,7 @@ class Contact(BaseModel):
 class Skill(BaseModel):
     name: str
     normalized_name: str | None = None
-    category: Literal[
-        "programming_language",
-        "framework",
-        "database",
-        "cloud",
-        "tool",
-        "soft_skill",
-        "other",
-    ] = "other"
+    category: str = "other"
     confidence: float | None = Field(default=1.0, ge=0, le=1)
     evidence: ExtractionEvidence | None = None
 

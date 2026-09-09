@@ -6,20 +6,19 @@ from app.services.llm_provider import GROQ_API_URL, DEFAULT_GROQ_API_KEY, DEFAUL
 # Maximum characters to send to LLM for job description extraction
 MAX_JOB_INPUT_CHARS = 6000
 
-JOB_EXTRACTION_SYSTEM_PROMPT = """You are an expert AI HR ATS Job Description Parser. Analyze the provided raw job posting text (from LinkedIn, Glints, or Job Street across ANY tech/engineering domain) and extract structured job requirements.
+JOB_EXTRACTION_SYSTEM_PROMPT = """You are an expert AI HR ATS Job Description Parser. Analyze the provided raw job posting text across ANY professional domain (HR, Finance, Marketing, Sales, Operations, Healthcare, Legal, Engineering, IT, Administration, etc.) and extract structured job requirements.
 OUTPUT ONLY VALID UNWRAPPED JSON matching this exact schema:
 {
-  "title": "Clean Professional Job Title (e.g. Senior Backend Engineer, DevOps Engineer, QA Automation)",
-  "company_name": "Company or Organization Name (e.g. AME Group, Beca, SPX Express, Bukalapak)",
-  "department": "Department or Function (e.g. Engineering, Digital Development, Operations)",
+  "title": "Clean Professional Job Title (e.g. HR Business Partner, Financial Analyst, Marketing Manager, Software Engineer)",
+  "company_name": "Company or Organization Name",
+  "department": "Department or Function (e.g. Human Resources, Finance, Operations, Engineering)",
   "location": "Location (e.g. Jakarta, Hybrid, Remote)",
   "minimum_experience_months": 36,
-  "mandatory_skills": ["Python", "PostgreSQL", "Docker"],
-  "preferred_skills": ["Kubernetes", "Redis"],
+  "mandatory_skills": ["Financial Modeling", "Excel", "Corporate Finance"],
+  "preferred_skills": ["SAP", "PowerBI"],
   "skill_equivalents": {
-    "Python": ["FastAPI", "Django", "Flask", "Python 3"],
-    "PostgreSQL": ["Postgres", "Relational Database", "SQL"],
-    "Docker": ["Containerization", "Docker Compose", "Podman"]
+    "Financial Modeling": ["Financial Analysis", "Corporate Finance", "Budgeting"],
+    "Excel": ["Spreadsheet", "Microsoft Excel", "VLOOKUP"]
   },
   "summary": "Concise 2-3 sentence summary of the job role and core responsibilities"
 }
@@ -27,9 +26,9 @@ RULES:
 1. Extract the clean job title accurately.
 2. Extract company_name, department, and location if mentioned in the text (or set to null if not specified).
 3. Convert required years of experience into total months (e.g. 3 years = 36, 1-3 years = 12, 6 months = 6). Default to 0 if not specified.
-4. Extract ALL explicit required/mandatory technical and domain skills into mandatory_skills list.
+4. Extract ALL explicit required/mandatory skills (technical, functional, administrative, management, soft skills, or domain expertise) into mandatory_skills list.
 5. Extract ALL optional or preferred skills (nice to have) into preferred_skills list.
-6. For each mandatory_skill, map a dictionary of skill_equivalents containing 2-5 acceptable aliases, related frameworks, or child tools in that domain (e.g. React -> [Next.js, React.js, TypeScript]; Java -> [Spring Boot, Java 17]).
+6. For each mandatory_skill, map a dictionary of skill_equivalents containing 2-5 acceptable aliases, related frameworks, methodologies, or child tools in that professional domain.
 7. Do not hallucinate non-existent requirements.
 8. Output ONLY JSON without markdown wrappers.
 """

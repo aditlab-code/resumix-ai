@@ -108,7 +108,9 @@ def prepare_candidate_profile_text(cv_input: Union[Dict[str, Any], str]) -> str:
             degree = edu.get("degree") or ""
             major = edu.get("major") or ""
             inst = edu.get("institution") or ""
-            edu_str = f"{degree} {major} from {inst}".strip()
+            gpa = edu.get("gpa")
+            gpa_str = f" (GPA: {gpa})" if gpa else ""
+            edu_str = f"{degree} {major} from {inst}{gpa_str}".strip()
             if edu_str:
                 edu_strings.append(edu_str)
     if edu_strings:
@@ -145,9 +147,9 @@ def prepare_skills_text(cv_or_job_input: Union[Dict[str, Any], List[str], str]) 
                 skill_names.append(s)
 
         if skill_names:
-            return "Technical Skills: " + ", ".join(skill_names)
+            return "Skills & Competencies: " + ", ".join(skill_names)
 
-    return "Technical Skills: General Engineering"
+    return "Skills & Competencies: General Professional Skills"
 
 
 def prepare_role_text(cv_or_job_input: Union[Dict[str, Any], str]) -> str:

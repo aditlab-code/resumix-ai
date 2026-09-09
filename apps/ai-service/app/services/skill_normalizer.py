@@ -2,7 +2,39 @@ import threading
 from typing import Dict, List, Set, Union
 
 SYNONYM_DICTIONARY: Dict[str, List[str]] = {
-    # Backend Tech Domain
+    # Finance, Accounting & Economics Domain
+    "financial analysis": ["financial modeling", "corporate finance", "financial reporting", "budgeting", "forecasting"],
+    "accounting": ["bookkeeping", "general ledger", "financial statements", "psak", "ifrs", "taxation", "pajak"],
+    "auditing": ["internal audit", "external audit", "compliance audit", "financial audit"],
+    "excel": ["microsoft excel", "ms excel", "spreadsheet", "vlookup", "pivot table"],
+
+    # Human Resources & Personnel Domain
+    "recruitment": ["talent acquisition", "headhunting", "sourcing", "interviewing", "recruiting"],
+    "human resources": ["hr", "hrbp", "hr generalist", "personnel management", "manajemen sdm", "hris"],
+    "payroll": ["payroll administration", "gaji", "penggajian", "bpjs", "pph 21"],
+    "employee relations": ["industrial relations", "hubungan industrial", "employee engagement"],
+
+    # Marketing, Communication & Sales Domain
+    "digital marketing": ["performance marketing", "online marketing", "growth marketing", "social media marketing"],
+    "seo": ["search engine optimization", "sem", "google ads"],
+    "sales": ["business development", "account executive", "lead generation", "sales strategy", "b2b sales"],
+    "crm": ["customer relationship management", "salesforce", "hubspot", "zoho"],
+    "copywriting": ["content writing", "content marketing", "copywriter", "content strategy"],
+
+    # Management, Operations & Administration Domain
+    "project management": ["pmp", "project manager", "project planning", "agile", "scrum", "kanban"],
+    "supply chain": ["logistics", "logistik", "procurement", "inventory management", "warehouse management"],
+    "administration": ["administrative support", "office administration", "secretarial", "data entry", "arsip"],
+    "customer service": ["customer support", "client service", "helpdesk", "call center"],
+
+    # Legal & Compliance Domain
+    "legal": ["corporate legal", "legal compliance", "contract drafting", "legal drafting", "hukum bisnis"],
+
+    # Design & Creative Domain
+    "ui/ux": ["user interface", "user experience", "figma", "wireframing", "product design"],
+    "graphic design": ["photoshop", "illustrator", "coreldraw", "visual design", "desain grafis"],
+
+    # Software & Backend Tech Domain
     "python": ["python 3", "py", "fastapi", "django", "flask", "pydantic"],
     "node.js": ["nodejs", "node", "express", "express.js", "nestjs", "ts-node"],
     "go": ["golang", "gin", "gorm", "go lang"],
@@ -11,13 +43,14 @@ SYNONYM_DICTIONARY: Dict[str, List[str]] = {
     "php": ["laravel", "symfony", "codeigniter"],
     "ruby": ["ruby on rails", "rails"],
 
-    # Database Tech Domain
+    # Database & Data Domain
     "postgresql": ["postgres", "pg", "postgresql 15", "psql", "sql rdbms"],
     "mongodb": ["mongo", "nosql", "mongoose"],
     "mysql": ["mariadb", "my sql"],
     "redis": ["redis cache", "in-memory database"],
+    "sql": ["structured query language", "database queries", "rdbms"],
 
-    # DevOps & Infrastructure Domain
+    # DevOps, Infrastructure & Cloud Domain
     "docker": ["docker compose", "containerization", "podman", "docker container"],
     "kubernetes": ["k8s", "k3s", "helm"],
     "aws": ["amazon web services", "ec2", "s3", "lambda"],

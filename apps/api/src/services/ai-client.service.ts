@@ -38,8 +38,10 @@ export interface JobFitScoreBreakdown {
   mandatory_skill_weight: number;
   experience_score: number;
   experience_weight: number;
+  relevant_experience_months?: number;
   preferred_skill_score: number;
   preferred_skill_weight: number;
+  mandatory_penalty_factor?: number;
   final_score: number;
   matched_skills: string[];
   missing_mandatory_skills: string[];
