@@ -2,8 +2,19 @@
 
 import React, { useState } from 'react';
 import { JobPosting } from '@/lib/types';
-import { Plus, MapPin, Clock, Users, Edit3, Trash2, Briefcase } from 'lucide-react';
-import { Button, Card, Toolbar, SearchInput, EmptyState, SectionLabel } from '@/components/ui';
+import { Plus, MapPin, Clock, Users, Edit3, Trash2, Briefcase, MoreVertical } from 'lucide-react';
+import {
+  Button,
+  Card,
+  Toolbar,
+  SearchInput,
+  EmptyState,
+  SectionLabel,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui';
 
 import { cn } from '@/lib/utils';
 
@@ -72,33 +83,58 @@ export const JobsManagerView: React.FC<JobsManagerViewProps> = ({
                 )}
               >
                 <div className="space-y-4">
-                  <div className="flex justify-between items-start gap-2">
-                    <div>
+                  <div className="flex justify-between items-start gap-3 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <SectionLabel
                         accentColor={isActive ? 'bg-blue-600' : 'bg-slate-400'}
-                        className={cn('mb-1 text-xs font-extrabold uppercase tracking-wider block truncate', isActive ? 'text-blue-950' : 'text-slate-600')}
+                        className={cn(
+                          'mb-1 text-xs font-extrabold uppercase tracking-wider',
+                          isActive ? 'text-blue-950' : 'text-slate-600'
+                        )}
                       >
                         {job.department}
                       </SectionLabel>
-                      <h3 className="text-lg font-bold text-foreground leading-snug">{job.title}</h3>
+                      <h3 className="text-lg font-bold text-foreground leading-snug truncate">
+                        {job.title}
+                      </h3>
                     </div>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        onClick={() => onEditJob(job)}
-                        className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors focus-ring"
-                        aria-label="Edit job"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => onDeleteJob(job.id)}
-                        className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors focus-ring"
-                        aria-label="Delete job"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <div className="shrink-0">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition-colors focus-ring cursor-pointer"
+                            aria-label="Job actions"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreVertical className="w-4 h-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditJob(job);
+                            }}
+                            className="cursor-pointer font-medium"
+                          >
+                            <Edit3 className="w-4 h-4 mr-2" />
+                            Edit Position
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteJob(job.id);
+                            }}
+                            className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer font-medium"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete Position
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
+
 
                   <div className="space-y-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">

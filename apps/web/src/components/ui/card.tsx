@@ -165,16 +165,16 @@ export const SectionLabel: React.FC<SectionLabelProps> = ({
   children,
   ...props
 }) => (
-  <p
+  <div
     className={cn(
-      'text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-2',
+      'text-xs font-extrabold uppercase tracking-wider text-muted-foreground inline-flex items-center gap-2 mb-2 max-w-full min-w-0',
       className
     )}
     {...props}
   >
     {showAccent && <ThreeDotsAccent colorClassName={accentColor} />}
-    {children}
-  </p>
+    <span className="truncate min-w-0">{children}</span>
+  </div>
 );
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
