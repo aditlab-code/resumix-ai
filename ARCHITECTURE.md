@@ -2,12 +2,12 @@
 
 ## 1. System Topology & Architecture Overview
 
-Resumix AI is engineered using a **Decoupled Microservices / Monorepo** architecture designed as a *decision-support system* for enterprise HR teams (rather than an automated decision maker).
+Resumix AI is engineered using a **Decoupled Microservices / Monorepo** architecture designed as a *decision-support system* for enterprise HR teams (rather than an automated decision maker). The system is deployed as a **Managed Private Enterprise Platform** operated exclusively by the Maintainer.
 
 ```mermaid
 graph TD
-    User[HR / Admin Web UI] -->|HTTPS / REST| API[Node.js Core API Gateway - Port 3000 / 3001]
-    API -->|Signed URL / Private Upload| Storage[(Supabase Storage Private Bucket)]
+    User["HR / Admin Web UI (Private SaaS)"] -->|HTTPS / REST| API[Node.js Core API Gateway - Port 3000 / 3001]
+    API -->|Signed URL / Private Upload| Storage[(Cloudflare R2 Storage Private Bucket)]
     API -->|Persist Data & Metadata| DB[(PostgreSQL 15 + pgvector)]
     API -->|Enqueue Ingestion Job| Queue[(Redis 7 / BullMQ Queue)]
     Queue -->|Worker Task| Worker[Async Job Worker]
@@ -38,37 +38,27 @@ graph TD
 | **Queue Worker**    | `apps/api/src/worker`<br>(Redis, BullMQ Worker)           | Consuming asynchronous ingestion tasks from Redis, retry management, coordinating AI pipeline execution, updating application state in PostgreSQL.           | Automatically altering candidate hiring decisions (`hired`/`rejected`).                  |
 | **AI Microservice** | `apps/ai-service`<br>(FastAPI, Python 3.11+)              | Microservice REST API (Port 8000). Pure PyMuPDF text extraction (zero-text rejection), Groq LLM parsing (`llama-3.1-8b-instant`), Dual-Vector embeddings, scoring. | Reading or writing directly to the SQL database without using REST API service contracts.|
 | **Database**        | `database`<br>(PostgreSQL 15+ + `pgvector` & `uuid-ossp`) | Normalized relational storage (13 tables), 384-dimensional cosine similarity search via PL/pgSQL function `match_candidates_for_job`, audit logs.            | Storing raw PDF document files directly in SQL table rows.                               |
-| **Private Storage** | Supabase Storage / S3 Private Bucket                      | Secure private storage for candidate resume PDF files.                                                                                                          | Exposing public buckets without time-limited signed URLs (TTL 300s).                     |
+| **Private Storage** | Cloudflare R2 Storage (S3-Compatible)                     | Secure private object storage for candidate resume PDF files.                                                                                                          | Exposing public buckets without time-limited signed URLs (TTL 300s).                     |
 
 ---
 
-## 3. Detail Endpoint & REST Interface Contracts
+## 3. High-Level Service Interface Contracts & Security Boundaries
 
-### Core API (`apps/api` — Port 3000 / 3001)
-- `GET /` — Root API service status and key endpoint directory.
-- `GET /health` — Health check endpoint for API gateway and AI microservice connectivity.
-- `GET /api/v1/jobs` — Retrieve list of active job postings and qualifications.
-- `POST /api/v1/jobs` — Create new job posting and automatically generate 384-dim `job_embedding`.
-- `DELETE /api/v1/jobs/:jobId` — Permanently delete job posting and associated requirements.
-- `POST /api/v1/jobs/import-linkedin` — Import & parse raw job descriptions from LinkedIn/Glints via Groq LLM + auto job embedding.
-- `POST /api/v1/cv/embedding` — Generate 384-dimensional multilingual vector embedding (profile, skill, role).
-- `POST /api/v1/jobs/:jobId/applications` — Asynchronous resume ingestion upload (returns `HTTP 202 Accepted` in `< 200ms` with `processing_status: queued`).
-- `POST /api/v1/jobs/:jobId/evaluate-instant` — Synchronous real-time resume evaluation.
-- `GET /api/v1/jobs/:jobId/candidates/match` — Retrieve top matching candidates using `pgvector` HNSW cosine similarity (with `threshold` & `limit` query parameters).
-- `GET /api/v1/jobs/:jobId/applications` — Retrieve candidate applications for a specific job posting.
-- `PATCH /api/v1/applications/:applicationId/status` — Update candidate recruitment stage (`applied`, `screening`, `interview`, `hired`, `rejected`, `withdrawn`).
-- `GET /api/v1/processing-jobs/:processingJobId` — Poll status of asynchronous document ingestion processing.
+In accordance with our **Zero Public API Spec Reconnaissance Policy** (to prevent attacker surface mapping during penetration testing), raw HTTP endpoint URIs and internal JSON schema parameters are omitted from public documentation.
 
-### AI Microservice (`apps/ai-service` — Port 8000)
-- `GET /health` — Service health, Groq LLM provider status, and embedding model availability (`all-MiniLM-L6-v2` / `paraphrase-multilingual-MiniLM-L12-v2`).
-- `POST /v1/cv/extract-text` — Receive PDF document (max 10MB) and extract raw text via PyMuPDF. If PDF has no text layer (`len(text.strip()) == 0`), returns `HTTP 400 NO_TEXT_LAYER` and recommends `parse_status: needs_review`.
-- `POST /v1/cv/llm-extract` — Parse raw text to structured JSON via Groq LLM (`llama-3.1-8b-instant`) enforced by Pydantic schemas.
-- `POST /v1/cv/normalize-skills` — Standardize skill synonym keywords using static & dynamic taxonomy dictionaries.
-- `POST /v1/cv/generate-embedding` — Generate 384-dimensional vector embeddings (`profile_embedding`, `skill_embedding`, `role_embedding`) via SentenceTransformers.
-- `POST /v1/cv/calculate-score` — Compute explainable job-fit score (0–100) and criteria breakdown (Dual-Vector & Multi-Factor Scoring Engine).
-- `POST /v1/job/extract-qualifications` — Parse raw job description text into structured qualifications & dual vector embeddings.
-- `GET /v1/skills/taxonomies` — Fetch full taxonomy dictionary for skill synonyms.
-- `POST /v1/skills/taxonomies` — Register custom domain skill synonym mappings.
+The system communicates internally across four conceptual interface boundaries:
+
+1. **BFF Gateway Boundary (`apps/web` ⟷ `apps/api`)**:
+   - Manages authenticated HR recruiter sessions, role-based access control (RBAC), signed URL issuance, and vacancy CRUD operations via HTTP REST JSON.
+2. **Asynchronous Ingestion Queue (`apps/api` ⟷ Redis 7 / BullMQ)**:
+   - Non-blocking job enqueueing returning instant `HTTP 202 Accepted` responses (< 180 ms latency) for PDF resume parsing.
+3. **Internal Microservice Compute Bridge (`Worker` ⟷ `apps/ai-service`)**:
+   - Operates within isolated Docker bridge networks (`backend-net`). Handles PyMuPDF text extraction (zero-text short circuit), Groq LLM structured parsing, taxonomy normalization, dual vector generation, and deterministic score computation.
+4. **Data & Storage Persistence Interface (`Apps` ⟷ PostgreSQL & Cloudflare R2 S3)**:
+   - Enforces 384-dimensional vector similarity search via `pgvector` HNSW index and time-limited signed URL document access (TTL 300s).
+
+> [!TIP]
+> For complete penetration testing defense mechanisms, OWASP API Security Top 10 controls, and network security details, refer to the dedicated specification: **[SECURITY_HARDENING.md](docs/SECURITY_HARDENING.md)**.
 
 ---
 

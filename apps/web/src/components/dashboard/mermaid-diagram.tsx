@@ -35,7 +35,8 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
         });
 
         const uniqueId = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
-        const res = await mermaid.render(uniqueId, chart);
+        const cleanChart = chart.replace(/\r/g, '').trim();
+        const res = await mermaid.render(uniqueId, cleanChart);
 
         if (isMounted) {
           setSvgContent(res.svg);

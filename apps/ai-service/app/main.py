@@ -1,21 +1,33 @@
+import os
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
 from typing import Any, Dict, List, Optional
 from app.schemas.cv_schema import JobFitScoreBreakdown
 from app.services.pdf_extractor import extract_pdf_text
-from app.services.skill_normalizer import normalize_skill_name
+from app.services.skill_normalizer import (
+    normalize_skill_name,
+    get_all_taxonomies,
+    register_custom_taxonomy,
+)
 from app.services.scoring_service import compute_job_fit_score
 from app.services.llm_provider import function_extract_via_groq, DEFAULT_GROQ_MODEL
+from app.services.job_extractor import extract_job_qualifications_via_groq
 from app.services.embedding_service import (
     DEFAULT_EMBEDDING_MODEL_NAME,
     generate_embedding,
+    generate_dual_embeddings,
     prepare_candidate_profile_text,
     compute_cosine_similarity,
 )
+
+ENABLE_SWAGGER_DOCS = os.getenv("ENABLE_SWAGGER_DOCS", "false").lower() in ("true", "1", "yes")
 
 app = FastAPI(
     title="Resumix AI Microservice",
     description="Microservice for PDF text extraction (PyMuPDF), zero-text rejection rule, structured parsing via Groq (llama-3.1-8b-instant), skill normalization, multilingual embeddings, and job-fit scoring",
     version="1.0.0",
+    docs_url="/docs" if ENABLE_SWAGGER_DOCS else None,
+    redoc_url="/redoc" if ENABLE_SWAGGER_DOCS else None,
+    openapi_url="/openapi.json" if ENABLE_SWAGGER_DOCS else None,
 )
 
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
@@ -95,8 +107,8 @@ def normalize_skills_endpoint(skills: list[str] = Body(...)):
 
 @app.post("/v1/cv/generate-embedding")
 def generate_embedding_endpoint(
-    text: Optional[str] = Body(default=None),
-    cv_extraction: Optional[Dict[str, Any]] = Body(default=None),
+    text: str | None = Body(default=None),
+    cv_extraction: dict[str, Any] | None = Body(default=None),
 ):
     """Generate 384-dimensional vector embeddings (overall, skill_embedding, role_embedding) using sentence-transformers."""
     if text and text.strip():
@@ -109,7 +121,6 @@ def generate_embedding_endpoint(
     try:
         target_text = prepare_candidate_profile_text(input_data) if isinstance(input_data, dict) else input_data
         embedding = generate_embedding(target_text)
-        from app.services.embedding_service import generate_dual_embeddings
         dual = generate_dual_embeddings(input_data)
 
         return {
@@ -131,15 +142,15 @@ def calculate_score_endpoint(
     preferred_skills: list[str] | None = Body(default=None),
     required_experience_months: int = Body(default=24),
     semantic_similarity: float = Body(default=0.0),
-    candidate_embedding: Optional[List[float]] = Body(default=None),
-    job_embedding: Optional[List[float]] = Body(default=None),
-    candidate_skill_embedding: Optional[List[float]] = Body(default=None),
-    job_skill_embedding: Optional[List[float]] = Body(default=None),
-    candidate_role_embedding: Optional[List[float]] = Body(default=None),
-    job_role_embedding: Optional[List[float]] = Body(default=None),
-    skill_equivalents: Optional[Dict[str, List[str]]] = Body(default=None),
-    work_experiences: Optional[List[Dict[str, Any]]] = Body(default=None),
-    job_title: Optional[str] = Body(default=None),
+    candidate_embedding: list[float] | None = Body(default=None),
+    job_embedding: list[float] | None = Body(default=None),
+    candidate_skill_embedding: list[float] | None = Body(default=None),
+    job_skill_embedding: list[float] | None = Body(default=None),
+    candidate_role_embedding: list[float] | None = Body(default=None),
+    job_role_embedding: list[float] | None = Body(default=None),
+    skill_equivalents: dict[str, list[str]] | None = Body(default=None),
+    work_experiences: list[dict[str, Any]] | None = Body(default=None),
+    job_title: str | None = Body(default=None),
 ):
     computed_similarity = semantic_similarity
     if candidate_embedding and job_embedding and len(candidate_embedding) == len(job_embedding):
@@ -175,14 +186,12 @@ async def extract_job_qualifications_endpoint(raw_text: str = Body(..., embed=Tr
         raise HTTPException(status_code=400, detail="Teks deskripsi lowongan tidak boleh kosong.")
 
     try:
-        from app.services.job_extractor import extract_job_qualifications_via_groq
         qualifications = await extract_job_qualifications_via_groq(raw_text)
 
         # Generate 384-dim job_embedding & dual vectors automatically
         job_text_for_embedding = f"Job Title: {qualifications.get('title')}. Experience Required: {qualifications.get('minimum_experience_months')} months. Mandatory Skills: {', '.join(qualifications.get('mandatory_skills', []))}. Summary: {qualifications.get('summary')}"
         job_embedding = generate_embedding(job_text_for_embedding)
 
-        from app.services.embedding_service import generate_dual_embeddings
         dual = generate_dual_embeddings(qualifications)
 
         return {
@@ -199,7 +208,6 @@ async def extract_job_qualifications_endpoint(raw_text: str = Body(..., embed=Tr
 @app.get("/v1/skills/taxonomies")
 def get_skill_taxonomies_endpoint():
     """Retrieve all static and dynamic skill synonym taxonomy mappings."""
-    from app.services.skill_normalizer import get_all_taxonomies
     return {"taxonomies": get_all_taxonomies()}
 
 
@@ -214,7 +222,6 @@ def register_skill_taxonomy_endpoint(
     if not isinstance(synonyms, list):
         raise HTTPException(status_code=400, detail="synonyms harus berupa list string.")
 
-    from app.services.skill_normalizer import register_custom_taxonomy, get_all_taxonomies
     register_custom_taxonomy(canonical_name, synonyms)
     return {
         "message": f"Berhasil mendaftarkan sinonim taksonomi untuk '{canonical_name}'",
@@ -222,6 +229,7 @@ def register_skill_taxonomy_endpoint(
         "synonyms": synonyms,
         "taxonomies": get_all_taxonomies(),
     }
+
 
 
 

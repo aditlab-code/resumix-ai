@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button, Card, Toolbar, SearchInput } from '@/components/ui';
-import { RefreshCw, FileText, Check, Copy, Layers, BarChart3, ShieldCheck, Scale, Info, AlertTriangle, Lightbulb, AlertCircle } from 'lucide-react';
+import { RefreshCw, FileText, Check, Copy, Layers, BarChart3, ShieldCheck, Scale, Info, AlertTriangle, Lightbulb, AlertCircle, Lock } from 'lucide-react';
 import { MermaidDiagram } from './mermaid-diagram';
 import { MathFormula } from './math-formula';
 import { cn } from '@/lib/utils';
 
-type DocKey = 'readme' | 'architecture' | 'evaluation' | 'license' | 'licenseDocs';
+type DocKey = 'readme' | 'architecture' | 'evaluation' | 'security' | 'license' | 'licenseDocs';
 
 interface DocItem {
   key: DocKey;
@@ -46,6 +46,13 @@ const DOC_CATEGORIES: DocCategory[] = [
         icon: BarChart3,
         description: 'Test results of 200 synthetic resume PDFs, ingestion latency, and AI accuracy.',
         badge: 'Metrics',
+      },
+      {
+        key: 'security',
+        label: 'Security & Pentest Hardening',
+        icon: Lock,
+        description: 'OWASP API Security Top 10 mitigations, zero public spec policy, and network isolation.',
+        badge: 'Hardening',
       },
     ],
   },
@@ -200,6 +207,7 @@ export const DocumentationView: React.FC = () => {
     let codeBlockBuffer: string[] = [];
     let inTable = false;
     let tableBuffer: string[] = [];
+    const term = searchQuery.toLowerCase().trim();
 
     const flushTable = (keyIndex: number) => {
       if (tableBuffer.length < 2) {
@@ -207,6 +215,13 @@ export const DocumentationView: React.FC = () => {
         inTable = false;
         return;
       }
+      const matchesTerm = !term || tableBuffer.join('\n').toLowerCase().includes(term);
+      if (!matchesTerm) {
+        tableBuffer = [];
+        inTable = false;
+        return;
+      }
+
       const headerRow = tableBuffer[0];
       const dataRows = tableBuffer.slice(2);
 
@@ -251,40 +266,38 @@ export const DocumentationView: React.FC = () => {
       inTable = false;
     };
 
-    const term = searchQuery.toLowerCase().trim();
-
     lines.forEach((line, idx) => {
-      if (term && !line.toLowerCase().includes(term) && !inCodeBlock && !inTable) {
-        return;
-      }
-
       if (line.startsWith('```')) {
         if (inCodeBlock) {
           const codeString = codeBlockBuffer.join('\n');
           const isCopied = copiedCode === codeString;
           const isMermaid = codeBlockLang === 'mermaid';
 
-          if (isMermaid) {
-            elements.push(<MermaidDiagram key={`mermaid-${idx}`} chart={codeString} />);
-          } else {
-            elements.push(
-              <div key={`code-${idx}`} className="my-5 rounded-md bg-ink-default text-white overflow-hidden border border-slate-800 shadow-2xs font-mono text-xs">
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-slate-200 font-bold uppercase tracking-wider text-[10px]">
-                  <span>{codeBlockLang || 'code'}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(codeString)}
-                    className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
-                  >
-                    {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{isCopied ? 'Copied' : 'Copy'}</span>
-                  </button>
+          const matchesTerm = !term || codeBlockLang.toLowerCase().includes(term) || codeString.toLowerCase().includes(term);
+
+          if (matchesTerm) {
+            if (isMermaid) {
+              elements.push(<MermaidDiagram key={`mermaid-${idx}`} chart={codeString} />);
+            } else {
+              elements.push(
+                <div key={`code-${idx}`} className="my-5 rounded-md bg-ink-default text-white overflow-hidden border border-slate-800 shadow-2xs font-mono text-xs">
+                  <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-slate-200 font-bold uppercase tracking-wider text-[10px]">
+                    <span>{codeBlockLang || 'code'}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(codeString)}
+                      className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
+                    >
+                      {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{isCopied ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+                  <pre className="p-4 overflow-x-auto leading-relaxed text-slate-200">
+                    <code>{codeString}</code>
+                  </pre>
                 </div>
-                <pre className="p-4 overflow-x-auto leading-relaxed text-slate-200">
-                  <code>{codeString}</code>
-                </pre>
-              </div>
-            );
+              );
+            }
           }
           codeBlockBuffer = [];
           inCodeBlock = false;
@@ -307,6 +320,11 @@ export const DocumentationView: React.FC = () => {
         return;
       } else if (inTable) {
         flushTable(idx);
+      }
+
+      // If search query is active and line does not match term, skip single-line elements
+      if (term && !line.toLowerCase().includes(term)) {
+        return;
       }
 
       const trimmedLine = line.trim();
