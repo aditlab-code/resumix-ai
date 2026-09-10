@@ -15,6 +15,7 @@ function requireEnv(name: string, fallback: string = ''): string {
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: parseInt(process.env.PORT || process.env.API_PORT || '3001', 10),
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'https://resumix.pradityawicaksono.com,http://localhost:3000,http://localhost:3001',
   AI_SERVICE_URL: requireEnv('AI_SERVICE_URL', 'http://localhost:8000'),
   DATABASE_URL: requireEnv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/cv_ats_db'),
   REDIS_HOST: process.env.REDIS_HOST || 'localhost',

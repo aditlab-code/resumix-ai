@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /candidates/
+Disallow: /settings/
+Disallow: /admin/

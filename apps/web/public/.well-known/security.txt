@@ -1,0 +1,5 @@
+Contact: mailto:security@pradityawicaksono.com
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: id, en
+Canonical: https://resumix.pradityawicaksono.com/.well-known/security.txt
+Policy: https://resumix.pradityawicaksono.com/security
