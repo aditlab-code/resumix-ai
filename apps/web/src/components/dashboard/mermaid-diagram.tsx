@@ -45,10 +45,13 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
           .replace(/&gt;/g, '>')
           .trim();
 
-        // Create temporary container element to avoid querySelector failures in Mermaid v11
+        // Create temporary offscreen container element (visibility hidden instead of display:none so getBBox() works)
         const tempDiv = document.createElement('div');
         tempDiv.id = uniqueId;
-        tempDiv.style.display = 'none';
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.left = '-9999px';
+        tempDiv.style.top = '-9999px';
+        tempDiv.style.visibility = 'hidden';
         document.body.appendChild(tempDiv);
 
         try {
@@ -104,17 +107,14 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
   if (isRendering) {
     return (
       <div className="my-6 p-6 bg-surface border border-line rounded-xl shadow-xs flex justify-center items-center text-xs text-ink-muted">
-        Memuat diagram alur Mermaid...
+        Memuat diagram...
       </div>
     );
   }
 
   if (hasError) {
     return (
-      <div className="my-4 rounded-lg bg-ink text-canvas overflow-hidden border border-line shadow-xs font-mono text-xs">
-        <div className="px-4 py-2 bg-slate-900 border-b border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-          Diagram Alur Mermaid (Code Mode)
-        </div>
+      <div className="my-4 rounded-lg bg-ink-default text-white overflow-hidden border border-line shadow-xs font-mono text-xs">
         <pre className="p-4 overflow-x-auto leading-relaxed text-slate-200">
           <code>{chart}</code>
         </pre>
@@ -128,7 +128,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
       <div className="px-4 py-2 bg-canvas/80 border-b border-line flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-xs text-ink-default font-bold">
           <Move className="w-3.5 h-3.5 text-brand-accent" />
-          <span>Diagram Alur (Klik & Geser untuk Navigasi)</span>
+          <span>Visualisasi Diagram</span>
         </div>
 
         <div className="flex items-center gap-1.5">
