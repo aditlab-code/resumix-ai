@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
   cleanDistDir: true,
   reactStrictMode: true,
-  outputFileTracing: false,
   productionBrowserSourceMaps: false,
   transpilePackages: ['@cv-ats/contracts'],
   async headers() {
@@ -38,12 +37,9 @@ const nextConfig = {
       },
     },
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
-    if (isServer) {
-      config.externals = [...(config.externals || []), 'mermaid'];
-    }
     return config;
   },
 };

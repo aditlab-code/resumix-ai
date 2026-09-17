@@ -6,7 +6,7 @@ Resumix AI is engineered using a **Decoupled Microservices / Monorepo** architec
 
 ```mermaid
 graph TD
-    User[HR / Admin Web UI (Private SaaS)] -->|HTTPS / REST| API[Node.js Core API Gateway - Port 3000 / 3001]
+    User["HR / Admin Web UI (Private SaaS)"] -->|HTTPS / REST| API[Node.js Core API Gateway - Port 3000 / 3001]
     API -->|Signed URL / Private Upload| Storage[(Cloudflare R2 Storage Private Bucket)]
     API -->|Persist Data & Metadata| DB[(PostgreSQL 15 + pgvector)]
     API -->|Enqueue Ingestion Job| Queue[(Redis 7 / BullMQ Queue)]
@@ -14,7 +14,7 @@ graph TD
     Worker -->|HTTP REST| AIService[FastAPI AI Microservice - Port 8000]
     API -->|Direct Evaluation / Import| AIService
     
-    subgraph AI Processing Microservice Pipeline
+    subgraph AIPipeline ["AI Processing Microservice Pipeline"]
         AIService -->|1. /v1/cv/extract-text| PyMuPDF[PyMuPDF Text Extractor]
         PyMuPDF -->|Reject if len==0| Reject[HTTP 400 NO_TEXT_LAYER -> needs_review]
         AIService -->|2. /v1/cv/llm-extract| LLM[Groq LLM - llama-3.1-8b-instant]

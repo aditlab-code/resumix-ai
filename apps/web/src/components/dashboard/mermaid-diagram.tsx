@@ -34,14 +34,34 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
           fontFamily: 'Inter, system-ui, sans-serif',
         });
 
-        const uniqueId = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
-        const cleanChart = chart.replace(/\r/g, '').trim();
-        const res = await mermaid.render(uniqueId, cleanChart);
+        // Generate safe DOM ID (starts with letters, no hyphens followed by digits)
+        const uniqueId = `mermaid_${Date.now()}_${Math.random().toString(36).substring(2, 7).replace(/[^a-zA-Z]/g, 'a')}`;
+        
+        // Clean chart string
+        let cleanChart = chart
+          .replace(/\r/g, '')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .trim();
 
-        if (isMounted) {
-          setSvgContent(res.svg);
-          setHasError(false);
-          setIsRendering(false);
+        // Create temporary container element to avoid querySelector failures in Mermaid v11
+        const tempDiv = document.createElement('div');
+        tempDiv.id = uniqueId;
+        tempDiv.style.display = 'none';
+        document.body.appendChild(tempDiv);
+
+        try {
+          const res = await mermaid.render(uniqueId, cleanChart, tempDiv);
+          if (isMounted) {
+            setSvgContent(res.svg);
+            setHasError(false);
+            setIsRendering(false);
+          }
+        } finally {
+          if (document.body.contains(tempDiv)) {
+            document.body.removeChild(tempDiv);
+          }
         }
       } catch (err) {
         console.error('[Mermaid Dynamic Import / Render Error]:', err);

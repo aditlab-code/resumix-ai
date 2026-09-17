@@ -51,20 +51,20 @@ Resumix AI separates responsibilities cleanly between Web Dashboard, Core API Ga
 
 ```mermaid
 graph LR
-    subgraph Client Layer (Private SaaS Portal)
+    subgraph ClientLayer ["Client Layer (Private SaaS Portal)"]
         WebUI["Web UI (Next.js 14 / React 18)\n- Tailwind CSS & Lucide Icons"]
     end
 
-    subgraph BFF Gateway Layer
+    subgraph BFFGatewayLayer ["BFF Gateway Layer"]
         CoreAPI["Core API Service (Node.js / Express)\n- Auth & RBAC\n- Temporary Signed URL\n- BullMQ Enqueue"]
     end
 
-    subgraph Ingestion & Job Worker
+    subgraph IngestionWorker ["Ingestion & Job Worker"]
         Redis[("Redis Ingestion Queue")]
         Worker["BullMQ Worker Engine (TypeScript)"]
     end
 
-    subgraph AI Microservice Pipeline
+    subgraph AIMicroservice ["AI Microservice Pipeline"]
         AIService["AI Microservice (FastAPI / Python 3.11)"]
         PyMuPDF["PyMuPDF Parser\n(Zero-Text Rejection)"]
         LLM["Groq LLM (llama-3.1-8b-instant)"]
@@ -72,7 +72,7 @@ graph LR
         Scoring["Multi-Factor Scoring Engine"]
     end
 
-    subgraph Persistence Layer
+    subgraph PersistenceLayer ["Persistence Layer"]
         DB[("PostgreSQL 15 + pgvector\n(13 Tables & HNSW Index)")]
         Storage[("Cloudflare R2 Storage\n(Encrypted Private S3 Buckets)")]
     end
@@ -151,11 +151,11 @@ The underlying cloud infrastructure, microservices orchestration, and release de
 
 ```mermaid
 graph TD
-    subgraph Edge & Security Layer
+    subgraph EdgeLayer ["Edge & Security Layer"]
         DNS["Enterprise DNS / Cloudflare"] --> TLS["Reverse Proxy / SSL Termination (Nginx / Traefik)"]
     end
 
-    subgraph Application Server Cluster (Private VPS / GCP / AWS)
+    subgraph AppCluster ["Application Server Cluster (Private VPS / GCP / AWS)"]
         TLS --> WebPod["Next.js Web Frontend (Port 3000)"]
         TLS --> APIPod["Express Core API Gateway (Port 3001)"]
         APIPod --> RedisPod["Redis 7 Queue Cluster (Port 6379)"]
@@ -163,7 +163,7 @@ graph TD
         WorkerPod --> AIPod["FastAPI AI Microservice Engine (Port 8000)"]
     end
 
-    subgraph Persistence & Managed Storage
+    subgraph ManagedStorage ["Persistence & Managed Storage"]
         APIPod & WorkerPod --> PostgreSQL[("Managed PostgreSQL 15 + pgvector\n(Encrypted at Rest)")]
         APIPod --> Storage[("Cloudflare R2 Private Storage\n(Time-Limited Signed URLs)")]
     end

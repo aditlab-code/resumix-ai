@@ -14,7 +14,7 @@ graph TD
     Worker -->|HTTP REST| AIService[FastAPI AI Microservice - Port 8000]
     API -->|Direct Evaluation / Import| AIService
     
-    subgraph AI Processing Microservice Pipeline
+    subgraph AIPipeline ["AI Processing Microservice Pipeline"]
         AIService -->|1. /v1/cv/extract-text| PyMuPDF[PyMuPDF Text Extractor]
         PyMuPDF -->|Reject if len==0| Reject[HTTP 400 NO_TEXT_LAYER -> needs_review]
         AIService -->|2. /v1/cv/llm-extract| LLM[Groq LLM - llama-3.1-8b-instant]

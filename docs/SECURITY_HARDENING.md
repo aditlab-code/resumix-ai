@@ -25,7 +25,7 @@ graph LR
     end
 
     subgraph Layer3 ["Layer 3: Application & Privacy Controls"]
-        E["5. PII Masking & Hiring Bias Prevention"]
+        E["5. Data Privacy & PII Handling"]
         F["6. Short-Lived Signed URL Storage (TTL 300s)"]
         G["7. Secret Hygiene & Environment Isolation"]
         H["8. Automated Data Retention & Auto-Purge Policy"]
@@ -96,10 +96,11 @@ Processing PDF documents and executing LLM inference creates computational overh
 
 ---
 
-### Pillar 5: PII Sanitization & Hiring Fairness
-To guarantee 100% compliance with data privacy regulations (GDPR, PDP) and eliminate hiring bias:
-- **Excluded Attributes**: Candidate photos, gender, age, religion, marital status, and physical addresses are strictly excluded from Pydantic extraction models.
-- **Log Sanitization**: Telemetry systems, Winston loggers, and FastAPI logs are explicitly sanitized to prevent raw CV text or email addresses from printing to `stdout` / `stderr`.
+#### Pillar 5: Data Privacy & PII Handling
+To guarantee 100% compliance with data privacy regulations (GDPR, PDP) and maintain candidate data integrity:
+- **Direct PII Extraction**: Full candidate identity details (Full Name, Email, Phone Number, Location) are extracted accurately and stored directly without masking or anonymization.
+- **Excluded Demographics**: Non-job-related demographic attributes (candidate photos, gender, age, religion, marital status) are excluded from extraction models to prevent hiring bias.
+- **Log Sanitization**: Telemetry systems and Winston loggers prevent raw credentials from printing to `stdout` / `stderr`.
 
 ---
 
@@ -116,7 +117,7 @@ To guarantee 100% compliance with data privacy regulations (GDPR, PDP) and elimi
 
 ---
 
-### Pillar 8: Automated Data Retention & Demo Auto-Purge Policy (UU PDP / GDPR Compliance)
+### Pillar 8: Automated Data Retention & Auto-Purge Policy (UU PDP / GDPR Compliance)
 To prevent perpetual data retention and comply with GDPR Article 5(1)(e) (Storage Limitation Principle) and UU PDP (Indonesian Personal Data Protection Law):
 
 1. **Demo Environment Auto-Purge Mode (`CV_RETENTION_MODE=demo`)**:
@@ -125,9 +126,9 @@ To prevent perpetual data retention and comply with GDPR Article 5(1)(e) (Storag
 2. **Enterprise Production Retention (`CV_RETENTION_MODE=enterprise`)**:
    - Production environments support configurable retention windows (`CV_RETENTION_DAYS`, e.g., 30, 60, or 90 days).
    - A scheduled background worker checks document timestamps (`candidate_documents.created_at`) and automatically purges expired PDF blobs from Cloudflare R2.
-3. **Metadata Integrity & Anonymized Retention**:
+3. **Metadata Integrity & Evaluation Retention**:
    - Upon raw PDF purging from Cloudflare R2, the document status in PostgreSQL transitions to `purged`.
-   - Anonymized skill match vectors and evaluation scores remain in PostgreSQL for historical talent analytics without retaining raw PDF files.
+   - Candidate skill match vectors and evaluation scores remain in PostgreSQL for historical talent analytics without retaining raw PDF files.
 
 ---
 *Resumix AI — Enterprise Security Hardening & Pentest Defense Specification.*
