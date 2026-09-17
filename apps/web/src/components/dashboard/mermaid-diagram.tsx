@@ -45,25 +45,21 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
           .replace(/&gt;/g, '>')
           .trim();
 
-        // Create temporary offscreen container element (visibility hidden instead of display:none so getBBox() works)
-        const tempDiv = document.createElement('div');
-        tempDiv.id = uniqueId;
-        tempDiv.style.position = 'absolute';
-        tempDiv.style.left = '-9999px';
-        tempDiv.style.top = '-9999px';
-        tempDiv.style.visibility = 'hidden';
-        document.body.appendChild(tempDiv);
-
         try {
-          const res = await mermaid.render(uniqueId, cleanChart, tempDiv);
+          const res = await mermaid.render(uniqueId, cleanChart);
           if (isMounted) {
             setSvgContent(res.svg);
             setHasError(false);
             setIsRendering(false);
           }
         } finally {
-          if (document.body.contains(tempDiv)) {
-            document.body.removeChild(tempDiv);
+          const orphanEl = document.getElementById(uniqueId);
+          if (orphanEl) {
+            orphanEl.remove();
+          }
+          const orphanContainer = document.getElementById(`d${uniqueId}`);
+          if (orphanContainer) {
+            orphanContainer.remove();
           }
         }
       } catch (err) {
