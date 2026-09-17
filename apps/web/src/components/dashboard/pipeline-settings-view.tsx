@@ -26,7 +26,6 @@ import {
   Select,
   Textarea,
   RangeField,
-  ThreeDotsAccent,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -688,8 +687,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
             />
 
             <div className="p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border-slate-200">
-              <span className="font-bold text-sm text-foreground flex items-center gap-2.5">
-                <ThreeDotsAccent />
+              <span className="font-bold text-sm text-foreground">
                 Total Weight Accumulation:
               </span>
               <span
@@ -701,7 +699,7 @@ export const PipelineSettingsView: React.FC<PipelineSettingsViewProps> = ({
                 <span
                   className={cn(
                     'w-1.5 h-1.5 rounded-full shrink-0',
-                    weightValid ? 'bg-emerald-600' : 'bg-rose-600 animate-pulse'
+                    weightValid ? 'bg-emerald-600' : 'bg-rose-600'
                   )}
                 />
                 {totalWeight}% {weightValid ? 'Valid (100%)' : 'Must be 100%'}

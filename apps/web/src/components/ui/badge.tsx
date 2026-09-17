@@ -73,7 +73,7 @@ const statusMap: Record<StatusType, { label: string; tone: Tone }> = {
   withdrawn: { label: 'WITHDRAWN', tone: 'neutral' },
 };
 
-const PULSE: StatusType[] = ['processing', 'queued', 'needs_review'];
+const PULSE: StatusType[] = ['processing'];
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -104,4 +104,3 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
 };
 
 export { Badge, badgeVariants };
-

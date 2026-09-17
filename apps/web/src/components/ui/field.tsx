@@ -106,8 +106,7 @@ export const RangeField: React.FC<RangeFieldProps> = ({
 }) => (
   <div className="space-y-2.5 bg-slate-50/80 rounded-xl p-4 border border-slate-200">
     <div className="flex justify-between items-center text-xs font-bold">
-      <span className="text-slate-900 flex items-center gap-2">
-        <ThreeDotsAccent />
+      <span className="text-slate-900 font-bold">
         {label}
       </span>
       <span className="font-mono font-extrabold text-blue-900 bg-slate-100 border border-blue-500 px-2.5 py-0.5 rounded-full text-xs shadow-2xs">

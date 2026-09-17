@@ -64,7 +64,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       subtitle,
       action,
       disableBorder = false,
-      showAccent = true,
+      showAccent = false,
       accentColor,
       children,
       ...props
@@ -119,7 +119,7 @@ export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement>
 }
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ className, showAccent = true, accentColor, children, ...props }, ref) => (
+  ({ className, showAccent = false, accentColor, children, ...props }, ref) => (
     <h3
       ref={ref}
       className={cn('font-bold leading-tight tracking-tight text-lg text-card-foreground flex items-center gap-2.5', className)}
@@ -160,7 +160,7 @@ export interface SectionLabelProps extends React.HTMLAttributes<HTMLParagraphEle
 
 export const SectionLabel: React.FC<SectionLabelProps> = ({
   className,
-  showAccent = true,
+  showAccent = false,
   accentColor,
   children,
   ...props
@@ -178,5 +178,3 @@ export const SectionLabel: React.FC<SectionLabelProps> = ({
 );
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
-
-
