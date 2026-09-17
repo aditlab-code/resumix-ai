@@ -66,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  'w-full px-3.5 py-2.5 rounded-md text-body font-semibold flex items-center gap-3 focus-ring transition-colors',
+                  'w-full px-3.5 py-2.5 rounded-md text-body font-semibold flex items-center gap-3 focus-ring transition-colors duration-120',
                   isActive
                     ? 'bg-blue-600 text-white shadow-e1 font-bold'
                     : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
@@ -89,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             href={process.env.NEXT_PUBLIC_PORTFOLIO_URL || '#'}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-400 hover:text-blue-300 font-medium transition-colors hover:underline"
+            className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-120 hover:underline"
           >
             Adit
           </a>
@@ -110,7 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="fixed inset-0 z-50 md:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-black/50 transition-opacity"
             onClick={onClose}
           />
           {/* Drawer Panel */}

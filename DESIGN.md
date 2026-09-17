@@ -151,6 +151,58 @@ Resumix AI `DESIGN.md` v3.0 is the official **Single Source of Truth (SSOT)** fo
 - Header label contains criterion variable name and percentage badge `bg-slate-100 text-blue-900 border border-blue-500 font-mono font-extrabold`.
 - Slider track & thumb use `accent-blue-600 h-2 bg-slate-200 rounded-lg` solid without gradients.
 
+### E. Anti-Slop Hover & Interactive State Specification
+- **Cards & Containers (KPI / Job / Candidate Cards)**:
+  - **Pure Flat Shift**: Zero `translateY` elevation lift or heavy box shadows.
+  - **Border Shift**: `border-slate-200` $\rightarrow$ `hover:border-slate-300` (or `hover:border-blue-300` for selectable cards).
+  - **Background Tint Shift**: `bg-white` / `bg-slate-50` $\rightarrow$ `hover:bg-slate-100/50`.
+  - **Motion**: `transition-colors duration-120 ease-in-out`.
+- **Button & Action Controls (Primary, Secondary, Ghost, Destructive)**:
+  - **Strict Flat Tint Transition**: Color fill, text, and border shift (120ms ease), strictly zero scale zoom on hover, zero radial glow or blurs.
+  - **Primary**: `bg-blue-700` $\rightarrow$ `hover:bg-blue-800`.
+  - **Secondary**: `bg-white border-slate-200` $\rightarrow$ `hover:bg-slate-100 hover:border-slate-300`.
+  - **Ghost/Icon**: `text-slate-500` $\rightarrow$ `hover:bg-slate-100 hover:text-slate-900`.
+  - **Active Click Feedback**: `active:scale-[0.98]` micro-compression.
+- **Table Rows & List Items**:
+  - **Subtle Slate Tint + Title Accent**: Background row shift `hover:bg-slate-100/70` (120ms).
+  - **Clickable Row Titles/Links**: Shift from `text-slate-900` to `hover:text-blue-700` (`brand.accent`).
+  - **Strict Rule R-31**: Zero decorative left stripes or vertical 3-dot ornaments.
+- **Form Controls, Dropdowns & Sliders**:
+  - **Hover**: `border-slate-200` $\rightarrow$ `hover:border-slate-300` (120ms).
+  - **Focus**: `focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20` (3px soft focus ring).
+  - **Strict Anti-Slop**: Zero glowing radial blurs or animated border gradients.
+
+### F. Navbar & Sidebar Navigation System
+- **Top Header / Navbar**:
+  - **Solid Enterprise Surface (R-10)**: `bg-white` / `bg-surface-raised` with 1px solid bottom border (`border-b border-slate-200`).
+  - **Position**: `sticky top-0 z-20`.
+  - **Strict Anti-Slop R-10**: Strictly zero `backdrop-blur` or semi-transparent frosted glass on top header.
+  - **Actions**: Flat tint button transitions without decorative ornaments.
+- **Sidebar Navigation**:
+  - **Permanent Desktop Panel**: `w-[264px] bg-ink-default border-r border-slate-800 text-white z-30`.
+  - **Active Nav Item**: Solid block accent fill (`bg-blue-600 text-white font-bold shadow-e1`).
+  - **Inactive Nav Items**: `text-slate-300 hover:bg-slate-800/80 hover:text-white transition-colors duration-120`.
+  - **Strict Rule R-31**: Zero decorative dots or left vertical accent stripes on nav items.
+- **Mobile Navigation Drawer**:
+  - **Slide-over Panel**: `w-[264px] bg-ink-default border-r border-slate-800 text-white`.
+  - **Backdrop**: Dark solid overlay `bg-black/50 transition-opacity` without heavy blur filters.
+  - **Motion**: Smooth 200ms slide-in animation (`animate-in slide-in-from-left duration-200`).
+
+### G. Anti-Slop Modal & Overlay Architecture
+- **Backdrop & Focus Trap**:
+  - **Solid Backdrop (R-10)**: `bg-slate-950/60` dark overlay without `backdrop-blur`.
+  - **Native Accessibility**: Built-in Radix Dialog focus trap and escape key handling; no duplicate manual JS listeners.
+- **Modal Header**:
+  - **Surface & Border**: Solid background (`bg-white` or `bg-slate-900`), 1px solid bottom border (`border-b border-slate-200`).
+  - **Clean Typography (R-31)**: Truncated title with optional concise subheadline; zero decorative 3-dot ornaments or artificial eyebrow badges.
+- **Modal Body**:
+  - **Single Scroll Container**: `max-h-[75vh] overflow-y-auto p-6 text-sm`; no double scrollbars.
+- **Modal Footer**:
+  - **Actions Container**: Sticky/fixed bottom panel with 1px solid top border (`border-t border-slate-200`), right-aligned action buttons using 120ms flat state transitions.
+- **Redundancy Elimination Rules (R-05, R-16)**:
+  - Do not create separate "Guidelines" tabs when file limits are stated on the dropzone.
+  - Do not create 3 separate warning boxes displaying the same candidate name in deletion modals; merge into 1 single high-contrast warning card.
+
 ---
 
 ## 5. Integration Governance with AGENTS.md

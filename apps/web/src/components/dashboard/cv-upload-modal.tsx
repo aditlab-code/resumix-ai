@@ -20,8 +20,9 @@ import {
 } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
+import { setupPdfWorker } from '@/lib/pdf-worker';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+setupPdfWorker();
 
 interface CvUploadModalProps {
   isOpen: boolean;
@@ -48,12 +49,10 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
   onUploadSuccess,
 }) => {
   const [jobId, setJobId] = useState(selectedJobId);
-  const [activeTab, setActiveTab] = useState<'upload' | 'guidelines'>('upload');
 
   React.useEffect(() => {
     if (isOpen) {
       setJobId(selectedJobId);
-      setActiveTab('upload');
     }
   }, [isOpen, selectedJobId]);
   const [file, setFile] = useState<File | null>(null);
@@ -374,6 +373,21 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
 
     const { score, breakdown } = calculateJobFitScore(realExtraction, activeJob);
 
+    const readFileAsDataUrl = (f: File): Promise<string> =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(f);
+      });
+
+    let filePdfUrl = '';
+    try {
+      filePdfUrl = await readFileAsDataUrl(file);
+    } catch (_) {
+      filePdfUrl = URL.createObjectURL(file);
+    }
+
     const newApp: CandidateApplication = {
       id: `app-${Date.now()}`,
       job_id: activeJob.id,
@@ -388,7 +402,7 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
       storage_path: `private/cv/${file.name}`,
       original_filename: file.name,
       file_size_bytes: file.size,
-      pdf_url: URL.createObjectURL(file),
+      pdf_url: filePdfUrl,
       job_fit_score: isCorrupt ? 0 : score,
       score_breakdown: breakdown,
       cv_extraction: realExtraction,
@@ -428,59 +442,25 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
           <p className="text-xs font-normal text-muted-foreground mt-0.5">PDF Format (Max 10 MB) for AI extraction & scoring</p>
         </div>
       }
-      subheader={
-        <Tabs
-          items={[
-            { key: 'upload', label: 'Upload PDF File' },
-            { key: 'guidelines', label: 'Parsing Guidelines' },
-          ]}
-          active={activeTab}
-          onChange={(k) => setActiveTab(k as 'upload' | 'guidelines')}
-          className="w-full justify-start"
-        />
-      }
       footer={
-        <div className="flex items-center justify-end gap-4 sm:gap-4 w-full">
-          <Button variant="ghost" size="md" onClick={close} disabled={isProcessing} className="px-6">
+        <div className="flex items-center justify-end gap-3 w-full">
+          <Button variant="ghost" size="md" onClick={close} disabled={isProcessing} className="px-5">
             Cancel
           </Button>
-          {activeTab === 'upload' && (
-            <Button
-              size="md"
-              onClick={handleStartUpload}
-              disabled={!file || isProcessing}
-              className="px-6"
-              iconLeft={isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
-            >
-              {isProcessing ? 'Extracting...' : 'Start Extraction & Scoring'}
-            </Button>
-          )}
+          <Button
+            size="md"
+            onClick={handleStartUpload}
+            disabled={!file || isProcessing}
+            className="px-6"
+            iconLeft={isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
+          >
+            {isProcessing ? 'Extracting...' : 'Start Extraction & Scoring'}
+          </Button>
         </div>
       }
     >
       <div className="space-y-4">
-        {activeTab === 'guidelines' ? (
-          <div className="space-y-3.5">
-            <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2">
-              <h4 className="text-xs font-bold text-foreground">
-                PDF Text Layer Requirements
-              </h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                The ATS system processes PDF files containing a searchable text layer. Scanned images or photos without a readable text layer will be flagged with status <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-amber-700 dark:text-amber-300 border border-border">needs_review</code> for manual HR review.
-              </p>
-            </div>
-
-            <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2">
-              <h4 className="text-xs font-bold text-foreground">
-                Security & Private Storage
-              </h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Each candidate resume document is securely stored in private storage with Temporary Signed URLs (max TTL 300 seconds) to protect candidate PII data.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <>
+        <>
             <Field label="Target Job Position" required hint="Select the target position to match candidate qualifications.">
               <Select value={jobId} onChange={(e) => setJobId(e.target.value)} disabled={isProcessing} sizeVariant="md">
                 {jobs.map((j) => (
@@ -580,7 +560,6 @@ export const CvUploadModal: React.FC<CvUploadModalProps> = ({
               </div>
             )}
           </>
-        )}
       </div>
     </Overlay>
   );

@@ -106,7 +106,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                   return (
                     <div
                       key={app.id}
-                      className="group relative bg-card border border-border hover:border-primary/50 rounded-lg p-3.5 shadow-sm transition-all cursor-pointer"
+                      className="group relative bg-card border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 rounded-lg p-3.5 shadow-xs transition-colors duration-120 active:scale-[0.99] cursor-pointer"
                       role="button"
                       tabIndex={0}
                       onClick={() => onSelectCandidate(app)}

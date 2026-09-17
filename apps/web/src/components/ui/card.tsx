@@ -14,12 +14,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        'rounded-xl border border-border bg-card text-card-foreground shadow-sm relative overflow-hidden transition-all duration-200',
+        'rounded-xl border border-border bg-card text-card-foreground shadow-xs relative overflow-hidden transition-colors duration-120',
         elevation === 'e0' && 'shadow-none',
-        elevation === 'e2' && 'shadow-md',
-        elevation === 'e3' && 'shadow-lg',
-        elevation === 'e4' && 'shadow-xl',
-        interactive && 'hover:border-primary/50 cursor-pointer hover:shadow-md',
+        elevation === 'e2' && 'shadow-xs',
+        elevation === 'e3' && 'shadow-sm',
+        elevation === 'e4' && 'shadow-md',
+        interactive && 'hover:border-slate-300 hover:bg-slate-50/50 cursor-pointer',
         accentTop && 'before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-primary',
         className
       )}

@@ -46,65 +46,11 @@ export const Overlay: React.FC<OverlayProps> = ({
   children,
   bodyClassName,
 }) => {
-  const contentRef = React.useRef<HTMLDivElement>(null);
-
-  const getFocusableElements = React.useCallback(() => {
-    if (!contentRef.current) return [];
-    return Array.from(contentRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-  }, []);
-
-  React.useEffect(() => {
-    if (!isOpen) return;
-
-    const timer = setTimeout(() => {
-      const focusableEls = getFocusableElements();
-      if (focusableEls.length > 0) {
-        focusableEls[0].focus();
-      }
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [isOpen, getFocusableElements]);
-
-  React.useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        return;
-      }
-
-      if (e.key !== 'Tab') return;
-
-      const focusableEls = getFocusableElements();
-      if (focusableEls.length === 0) return;
-
-      const firstEl = focusableEls[0];
-      const lastEl = focusableEls[focusableEls.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstEl) {
-          e.preventDefault();
-          lastEl.focus();
-        }
-      } else {
-        if (document.activeElement === lastEl) {
-          e.preventDefault();
-          firstEl.focus();
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, getFocusableElements]);
-
   if (variant === 'side') {
     return (
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent side="right" className="flex flex-col p-0 gap-0 w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl shadow-2xl border-l border-border bg-background">
-          <SheetHeader className="px-4 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-border bg-background shrink-0 text-left pr-14 sm:pr-16">
+        <SheetContent side="right" className="flex flex-col p-0 gap-0 w-full sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl shadow-2xl border-l border-slate-200 bg-background">
+          <SheetHeader className="px-4 sm:px-6 pt-5 pb-4 border-b border-slate-200 bg-background shrink-0 text-left pr-14 sm:pr-16">
             {typeof title === 'string' ? (
               <SheetTitle className="text-lg font-bold text-foreground truncate">{title}</SheetTitle>
             ) : (
@@ -112,15 +58,14 @@ export const Overlay: React.FC<OverlayProps> = ({
             )}
             {header}
           </SheetHeader>
-          {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-3 sm:px-8 py-2.5 text-xs text-muted-foreground overflow-x-auto no-scrollbar">{subheader}</div>}
+          {subheader && <div className="shrink-0 border-b border-slate-200 bg-slate-50 px-4 sm:px-6 py-2.5 text-xs text-muted-foreground overflow-x-auto no-scrollbar">{subheader}</div>}
           <div
-            ref={contentRef}
-            className={cn('flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 text-sm text-foreground', bodyClassName)}
+            className={cn('flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 text-sm text-foreground max-h-[75vh]', bodyClassName)}
           >
             {children}
           </div>
           {footer && (
-            <div className="flex items-center justify-end gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-t border-border bg-muted/30 shrink-0">
+            <div className="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-slate-200 bg-slate-50/50 shrink-0">
               {footer}
             </div>
           )}
@@ -131,8 +76,8 @@ export const Overlay: React.FC<OverlayProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn('p-0 gap-0 border border-surface-border bg-background shadow-e4_modal rounded-none sm:rounded-2xl sm:max-h-[85vh]', centerSizeClass[size])}>
-        <DialogHeader className="px-4 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-border bg-background text-left pr-14 sm:pr-16 shrink-0">
+      <DialogContent className={cn('p-0 gap-0 border border-slate-200 bg-background shadow-e4_modal rounded-xl sm:rounded-2xl', centerSizeClass[size])}>
+        <DialogHeader className="px-4 sm:px-6 pt-5 pb-4 border-b border-slate-200 bg-background text-left pr-14 sm:pr-16 shrink-0">
           {typeof title === 'string' ? (
             <DialogTitle className="text-lg font-bold text-foreground truncate">{title}</DialogTitle>
           ) : (
@@ -140,15 +85,14 @@ export const Overlay: React.FC<OverlayProps> = ({
           )}
           {header}
         </DialogHeader>
-        {subheader && <div className="shrink-0 border-b border-border bg-muted/40 px-4 sm:px-8 py-3 text-xs text-muted-foreground">{subheader}</div>}
+        {subheader && <div className="shrink-0 border-b border-slate-200 bg-slate-50 px-4 sm:px-6 py-2.5 text-xs text-muted-foreground">{subheader}</div>}
         <div
-          ref={contentRef}
-          className={cn('flex-1 px-4 sm:px-8 py-4 sm:py-6 text-sm text-foreground sm:overflow-y-auto sm:max-h-[65vh]', bodyClassName)}
+          className={cn('flex-1 px-4 sm:px-6 py-4 sm:py-6 text-sm text-foreground overflow-y-auto max-h-[75vh]', bodyClassName)}
         >
           {children}
         </div>
         {footer && (
-          <div className="flex items-center justify-end gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-t border-border bg-muted/30 shrink-0 mt-auto sm:mt-0">
+          <div className="flex items-center justify-end gap-3 px-4 sm:px-6 py-4 border-t border-slate-200 bg-slate-50/50 shrink-0 mt-auto sm:mt-0">
             {footer}
           </div>
         )}

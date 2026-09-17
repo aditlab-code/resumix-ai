@@ -104,18 +104,18 @@
 }
 
 @layer components {
-  /* Utility component shortcuts for consistent multi-tier surface elevation */
+  /* Anti-Slop Surface Elevation & Card Tokens (Flat Shift 120ms) */
   .surface-card {
     background-color: var(--surface-base);
     border: 1px solid var(--surface-border);
     border-radius: 10px;
     box-shadow: var(--shadow-e1);
-    transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: border-color 120ms ease-in-out, background-color 120ms ease-in-out;
   }
 
   .surface-card:hover {
-    box-shadow: var(--shadow-e2);
     border-color: var(--surface-border-strong);
+    background-color: var(--surface-hover);
   }
 
   .surface-inset {
@@ -132,14 +132,41 @@
     outline-offset: 1px;
   }
 
-
-  .hover-lift {
-    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Anti-Slop Flat Shift Card Hover Utility */
+  .hover-card-flat {
+    transition: border-color 120ms ease-in-out, background-color 120ms ease-in-out;
+  }
+  .hover-card-flat:hover {
+    border-color: var(--surface-border-strong);
+    background-color: var(--surface-hover);
   }
 
-  .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-e2);
+  /* Anti-Slop Interactive Button Active Press Utility */
+  .button-active-press {
+    transition: background-color 120ms ease-in-out, border-color 120ms ease-in-out, color 120ms ease-in-out, transform 80ms ease-in-out;
+  }
+  .button-active-press:active {
+    transform: scale(0.98);
+  }
+
+  /* Anti-Slop Table Row Hover Utility */
+  .hover-row-slate {
+    transition: background-color 120ms ease-in-out;
+  }
+  .hover-row-slate:hover {
+    background-color: rgba(241, 245, 249, 0.7);
+  }
+
+  /* Anti-Slop Form Control Hover & Focus Utility */
+  .hover-form-control {
+    transition: border-color 120ms ease-in-out, box-shadow 120ms ease-in-out;
+  }
+  .hover-form-control:hover {
+    border-color: var(--surface-border-strong);
+  }
+  .hover-form-control:focus {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.20);
   }
 }
 

@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onToggleMobileMenu}
-              className="md:hidden p-2 rounded-md border border-surface-border text-ink-default hover:bg-surface-hover focus-ring shrink-0"
+              className="md:hidden p-2 rounded-md border border-surface-border text-ink-default hover:bg-surface-hover hover:border-slate-300 transition-colors duration-120 focus-ring shrink-0"
               aria-label="Open Sidebar Menu"
             >
               <Menu className="w-5 h-5" />

@@ -27,10 +27,9 @@ import { CVExtractionDTO } from '@cv-ats/contracts';
 import { SAMPLE_PDF_BASE64 } from '@/lib/sample-pdf';
 import { Card } from '@/components/ui';
 import * as pdfjsLib from 'pdfjs-dist';
+import { setupPdfWorker } from '@/lib/pdf-worker';
 
-if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-}
+setupPdfWorker();
 
 interface ResumePreviewProps {
   originalFilename: string;
@@ -114,6 +113,7 @@ const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
 
     const loadPdfDoc = async () => {
       try {
+        setupPdfWorker();
         let byteArray: Uint8Array;
         try {
           byteArray = await loadPdfBytes(effectivePdfUrl);
@@ -121,8 +121,21 @@ const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
           console.warn('Failed to fetch primary PDF URL, falling back to sample PDF base64:', fetchErr);
           byteArray = await loadPdfBytes(SAMPLE_PDF_BASE64);
         }
-        const loadingTask = pdfjsLib.getDocument({ data: byteArray });
-        const loadedDoc = await loadingTask.promise;
+
+        let loadedDoc: any;
+        try {
+          const loadingTask = pdfjsLib.getDocument({ data: byteArray });
+          loadedDoc = await loadingTask.promise;
+        } catch (workerErr: any) {
+          console.warn('PDF.js initial worker task failed, retrying in fallback main-thread mode:', workerErr);
+          const fallbackTask = pdfjsLib.getDocument({
+            data: byteArray,
+            disableAutoFetch: true,
+            disableStream: true,
+          });
+          loadedDoc = await fallbackTask.promise;
+        }
+
         if (!isCancelled) {
           setPdfDoc(loadedDoc);
           if (onPagesLoaded) onPagesLoaded(loadedDoc.numPages);
@@ -199,17 +212,36 @@ const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
   }, [pdfDoc, currentPage, zoomLevel, rotation, renderError]);
 
   if (renderError) {
+    const isBase64 = effectivePdfUrl.startsWith('data:');
     return (
       <div className="w-full flex flex-col items-center justify-center p-4 space-y-4">
-        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 p-3 rounded-lg text-xs flex items-center gap-2 max-w-md">
-          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-          <span>Canvas renderer note: {renderError}. Displaying iframe viewer fallback.</span>
+        <div className="bg-amber-50 border border-amber-200 text-amber-950 p-3 rounded-xl text-xs flex items-center justify-between gap-3 max-w-xl w-full">
+          <div className="flex items-center gap-2 min-w-0">
+            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+            <span className="truncate">Renderer note: {renderError}</span>
+          </div>
+          <a
+            href={effectivePdfUrl}
+            download={originalFilename || 'resume.pdf'}
+            className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:underline shrink-0"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Download PDF
+          </a>
         </div>
-        <iframe
-          src={`${effectivePdfUrl}#toolbar=0&navpanes=0`}
-          title={originalFilename}
-          className="w-full h-[650px] rounded-xl border border-border shadow-sm bg-white"
-        />
+        {!isBase64 ? (
+          <object
+            data={`${effectivePdfUrl}#toolbar=0&navpanes=0`}
+            type="application/pdf"
+            className="w-full h-[650px] rounded-xl border border-slate-200 bg-white"
+          >
+            <p className="text-xs text-slate-500 p-4">Unable to display PDF preview in browser. Use the download link above.</p>
+          </object>
+        ) : (
+          <div className="w-full h-[300px] flex items-center justify-center border border-slate-200 bg-slate-50 rounded-xl text-xs text-slate-500 font-medium">
+            Inline PDF Preview fallback active. Use Download PDF to inspect document.
+          </div>
+        )}
       </div>
     );
   }

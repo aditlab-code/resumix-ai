@@ -71,56 +71,29 @@ export const DeleteCandidateModal: React.FC<DeleteCandidateModalProps> = ({
       }
     >
       <div className="space-y-4 text-xs">
-        {/* Danger Warning Alert Box */}
-        <div className="p-3.5 bg-destructive/10 border border-destructive/20 text-destructive rounded-xl space-y-1">
-          <p className="font-semibold text-xs leading-snug">Data Deletion Warning</p>
-          <p className="leading-relaxed text-muted-foreground text-xs">
-            The private PDF file, extracted PII data, and Job-Fit Score for candidate{' '}
-            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono font-bold text-xs bg-destructive/15 text-destructive border border-destructive/30 mx-1">
-              {application.candidate_name}
-            </span>{' '}
-            ({application.email}) will be permanently removed from the database and cannot be restored.
+        {/* Single Unified Warning Card */}
+        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-950 rounded-xl space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="font-extrabold text-xs uppercase tracking-wider text-rose-900">Permanent Data Deletion</span>
+            <span className="text-[11px] font-mono text-rose-700">Irreversible</span>
+          </div>
+          <p className="leading-relaxed text-slate-700 text-xs">
+            Resume PDF, extracted PII, and Job-Fit scores for candidate{' '}
+            <strong className="text-slate-900 font-bold">{application.candidate_name}</strong> ({application.email}) will be permanently removed.
           </p>
         </div>
 
-        {/* Confirmation Tag & Input Section */}
-        <div className="space-y-3 pt-1">
-          <div className="flex items-center justify-between">
-            <label className="block text-xs font-semibold text-foreground">
-              Candidate Name Confirmation
-            </label>
-            <span className="text-[11px] text-muted-foreground italic">Case-insensitive</span>
-          </div>
-          
-          {/* Enhanced Target Name Badge Box */}
-          <div className="flex items-center justify-between gap-2 p-2.5 bg-muted/60 border border-border rounded-xl shadow-xs">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-[11px] font-medium text-muted-foreground shrink-0">Target name:</span>
-              <code className="inline-flex items-center px-2.5 py-1 rounded-lg font-mono text-xs font-bold bg-primary/10 text-primary border border-primary/20 shadow-xs truncate select-all">
-                {application.candidate_name}
-              </code>
-            </div>
-            <button
-              type="button"
-              onClick={handleCopyName}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-primary hover:text-primary/80 bg-background border border-border rounded-lg hover:bg-accent transition-colors shrink-0 shadow-xs"
-              title="Copy candidate name"
-            >
-              {copied ? <span className="text-emerald-600 font-bold">Copied</span> : <span>Copy</span>}
-            </button>
-          </div>
-
-          <div className="space-y-1.5">
-            <p className="text-[11px] text-muted-foreground leading-relaxed">
-              Type the name above or the word <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-foreground border border-border">delete</code> to confirm:
-            </p>
-            <Input
-              value={confirmName}
-              onChange={(e) => setConfirmName(e.target.value)}
-              placeholder={`Type "${application.candidate_name}" or "delete"`}
-              className="font-mono text-xs focus:ring-destructive/30"
-            />
-          </div>
+        {/* Confirmation Input Section */}
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-foreground">
+            Type candidate name or <code className="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-slate-800 border border-slate-300">delete</code> to confirm:
+          </label>
+          <Input
+            value={confirmName}
+            onChange={(e) => setConfirmName(e.target.value)}
+            placeholder={`Type "${application.candidate_name}" or "delete"`}
+            className="font-mono text-xs"
+          />
         </div>
       </div>
     </Overlay>

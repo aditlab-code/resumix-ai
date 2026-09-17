@@ -116,47 +116,47 @@ export default function DashboardPage() {
             <div className="space-y-3 mt-4">
               <button
                 onClick={() => setIsUploadModalOpen(true)}
-                className="w-full p-3.5 rounded-md border border-surface-border bg-surface-raised hover:bg-surface-hover flex items-center justify-between text-left transition-colors group focus-ring"
+                className="w-full p-3.5 rounded-md border border-surface-border bg-surface-raised hover:bg-surface-hover hover:border-slate-300 flex items-center justify-between text-left transition-colors duration-120 active:scale-[0.98] group focus-ring"
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-blue-50 text-blue-600">
                     <FileText className="w-5 h-5" />
                   </div>
-                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
+                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent transition-colors duration-120">
                     Upload Resume CV
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-colors duration-120" />
               </button>
 
               <button
                 onClick={() => setIsCreateJobModalOpen(true)}
-                className="w-full p-3.5 rounded-md border border-surface-border bg-surface-raised hover:bg-surface-hover flex items-center justify-between text-left transition-colors group focus-ring"
+                className="w-full p-3.5 rounded-md border border-surface-border bg-surface-raised hover:bg-surface-hover hover:border-slate-300 flex items-center justify-between text-left transition-colors duration-120 active:scale-[0.98] group focus-ring"
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-emerald-50 text-emerald-600">
                     <Plus className="w-5 h-5" />
                   </div>
-                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
+                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent transition-colors duration-120">
                     Post Available Job
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-colors duration-120" />
               </button>
 
               <Link
                 href="/jobs"
-                className="w-full p-3.5 rounded-md border border-surface-border bg-surface-raised hover:bg-surface-hover flex items-center justify-between text-left transition-colors group focus-ring"
+                className="w-full p-3.5 rounded-md border border-surface-border bg-surface-raised hover:bg-surface-hover hover:border-slate-300 flex items-center justify-between text-left transition-colors duration-120 active:scale-[0.98] group focus-ring"
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-md bg-purple-50 text-purple-600">
                     <Briefcase className="w-5 h-5" />
                   </div>
-                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent">
+                  <div className="text-body font-bold text-ink-default group-hover:text-brand-accent transition-colors duration-120">
                     Manage Jobs
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight className="w-4 h-4 text-ink-subtle group-hover:text-brand-accent transition-colors duration-120" />
               </Link>
             </div>
           </div>
