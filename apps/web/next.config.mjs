@@ -6,9 +6,9 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  cleanDistDir: true,
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
+  outputFileTracing: false,
   transpilePackages: ['@cv-ats/contracts'],
   async headers() {
     return [
@@ -28,14 +28,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        canvas: './src/lib/empty.js',
-        encoding: './src/lib/empty.js',
-      },
-    },
   },
   webpack: (config) => {
     config.resolve.alias.canvas = false;

@@ -8,12 +8,20 @@ interface MathFormulaProps {
   block?: boolean;
 }
 
+let katexPromise: Promise<typeof import('katex')> | null = null;
+const getKatex = () => {
+  if (!katexPromise) {
+    katexPromise = import('katex');
+  }
+  return katexPromise;
+};
+
 export const MathFormula: React.FC<MathFormulaProps> = React.memo(({ math, block = true }) => {
   const [html, setHtml] = useState<string>('');
 
   useEffect(() => {
     let isMounted = true;
-    import('katex').then((katexModule) => {
+    getKatex().then((katexModule) => {
       const katex = katexModule.default;
       try {
         const rendered = katex.renderToString(math, {
@@ -26,6 +34,8 @@ export const MathFormula: React.FC<MathFormulaProps> = React.memo(({ math, block
       } catch (err) {
         console.error('[KaTeX Error]:', err);
       }
+    }).catch((err) => {
+      console.error('[KaTeX Module Load Error]:', err);
     });
 
     return () => {

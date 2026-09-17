@@ -7,6 +7,14 @@ interface MermaidDiagramProps {
   chart: string;
 }
 
+let mermaidPromise: Promise<typeof import('mermaid')> | null = null;
+const getMermaid = () => {
+  if (!mermaidPromise) {
+    mermaidPromise = import('mermaid');
+  }
+  return mermaidPromise;
+};
+
 export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svgContent, setSvgContent] = useState<string>('');
@@ -20,11 +28,14 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
-    let isMounted = true;
+    let cancelled = false;
 
     async function renderDiagram() {
+      if (!chart || !chart.trim()) return;
+
       try {
-        const mermaidModule = await import('mermaid');
+        setIsRendering(true);
+        const mermaidModule = await getMermaid();
         const mermaid = mermaidModule.default;
 
         mermaid.initialize({
@@ -32,39 +43,44 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
           theme: 'neutral',
           securityLevel: 'loose',
           fontFamily: 'Inter, system-ui, sans-serif',
+          suppressErrorRendering: true,
         });
 
-        // Generate safe DOM ID (starts with letters, no hyphens followed by digits)
-        const uniqueId = `mermaid_${Date.now()}_${Math.random().toString(36).substring(2, 7).replace(/[^a-zA-Z]/g, 'a')}`;
-        
         // Clean chart string
-        let cleanChart = chart
+        const cleanChart = chart
           .replace(/\r/g, '')
           .replace(/&amp;/g, '&')
           .replace(/&lt;/g, '<')
           .replace(/&gt;/g, '>')
           .trim();
 
-        try {
-          const res = await mermaid.render(uniqueId, cleanChart);
-          if (isMounted) {
-            setSvgContent(res.svg);
-            setHasError(false);
-            setIsRendering(false);
-          }
-        } finally {
-          const orphanEl = document.getElementById(uniqueId);
-          if (orphanEl) {
-            orphanEl.remove();
-          }
-          const orphanContainer = document.getElementById(`d${uniqueId}`);
-          if (orphanContainer) {
-            orphanContainer.remove();
-          }
+        // Parse check first to ensure syntax validity
+        const isValid = await mermaid.parse(cleanChart).catch(() => false);
+        if (!isValid && !cancelled) {
+          setHasError(true);
+          setIsRendering(false);
+          return;
         }
+
+        // Safe DOM ID generator
+        const uniqueId = `mermaid_${Math.random().toString(36).substring(2, 9)}`;
+
+        const { svg } = await mermaid.render(uniqueId, cleanChart);
+        
+        if (!cancelled) {
+          setSvgContent(svg);
+          setHasError(false);
+          setIsRendering(false);
+        }
+
+        // Clean up temporary DOM nodes created by mermaid render
+        const orphanEl = document.getElementById(uniqueId);
+        if (orphanEl) orphanEl.remove();
+        const orphanContainer = document.getElementById(`d${uniqueId}`);
+        if (orphanContainer) orphanContainer.remove();
       } catch (err) {
-        console.error('[Mermaid Dynamic Import / Render Error]:', err);
-        if (isMounted) {
+        console.error('[Mermaid Render Error]:', err);
+        if (!cancelled) {
           setHasError(true);
           setIsRendering(false);
         }
@@ -74,7 +90,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = React.memo(({ chart
     renderDiagram();
 
     return () => {
-      isMounted = false;
+      cancelled = true;
     };
   }, [chart]);
 
