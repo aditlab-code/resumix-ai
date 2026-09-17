@@ -94,27 +94,34 @@ const PdfCanvasViewer: React.FC<PdfCanvasViewerProps> = ({
     setIsLoading(true);
     setRenderError(null);
 
+    const loadPdfBytes = async (targetUrl: string): Promise<Uint8Array> => {
+      if (targetUrl.startsWith('data:application/pdf;base64,')) {
+        const base64Data = targetUrl.replace(/^data:application\/pdf;base64,/, '');
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        return new Uint8Array(byteNumbers);
+      }
+      const res = await fetch(targetUrl);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      const buf = await res.arrayBuffer();
+      return new Uint8Array(buf);
+    };
+
     const loadPdfDoc = async () => {
       try {
-        let loadingTask: any;
-        if (effectivePdfUrl.startsWith('data:application/pdf;base64,')) {
-          const base64Data = effectivePdfUrl.replace(/^data:application\/pdf;base64,/, '');
-          const byteCharacters = atob(base64Data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          loadingTask = pdfjsLib.getDocument({ data: byteArray });
-        } else if (effectivePdfUrl.startsWith('blob:')) {
-          const res = await fetch(effectivePdfUrl);
-          const buf = await res.arrayBuffer();
-          const byteArray = new Uint8Array(buf);
-          loadingTask = pdfjsLib.getDocument({ data: byteArray });
-        } else {
-          loadingTask = pdfjsLib.getDocument(effectivePdfUrl);
+        let byteArray: Uint8Array;
+        try {
+          byteArray = await loadPdfBytes(effectivePdfUrl);
+        } catch (fetchErr) {
+          console.warn('Failed to fetch primary PDF URL, falling back to sample PDF base64:', fetchErr);
+          byteArray = await loadPdfBytes(SAMPLE_PDF_BASE64);
         }
-
+        const loadingTask = pdfjsLib.getDocument({ data: byteArray });
         const loadedDoc = await loadingTask.promise;
         if (!isCancelled) {
           setPdfDoc(loadedDoc);
@@ -473,24 +480,8 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                           <p className="text-xs text-muted-foreground leading-relaxed">{exp.description}</p>
                         )}
 
-                        {exp.technologies && exp.technologies.length > 0 && (
-                          <div className="flex flex-wrap gap-1 items-center pt-1">
-                            <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider mr-1">
-                              Technologies:
-                            </span>
-                            {exp.technologies.map((tech, tIdx) => (
-                              <span
-                                key={tIdx}
-                                className="px-2 py-0.5 bg-teal-500/15 text-teal-800 border border-teal-500/35 text-[11px] font-bold rounded-md"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-
                         {exp.projects && exp.projects.length > 0 && (
-                          <div className="flex flex-wrap gap-1 items-center pt-1 border-t border-border/60">
+                          <div className="flex flex-wrap gap-1 items-center pt-1">
                             <span className="text-[10px] font-extrabold text-muted-foreground flex items-center gap-1 uppercase tracking-wider mr-1">
                               <FolderGit2 className="w-3 h-3 text-purple-600" /> Projects:
                             </span>

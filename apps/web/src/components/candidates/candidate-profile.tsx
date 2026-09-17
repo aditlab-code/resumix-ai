@@ -95,28 +95,9 @@ export const CandidateProfile: React.FC<CandidateProfileProps> = ({ extraction }
                   <p className="text-xs text-muted-foreground leading-relaxed">{bodyDescription}</p>
                 )}
 
-                {/* Technologies used */}
-                {exp.technologies && exp.technologies.length > 0 && (
-                  <div className="pt-1 space-y-1">
-                    <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
-                      Technologies:
-                    </span>
-                    <div className="flex flex-wrap gap-1">
-                      {exp.technologies.map((tech, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-foreground border border-border text-[11px] font-medium rounded-md"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Projects */}
+                {/* Key Projects */}
                 {exp.projects && exp.projects.length > 0 && (
-                  <div className="pt-1.5 border-t border-border/40 space-y-1">
+                  <div className="pt-1.5 space-y-1">
                     <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
                       Key Projects
                     </span>

@@ -82,10 +82,14 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     async function loadLiveData() {
       try {
-        const liveJobsResponse = await fetchJobs().catch(() => null);
+        const liveJobsResponse = await fetchJobs().catch((err) => {
+          console.warn('[LiveData] Could not fetch live jobs from Core API:', err);
+          return null;
+        });
         if (liveJobsResponse && Array.isArray(liveJobsResponse.data) && liveJobsResponse.data.length > 0) {
           setJobs(liveJobsResponse.data);
         } else {
+          console.info('[LiveData] Using local cached/fallback jobs dataset.');
           const savedJobs = localStorage.getItem('cv_ats_jobs');
           if (savedJobs !== null) {
             const parsed = JSON.parse(savedJobs);
@@ -109,7 +113,7 @@ export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
             setApplications(
               realApps.map((app: any) => ({
                 ...app,
-                pdf_url: app.pdf_url || SAMPLE_PDF_BASE64,
+                pdf_url: (!app.pdf_url || app.pdf_url.startsWith('blob:')) ? SAMPLE_PDF_BASE64 : app.pdf_url,
               }))
             );
           }
