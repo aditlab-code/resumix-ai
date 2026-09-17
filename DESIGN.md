@@ -78,46 +78,46 @@ motion:
 
 ## 1. Overview & Single Source of Truth
 
-Resumix AI `DESIGN.md` v3.0 adalah **Single Source of Truth (SSOT)** resmi untuk seluruh pengembangan antarmuka (UI/UX) di `apps/web` berstandar **Anti-Slop**. Dokumen ini menggabungkan aturan desain visual dengan filter kualitatif anti-slop.
+Resumix AI `DESIGN.md` v3.0 is the official **Single Source of Truth (SSOT)** for all user interface (UI/UX) development in `apps/web`, enforcing **Anti-Slop** craftsmanship standards. This document binds visual design system tokens directly with anti-slop qualitative filters.
 
 ### Anti-Slop Liveliness Dials
 - **ENERGY: 1** (Quiet, Restrained Enterprise Aesthetics, No Over-Decorated Accent Blurs).
 - **RHYTHM: 1** (Structured Grid, Data-Dense Enterprise Layout, Purposeful Content Density).
-- **MOTION: 1** (Fast 120-200ms Micro-Interactions, No Endless Looping Animations/Pulses).
+- **MOTION: 1** (Fast 120–200ms Micro-Interactions, No Endless Looping Animations/Pulses).
 
-### Prinsip Utama v3.0 (Anti-Slop Standards)
-1. **DILARANG GLASSMORPHISM (R-10)**: Tidak boleh menggunakan `backdrop-blur`, efek kaca buram semi-transparan, atau surface melayang tanpa latar padat.
-2. **DILARANG GRADIEN & ORBS (R-01)**: Tidak boleh menggunakan `bg-gradient-*`, `linear-gradient`, teks bertingkat warna, atau efek radial orb. Seluruh permukaan menggunakan warna padat (*solid colors*) atau *soft background tint*.
-3. **BORDER UNIFIED (R-11)**: Seluruh kartu, container, dan panel menggunakan garis pembatas padat 1px yang presisi (`border border-slate-200` atau `border border-border`).
-4. **DILARANG AKSEN ORNAMEN DEKORATIF (R-31)**: Dilarang menambahkan aksen 3 titik vertikal (`3 vertical dots`) atau ornamen visual buatan pada header kartu/section. Header hanya memuat judul fungsional, sub-judul, atau aksi yang nyata.
-5. **DILARANG ANIMASI PULSE BERULANG (R-19)**: Dilarang menggunakan `animate-pulse` pada status badge atau indikator statis. Indikator status menggunakan titik padat 6px solid (`w-1.5 h-1.5 rounded-full shrink-0`). `animate-pulse` hanya diperbolehkan jika ada proses pengunggahan/parsing PDF yang sedang berlangsung secara real-time.
-6. **MINIMALIST PILL BADGES + SOLID INDICATOR DOT (R-09)**: Badge status menggunakan latar Slate-100 neutral sunken (`bg-slate-100`), border 1px solid berwarna indikator status, dan titik indikator 6px solid.
+### Core Principles (Anti-Slop Standards)
+1. **NO GLASSMORPHISM (R-10)**: Do not use `backdrop-blur`, semi-transparent frosted glass effects, or floating surfaces lacking a solid background.
+2. **NO GRADIENTS & ORBS (R-01)**: Do not use `bg-gradient-*`, `linear-gradient`, multi-tone text gradients, or radial orb effects. All surfaces must use solid colors or soft background tints.
+3. **UNIFIED BORDERS (R-11)**: All cards, containers, and panels must use precise 1px solid borders (`border border-slate-200` or `border border-border`).
+4. **NO DECORATIVE ORNAMENTS (R-31)**: Do not add artificial 3 vertical dots (`3 vertical dots`) or decorative visual marks to card or section headers. Headers must contain only functional titles, subtitles, or actual action controls.
+5. **NO ENDLESS PULSE ANIMATIONS (R-19)**: Do not use `animate-pulse` on static status badges or indicators. Status indicators must use a solid 6px dot (`w-1.5 h-1.5 rounded-full shrink-0`). `animate-pulse` is strictly restricted to active real-time upload/parsing operations.
+6. **MINIMALIST PILL BADGES + SOLID INDICATOR DOT (R-09)**: Status badges must use a neutral sunken Slate-100 background (`bg-slate-100`), a 1px solid border matching the status tone, and a solid 6px indicator dot.
 
 ---
 
 ## 2. Color Palette & Surface Tokens
 
-| Peran | Token | Hex / Class | Penggunaan |
+| Role | Token | Hex / Class | Usage |
 |:---|:---|:---:|:---|
-| Teks utama | `ink.default` | `#0F172A` | Judul utama, nama kandidat, metrik kuantitatif |
-| Teks sekunder | `ink.subtle` | `#475569` | Caption, metadata, label field |
-| Teks aksen | `ink.brand` | `#1D4ED8` | Link, tab terpilih, skor aksen |
-| Kanvas app | `surface.canvas` | `#F1F5F9` | Latar belakang utama dashboard (`Slate-100`) |
-| Permukaan sunken | `surface.sunken` | `#E2E8F0` / `bg-slate-100` | Header tabel, latar badge, filter bar |
-| Kartu KPI / Job | `surface.soft` | `bg-white` / `bg-slate-50/80` | Latar belakang kartu KPI dan Job Available |
-| Kartu aktif | `surface.active_ring` | `bg-blue-50/60 border-blue-500 ring-1 ring-blue-500` | Highlight kartu posisi pekerjaan terpilih |
-| Border standar | `surface.border` | `#E2E8F0` / `border-slate-200` | Pembatas section / table row / card border |
+| Primary Text | `ink.default` | `#0F172A` | Page titles, candidate names, quantitative metrics |
+| Secondary Text | `ink.subtle` | `#475569` | Captions, metadata, field labels |
+| Accent Text | `ink.brand` | `#1D4ED8` | Links, selected tabs, accent scores |
+| App Canvas | `surface.canvas` | `#F1F5F9` | Main dashboard canvas background (`Slate-100`) |
+| Sunken Surface | `surface.sunken` | `#E2E8F0` / `bg-slate-100` | Table headers, badge backgrounds, filter bars |
+| Card Surface | `surface.soft` | `bg-white` / `bg-slate-50/80` | KPI card and job card backgrounds |
+| Active Card | `surface.active_ring` | `bg-blue-50/60 border-blue-500 ring-1 ring-blue-500` | Selected job card highlight ring |
+| Standard Border | `surface.border` | `#E2E8F0` / `border-slate-200` | Section dividers, table row borders, card outlines |
 
 ---
 
 ## 3. Typography & Numeric Precision
 
-- **Font UI**: Inter / system-ui untuk seluruh teks UI.
-- **Font Numeric / Metrics (R-17, C-5)**: Monospaced tabular numerals (`tabular-nums font-mono font-extrabold`) wajib digunakan pada:
-  - Angka Job-Fit Score (`85%`, `92.5/100`).
-  - Total bobot formula scoring (`Total Weight Accumulation: 100%`).
-  - Angka metrik jumlah pelamar (`applications_count`).
-  - Durasi pengalaman kerja (`total_experience_months`).
+- **UI Font**: Inter / system-ui for all interface copy.
+- **Numeric & Metric Font (R-17, C-5)**: Monospaced tabular numerals (`tabular-nums font-mono font-extrabold`) are mandatory for:
+  - Job-Fit Scores (`85%`, `92.5/100`).
+  - Total scoring weight accumulation (`Total Weight Accumulation: 100%`).
+  - Applicant metrics (`applications_count`).
+  - Work experience duration (`total_experience_months`).
 
 ---
 
@@ -131,31 +131,31 @@ Resumix AI `DESIGN.md` v3.0 adalah **Single Source of Truth (SSOT)** resmi untuk
   - `danger` / `rejected` / `failed`: `text-rose-900 border-rose-500` (Dot: `bg-rose-600`).
   - `accent` / `processing`: `text-blue-900 border-blue-500` (Dot: `bg-blue-600`).
   - `neutral` / `applied`: `text-slate-800 border-slate-300` (Dot: `bg-slate-400`).
-- **Indicator Dot**: Solid 6px dot (`w-1.5 h-1.5 rounded-full shrink-0`) di sisi kiri teks. **Tanpa `animate-pulse`** kecuali pada status `processing` aktif saat unggah file.
+- **Indicator Dot**: Solid 6px dot (`w-1.5 h-1.5 rounded-full shrink-0`) on the left side. **No `animate-pulse`** except for active `processing` during real-time document upload.
 
 ### B. Job-Fit Score Badges
 - **Format**: `bg-slate-100 border text-caption font-bold tabular-nums font-mono px-2.5 py-1 rounded-full`.
-- **Indikator Border**:
+- **Border Indicators**:
   - Score >= 80: `text-emerald-950 border-emerald-500`.
   - Score >= 60: `text-amber-950 border-amber-500`.
   - Score < 60: `text-rose-950 border-rose-500`.
 
-### C. KPI & Job Available Cards
-- **Border Solid Presisi**: Seluruh kartu menggunakan border solid 1px seragam (`border-slate-200`).
-- **Tanpa 3 Vertical Dots**: Header kartu hanya berisi judul fungsional, label deskriptif, atau tombol aksi nyata.
-- **Latar Soft Tint**: Latar kartu `bg-white` atau `bg-slate-50/80`.
-- **Kartu Aktif**: Kartu terpilih memakai ring border aksen `border-blue-500 bg-blue-50/60 ring-1 ring-blue-500`.
+### C. KPI & Job Cards
+- **Precise Solid Border**: All cards use a uniform 1px solid border (`border-slate-200`).
+- **No 3 Vertical Dots**: Card headers contain only functional titles, descriptive labels, or actual action buttons.
+- **Soft Tint Background**: Card background `bg-white` or `bg-slate-50/80`.
+- **Active Card**: Selected card uses an accent ring border `border-blue-500 bg-blue-50/60 ring-1 ring-blue-500`.
 
 ### D. Settings & Range Input Fields (`RangeField`)
-- Wadah slider menggunakan `bg-slate-50/80 border border-slate-200 rounded-xl p-4`.
-- Header label memuat nama variabel kriteria dan badge persentase `bg-slate-100 text-blue-900 border border-blue-500 font-mono font-extrabold`.
-- Slider track & thumb menggunakan `accent-blue-600 h-2 bg-slate-200 rounded-lg` padat tanpa gradien.
+- Slider container uses `bg-slate-50/80 border border-slate-200 rounded-xl p-4`.
+- Header label contains criterion variable name and percentage badge `bg-slate-100 text-blue-900 border border-blue-500 font-mono font-extrabold`.
+- Slider track & thumb use `accent-blue-600 h-2 bg-slate-200 rounded-lg` solid without gradients.
 
 ---
 
 ## 5. Integration Governance with AGENTS.md
 
-Dokumen `DESIGN.md` ini diikat secara langsung dalam `AGENTS.md` pada bagian **MUST RULES** dan **DO NOT RULES**:
+`DESIGN.md` is strictly bound inside `AGENTS.md` under **MUST RULES** and **DO NOT RULES**:
 
 1. **MUST RULE**:
    - `MUST follow DESIGN.md v3.0 as the single source of truth for all UI component styling, colors, and layout in apps/web.`
@@ -168,11 +168,11 @@ Dokumen `DESIGN.md` ini diikat secara langsung dalam `AGENTS.md` pada bagian **M
 
 ## 6. Delivery Gate Verification Checklist
 
-Setiap perubahan antarmuka UI wajib memenuhi checklist berikut sebelum dirilis (Delivery Gate PASS/FAIL):
+Every UI modification must pass the following verification checklist before delivery (Delivery Gate PASS/FAIL):
 
-- [ ] Palette diturunkan murni dari `DESIGN.md` v3.0 tanpa gradien default AI (R-01, R-29).
-- [ ] UI bebas dari aksen ornamen 3 titik vertikal dekoratif (R-31).
-- [ ] UI bebas dari `animate-pulse` berulang pada status badge/indikator statis (R-19).
-- [ ] Angka skor dan metrik kuantitatif menggunakan `tabular-nums font-mono` (R-17, C-5).
-- [ ] Komponen interaktif memiliki fungsi nyata tanpa dummy placeholder (C-2, R-26).
-- [ ] State loading, empty, dan error terdefinisikan dengan jelas (C-4, R-27).
+- [ ] Palette is derived strictly from `DESIGN.md` v3.0 without AI default gradients (R-01, R-29).
+- [ ] UI is free of artificial 3 vertical dots decorative ornaments (R-31).
+- [ ] UI is free of endless `animate-pulse` on static status badges or indicators (R-19).
+- [ ] Scores and quantitative metrics use monospaced tabular numerals (`tabular-nums font-mono`) (R-17, C-5).
+- [ ] Interactive components have real functionality without dummy placeholders (C-2, R-26).
+- [ ] Loading, empty, and error states are explicitly defined and meaningful (C-4, R-27).

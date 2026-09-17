@@ -14,7 +14,7 @@ const app = express();
 
 app.disable('x-powered-by');
 
-// Global Security Headers Middleware
+// Enforce security headers for cross-origin defense and frame isolation.
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
@@ -40,7 +40,7 @@ app.use(
 
 app.use(express.json({ limit: '10mb' }));
 
-// Initialize BullMQ Worker in background
+// Start asynchronous ingestion worker process; fails gracefully if Redis is unavailable.
 let cvWorker: ReturnType<typeof startCVProcessingWorker> | undefined;
 try {
   cvWorker = startCVProcessingWorker();
