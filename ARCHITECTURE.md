@@ -133,21 +133,6 @@ The database consists of **13 core tables** defined across SQL migration scripts
 
 ## 6. Mathematical Formulation for Scoring Engine
 
-Scoring Engine computes final candidate match scores (ranging 0.0 to 100.0) deterministically without LLM hallucination using *Dual-Vector & Multi-Factor* weighting:
-
-$$\text{Raw Score} = 100 \times \Big( 0.25 \cdot S_{\text{skill\_sem}} + 0.20 \cdot S_{\text{role\_sem}} + 0.30 \cdot S_{\text{man}} + 0.20 \cdot S_{\text{exp}} + 0.05 \cdot S_{\text{pref}} \Big)$$
-
-$$\text{Final Score} = \text{round}\Big( \text{clamp}\big(0.0, 100.0, \text{Raw Score} \times \text{Penalty Factor}\big) \Big)$$
-
-### Score Components:
-- **Dual-Vector Semantic Similarity ($S_{\text{sem}} = 0.55 \cdot S_{\text{skill\_sem}} + 0.45 \cdot S_{\text{role\_sem}}$)**:
-  - $S_{\text{skill\_sem}}$: Cosine similarity between `candidate_skill_embedding` & `job_skill_embedding` (weight: $0.25$).
-  - $S_{\text{role\_sem}}$: Cosine similarity between `candidate_role_embedding` & `job_role_embedding` (weight: $0.20$).
-  - *Combined Semantic Weight*: $0.45$.
-- **Mandatory Skill Match Ratio ($S_{\text{man}}$)**: Ratio of matched required skills ($\frac{\text{matched mandatory}}{\text{total mandatory}}$) (weight: $0.30$).
-- **Domain Relevant Experience Ratio ($S_{\text{exp}}$)**: Ratio of relevant work duration ($\min(1.0, \frac{\text{relevant exp months}}{\text{required exp months}})$) (weight: $0.20$).
-- **Preferred Skill Match Ratio ($S_{\text{pref}}$)**: Ratio of matched optional skills ($\frac{\text{matched preferred}}{\text{total preferred}}$) (weight: $0.05$).
-
 ### Mandatory Skill Strict Penalty Factor ($\text{Penalty Factor}$):
 To ensure candidates lacking core critical skills are highlighted transparently:
 - **0 missing mandatory skill**: Factor = $1.00$ (no deduction)
